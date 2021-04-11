@@ -34,14 +34,10 @@ def make_tv_show_ds():
             k.lower().strip(): "" if v==-1 or v=="NaN" else v
             for k, v in show.items() if k!="Unnamed: 0" and k!= "Title"
             }
+        val["streaming platform"] = val["streaming platform"].replace(",", ", ")
         d[show["Title"]] = val
         tv_shows.append(d)
         index_to_tv_shows[show["Unnamed: 0"]] = show["Title"]
-
-    # cleaning the ds
-    for show in tv_shows:   
-        # print(show)
-        val["streaming platform"] = val["streaming platform"].replace(",", ", ")
 
     tv_shows_to_index = {v: k for k, v in index_to_tv_shows.items()}
     print("Data structures created for tv shows")
