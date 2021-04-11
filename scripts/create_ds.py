@@ -1,5 +1,5 @@
 # DESCRIPTION: This script creates the data structures using the kaggle data set and the data
-# set from the web-scrapping IMBd.
+# set from the web-scrapping IMDb.
 #
 # The outline of the data structures for tv_shows and reviews is described in ds.md
 #
@@ -31,10 +31,14 @@ def make_tv_show_ds():
     for show in result:
         d = {}
         val = {
-            k.lower().strip(): "" if v==-1 or v=="NaN" else v
-            for k, v in show.items() if k!="Unnamed: 0" and k!= "Title"
+            k.lower().strip(): "" if v==-1 or v=="-1" else v
+            for k, v in show.items() if k!="Unnamed: 0" and k!= "Title" and k!="IMDb"
             }
-        val["streaming platform"] = val["streaming platform"].replace(",", ", ")
+        val["streaming platform"] = list(val["streaming platform"].replace(",", ", ").split(", "))
+        val["genre"] = list(val["genre"].replace(",", ", ").split(", "))
+        seasons = val["no of seasons"]
+        if seasons!="":
+            val["no of seasons"] = int(seasons[0:seasons.index('S')].strip())
         d[show["Title"]] = val
         tv_shows.append(d)
         index_to_tv_shows[show["Unnamed: 0"]] = show["Title"]
