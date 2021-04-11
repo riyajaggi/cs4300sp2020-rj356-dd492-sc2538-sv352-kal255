@@ -1,3 +1,26 @@
+# TV Shows
+
+`tv_shows` - list of tv shows
+```
+[
+    "tv_show" : {
+        "year": int 
+        "content_rating": string
+        "imbd_rating": float
+        "r rating": float
+        "genre": list of strings
+        "description": string
+        "no. of seasons": int 
+        "streaming platform": list of strings
+        "rotten_tomatoes": int
+    }
+]
+```
+
+`index_to_tv_shows` - dictionary of indices to tv shows
+`tv_shows_to_index` - dictionary of tv shows to indices
+
+
 # Reviews
 
 `reviews`  - list of reviews
@@ -14,29 +37,6 @@
     }
 ]
 ```
-
-# TV Shows
-
-`tv_shows` - list of tv shows
-```
-[
-    "tv_show" : {
-        "year": int 
-        "content_rating": string
-        "imbd_rating": float
-        "r rating": float
-        "genre": list of strings
-        "description": string
-        "no. of seasons": int 
-        "streaming platform": list of strings
-        "rotten_tomatoes":
-    }
-]
-```
-
-`index_to_tv_shows` - dictionary of indices to tv shows
-`tv_shows_to_index` - dictionary of tv shows to indices
-
 
 # Script output
 
