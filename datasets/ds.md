@@ -33,3 +33,6 @@
 }
 ]
 ```
+
+`index_to_tv_shows` - dictionary of indices to tv shows
+`tv_shows_to_index` - dictionary of tv shows to indices
