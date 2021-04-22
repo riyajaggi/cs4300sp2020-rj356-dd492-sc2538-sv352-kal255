@@ -1,13 +1,4 @@
-@media (min-width: 1200px) {
-  .container {
-    max-width: 970px;
-  }
-}
-
-
-
-@media (min-width:400px) {
-  #title {
+ #title {
     /* streamOn */
 
     /*     position: absolute; */
@@ -50,6 +41,7 @@
     border: 4px solid #D8CFCF;
     box-sizing: border-box;
     border-radius: 25px;
+    margin: auto;
 
 
     /* TV Show * */
@@ -115,4 +107,3 @@
 
 
   }
-}
