@@ -1,0 +1,27 @@
+<html>
+
+<head>
+    <link rel="stylesheet" href="/static/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/main.css">
+    <link rel="stylesheet" href="/static/prototype1.css">
+</head>
+
+<body>
+    <div class="topcorner">
+        <p>Project Name: {{ name }}</p>
+        <p>Student Name: ({{ netid }})</p>
+    </div>
+
+    <form action="https://stream-on.herokuapp.com">
+        <h1 id="title">
+            stream<span id="title" style="color: #5680E9;">On </span>
+        </h1>
+        <p>
+            Sorry no result found! Please try another search!
+        </p>
+        <br><br>
+        <button type="submit" class="btn btn-info"> Go Back! </button>
+    </form>
+</body>
+
+</html>
