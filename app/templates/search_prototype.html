@@ -1,0 +1,51 @@
+<html>
+
+<head>
+    <link rel="stylesheet" href="/static/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/main.css">
+    <link rel="stylesheet" href="/static/prototype1.css">
+</head>
+
+<body>
+    <div class="topcorner">
+        <p>Project Name: {{ name }}</p>
+        <p>Student Name: ({{ netid }})</p>
+    </div>
+
+    <form class="form-inline global-search">
+        <h1 id="title">
+            Stream
+        <span id="title" style="color: #5680E9;">
+          On </span>
+        </h1>
+
+        <br><br>
+
+        <div class="form-group">
+            <input id="query" type="text" name="search" class="form-control" placeholder="Your Input">
+        </div>
+        <button type="submit" class="btn btn-info"> Go! </button>
+    </form>
+<!--     <form class="form-inline global-search">
+        <input id="query" type="text" name="notShow" class="form-control" placeholder="Shows not to include">
+        <input id="query" type="text" name="Genre" class="form-control" placeholder="Genre">
+        <input id="query" type="text" name="platform" class="form-control" placeholder="Platforms">
+    </form> -->
+    <form class="form-inline global-search">
+        {% if data %}
+        <h1>{{output_message}}</h1>
+        {% for d in data %}
+        <br>
+        <br>
+        <p id="ans" style="text-align: center;
+        color: black;
+        background: #F7F3F3;
+      border: 4px solid #D8CFCF;
+      box-sizing: border-box;
+      border-radius: 25px;">{{d}}<br></p>
+        {% endfor %}
+        {% endif %}
+    </form>
+</body>
+
+</html>

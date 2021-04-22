@@ -18,4 +18,4 @@ def search():
         output_message = "Your results for " + query
         data = jaccardRanking(query, 3)
 
-    return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data)
+    return render_template('search_prototype.html', name=project_name, netid=net_id, output_message=output_message, data=data)
