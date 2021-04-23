@@ -14,6 +14,7 @@ def makeSoup(url):
 titles_to_links = {}
 
 tv_shows = transcripts_info.tv_shows_no_transcripts
+session = requests.Session()
 letter = 'Z'
 
 url = "https://subslikescript.com/series_letter-"+ letter
