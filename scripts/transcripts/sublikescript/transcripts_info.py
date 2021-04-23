@@ -21,7 +21,18 @@ for show in os.listdir("./transcripts2"):
     tv_shows_w_transcripts.append(show.lower())
 
 for show in tv_shows:
-  if not show.lower() in tv_shows_w_transcripts:
+  formatted_show = show.lower()
+  if ":" in show:
+    formatted_show = formatted_show.replace(":", "")
+  if "?" in show:
+    formatted_show = formatted_show.replace("?", "")
+  if "*" in show:
+    formatted_show = formatted_show.replace("*", "")
+  if "+" in show:
+    formatted_show = formatted_show.replace("+", " ")
+  if "/" in show:
+    formatted_show = formatted_show.replace("/", " ")
+  if not formatted_show in tv_shows_w_transcripts:
     tv_shows_no_transcripts.append(show)
 
 # for show in tv_shows_no_transcripts:

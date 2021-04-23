@@ -20,15 +20,18 @@ with open('./datasets/final/tv_shows_to_index.json') as json_file:
     
   session = requests.Session()
 
-  url = find_starting_letter_links.letters_to_links["V"]
+  url = find_starting_letter_links.letters_to_links["R"]
   soup = makeSoup(url)
   show_url = "https://transcripts.foreverdreaming.org"
 
+  total_transcripts_for_letter = []
   for link in soup.select("a.forumlink"):
     title = link.contents[0]
+    total_transcripts_for_letter.append(title)
     if title in tv_shows:
+      print(title)
       titles_to_links[title] = show_url + link['href'][1:]
 
-print(titles_to_links)
-print(len(titles_to_links))
+print(total_transcripts_for_letter)
+print(len(total_transcripts_for_letter))
 print("\nEND OF SCRIPT")
