@@ -33,9 +33,10 @@ def make_tv_show_ds():
     tv_shows = []
     index_to_tv_shows = {}
     tv_shows_to_index = {}
-
+    count = -1
     for show in result:
         # d = []
+        count += 1
         val = {
             k.lower().strip(): "" if v == -1 or v == "-1" else v
             for k, v in show.items()
@@ -52,17 +53,27 @@ def make_tv_show_ds():
         val["start year"] = -1
         val["end year"] = -1
         if val["imdb rating"] == "":
-            val["imdb rating"] = -1 
+            val["imdb rating"] = -1
         if val["no of seasons"] == "":
-            val["no of seasons"] = -1 
+            val["no of seasons"] = -1
         if val["year"] == "":
-            val["year"] = -1 
+            val["year"] = -1
+        # if show["Title"] in tv_shows_to_index.keys() and val!=tv_shows[tv_shows_to_index[show["Title"]]]:
+        #     print(show["Title"] + " duplicate")
+        #     if val["year"] != -1:
+        #         # print("here")
+        #         show["Title"] = show["Title"] + " " + str(val["year"])
+        #         print(show["Title"])
+        #     else:
+        #         print("ELSE")
         d = {"show_title": show["Title"], "show_info": val}
         tv_shows.append(d)
-        index_to_tv_shows[show["Unnamed: 0"]] = show["Title"]
+        # index_to_tv_shows[show["Unnamed: 0"]] = show["Title"]
+        tv_shows_to_index[show["Title"]] = count
 
-    tv_shows_to_index = {v: k for k, v in index_to_tv_shows.items()}
+    index_to_tv_shows = {v: k for k, v in tv_shows_to_index.items()}
     print(len(tv_shows))
+    # print(index_to_tv_shows)
     print("Data structures created for tv shows")
     return (tv_shows, index_to_tv_shows, tv_shows_to_index)
 
@@ -113,7 +124,7 @@ def make_info_ds():
     range of imdb rating, content rating, genre count, max and min seasons, min start date, max
     end date, max and min runtime and chart of that
     """
-    a_file = open("datasets/final/merged_tv_shows.json", "r")
+    a_file = open("datasets/p2/merged_tv_shows3.json", "r")
     tv_shows = json.load(a_file)
 
     # streaming_platform_set = {} # dic with count
@@ -131,6 +142,7 @@ def make_info_ds():
 
     for show_dict in tv_shows:
         count += 1
+        # print(show_dict)
         show_info = show_dict["show_info"]
         years_set.add(show_info["start year"])
 
@@ -163,11 +175,10 @@ def make_info_ds():
             min_runtime = show_info["runtime"]
 
         for p in show_info["streaming platform"]:
-            streaming_platform_dict[p] = (
-                streaming_platform_dict[p] + 1
-                if g in streaming_platform_dict.keys()
-                else 1
-            )
+            if p in streaming_platform_dict.keys():
+                streaming_platform_dict[p] += 1
+            else:
+                streaming_platform_dict[p] = 1
 
     new_json = {
         "years_set": list(years_set),
@@ -181,11 +192,11 @@ def make_info_ds():
         "streaming_platform_list": list(streaming_platform_dict.keys()),
         "genre_list": list(genre_dict.keys()),
         "content_rating_list": list(content_rating_dict.keys()),
-        "min_seasons": min(list(seasons_dict.keys())),
+        "min_seasons": min([x for x in seasons_dict.keys() if x!=-1]),
         "max_seasons": max(list(seasons_dict.keys())),
         "shows_count": count,
         "max_year": 2021,
-        "min_year": min(list(years_set))
+        "min_year": min([x for x in years_set if x!=-1]),
     }
     # print()
     # print(new_json)
@@ -193,8 +204,158 @@ def make_info_ds():
     return new_json
 
 
+def create_final_index():
+    a_file = open("datasets/p2/merged_tv_shows2.json", "r")
+    tv_shows = json.load(a_file)
+
+    count = 0
+
+    tv_shows_to_index = {}
+    index_to_tv_shows = {}
+
+    for show in tv_shows:
+        tv_shows_to_index[show["show_title"]] = count
+        count += 1
+
+    print(len(tv_shows_to_index))
+
+    index_to_tv_shows = {v: k for k, v in tv_shows_to_index.items()}
+
+    print(len(index_to_tv_shows))
+    print("Created index for shows!")
+    return (tv_shows_to_index, index_to_tv_shows)
+
+
+def clean_genre():
+    a_file = open("datasets/p2/merged_tv_shows3.json", "r")
+    tv_shows = json.load(a_file)
+
+    index_file = open("datasets/p2/final/tv_shows_to_index.json")
+    tv_shows_to_index = json.load(index_file)
+
+    genre_lst = [
+        "",
+        "2009",
+        "2007",
+        "2003",
+        "2014",
+        "2018",
+        "2000",
+        "2006",
+        "2016",
+        "1999",
+        "2015",
+        "2011",
+        "2020",
+        "2019",
+        "1993",
+        "2012",
+        "1975",
+        "1969",
+        "2017",
+        "2010",
+        "1995",
+        "2008",
+        "2013",
+        "1992",
+        "1998",
+        "1987",
+        "1996",
+        "1983",
+        "1981",
+        "1965",
+        "1990",
+        "1997",
+        "2001",
+        "1955",
+        "1984",
+        "1974",
+        "2002",
+        "1964",
+        "1980",
+        "1978",
+        "1977",
+        "2004",
+        "1994",
+        "1976",
+        "1972",
+        "1982",
+        "1970",
+        "1989",
+        "1985",
+        "1986",
+        "1968",
+        "1991",
+        "1949",
+        "1979",
+        "1971",
+        "1958",
+        "1988",
+        "1962",
+        "1950",
+        "1963",
+        "1966",
+        "1957",
+        "1959",
+        "1961",
+        "1967",
+        "1951",
+        "1901",
+        "1952",
+        "1954",
+        "1948",
+        "1947",
+        "1953",
+        "1956",
+        "1960",
+        "1931",
+        "1904",
+        "1945",
+        "1943",
+        "1973",
+    ]
+    count = 0
+    for show in tv_shows:
+        if "show_info" and "show_title" not in show.keys():
+            print(show)
+            continue
+        count += 1
+        # print(show)
+        print()
+        show_genre = show["show_info"]["genre"]
+        show["show_info"]["genre"] = [x for x in show_genre if x not in genre_lst]
+        tv_shows[tv_shows_to_index[show["show_title"]]]["show_info"] = show["show_info"]
+    print(count)
+    return tv_shows
+
+
+def add_titles():
+    a_file = open("datasets/p2/merged_tv_shows3.json", "r")
+    tv_shows = json.load(a_file)
+
+    index_file = open("datasets/p2/final/index_to_tv_shows.json")
+    index_to_tv_shows = json.load(index_file)
+    # print(index_to_tv_shows[2])
+
+    # for num in range(len(tv_shows)):
+    #     if "show_title" not in tv_shows[num].keys():
+    #         d = {"show_title": index_to_tv_shows[str(num)], "show_info": tv_shows[num]}
+    #         tv_shows[num] = d
+
+    # a2_file = open("datasets/p2/merged_tv_shows3.json", "w")
+    # json.dump(tv_shows, a2_file)
+    # a2_file.close()
+    # print("Add titles json")
+    for num in range(len(tv_shows)):
+        print(tv_shows[num]["show_title"])
+        print()
+
+    return tv_shows
+
+
 def main():
     print()
+    # add_titles()
     # ======= MAKE TV SHOWS AND SAVE JSON =========
     # (tv_shows, index_to_tv_shows, tv_shows_to_index) = make_tv_show_ds()
 
@@ -235,10 +396,29 @@ def main():
     # ======= MAKE INFO AND SAVE JSON =========
     info_json = make_info_ds()
     print(info_json)
-    with open("datasets/final/info.p", "wb") as f:
+    with open("datasets/p2/final/info.p", "wb") as f:
         pickle.dump(info_json, f)
     # a_file.close()
     print("Made info json")
+
+    # ======= MAKE TV SHOWS INDEX AND SAVE JSON =========
+    # (tv_shows_to_index, index_to_tv_shows) = create_final_index()
+
+    # a_file = open("datasets/p2/index_to_tv_shows.json", "w")
+    # json.dump(index_to_tv_shows, a_file)
+    # a_file.close()
+
+    # a_file = open("datasets/p2/tv_shows_to_index.json", "w")
+    # json.dump(tv_shows_to_index, a_file)
+    # a_file.close()
+
+    # ======= CLEAN DESCRIPTIONS AND SAVE JSON =========
+    # tv_shows = clean_genre()
+
+    # a_file = open("datasets/p2/merged_tv_shows3.json", "w")
+    # json.dump(tv_shows, a_file)
+    # a_file.close()
+    # print("Cleaned tv shows")
 
 
 if __name__ == "__main__":
