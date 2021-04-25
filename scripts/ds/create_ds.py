@@ -227,10 +227,10 @@ def create_final_index():
 
 
 def clean_genre():
-    a_file = open("datasets/p2/merged_tv_shows3.json", "r")
+    a_file = open("datasets/p2/final/merged_tv_shows_final.json", "r")
     tv_shows = json.load(a_file)
 
-    index_file = open("datasets/p2/final/tv_shows_to_index.json")
+    index_file = open("datasets/p2/final/tv_shows_to_index_final.json")
     tv_shows_to_index = json.load(index_file)
 
     genre_lst = [
@@ -321,36 +321,37 @@ def clean_genre():
             continue
         count += 1
         # print(show)
-        print()
+        # print()
         show_genre = show["show_info"]["genre"]
-        show["show_info"]["genre"] = [x for x in show_genre if x not in genre_lst]
+        show["show_info"]["genre"] = [x for x in show_genre if x != ""]
         tv_shows[tv_shows_to_index[show["show_title"]]]["show_info"] = show["show_info"]
     print(count)
     return tv_shows
 
 
 def add_titles():
-    a_file = open("datasets/p2/merged_tv_shows3.json", "r")
+    a_file = open("datasets/p2/final/merged_tv_shows_final.json", "r")
     tv_shows = json.load(a_file)
 
-    index_file = open("datasets/p2/final/index_to_tv_shows.json")
+    index_file = open("datasets/p2/final/index_to_tv_shows_final.json")
     index_to_tv_shows = json.load(index_file)
     # print(index_to_tv_shows[2])
 
-    # for num in range(len(tv_shows)):
-    #     if "show_title" not in tv_shows[num].keys():
-    #         d = {"show_title": index_to_tv_shows[str(num)], "show_info": tv_shows[num]}
-    #         tv_shows[num] = d
+    for num in range(len(tv_shows)):
+        if "show_title" not in tv_shows[num].keys():
+            d = {"show_title": index_to_tv_shows[str(num)], "show_info": tv_shows[num]}
+            tv_shows[num] = d
 
-    # a2_file = open("datasets/p2/merged_tv_shows3.json", "w")
-    # json.dump(tv_shows, a2_file)
-    # a2_file.close()
-    # print("Add titles json")
+    a2_file = open("datasets/p2/final/merged_tv_shows_final.json", "w")
+    json.dump(tv_shows, a2_file)
+    a2_file.close()
+
+    print("Add titles json")
     for num in range(len(tv_shows)):
         print(tv_shows[num]["show_title"])
         print()
 
-    return tv_shows
+    return
 
 
 def main():
@@ -413,12 +414,20 @@ def main():
     # a_file.close()
 
     # ======= CLEAN DESCRIPTIONS AND SAVE JSON =========
-    # tv_shows = clean_genre()
+    tv_shows = clean_genre()
 
-    # a_file = open("datasets/p2/merged_tv_shows3.json", "w")
-    # json.dump(tv_shows, a_file)
+    a_file = open("datasets/p2/final/merged_tv_shows_final.json", "w")
+    json.dump(tv_shows, a_file)
+    a_file.close()
+    print("Cleaned tv shows")
+
+    # ======= MAKE INFO AND SAVE JSON =========
+    info_json = make_info_ds()
+    print(info_json)
+    with open("datasets/p2/final/info.p", "wb") as f:
+        pickle.dump(info_json, f)
     # a_file.close()
-    # print("Cleaned tv shows")
+    print("Made info json")
 
 
 if __name__ == "__main__":

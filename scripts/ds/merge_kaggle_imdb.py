@@ -84,12 +84,42 @@ def add_streaming_platforms():
             change = False
             print(show["Title"] + " changed!")
         merge_item["show_info"] = val 
-        tv_shows_lst[tv_shows_to_index[show["Title"]]] = merge_item["show_info"]
+        tv_shows_lst[tv_shows_to_index[show["Title"]]]["show_info"] = merge_item["show_info"]
     
     print(count)
     return tv_shows_lst
     # return {}
         
+
+def update_more_shows():
+    more_shows = "datasets/more_shows.csv"
+    # get only the columns you want from the csv file
+    df = pd.read_csv(more_shows, na_values="")
+    df = df.fillna("")
+    result = df.to_dict(orient="records")
+
+    a_file = open("datasets/p2/final/merged_tv_shows_final.json", "r")
+    tv_shows = json.load(a_file)
+
+    index_file = open("datasets/p2/final/tv_shows_to_index_final.json")
+    tv_shows_to_index = json.load(index_file)    
+
+    count = 0
+
+    for show in result:
+        if show["title"] not in tv_shows_to_index.keys():
+            continue
+        merge_item = tv_shows[tv_shows_to_index[show["title"]]]
+        val = tv_shows[tv_shows_to_index[show["title"]]]
+        print(show["title"])
+        print()
+        val["show_info"]["streaming platform"] += [show["streaming platform"]]
+        tv_shows[tv_shows_to_index[show["title"]]]["show_info"] = merge_item["show_info"]
+        count+=1
+    
+    print(str(count) + " shows updated!")
+    return tv_shows
+
 
 def main():
     print()
@@ -97,8 +127,8 @@ def main():
     # a_file = open("datasets/p2/merged_tv_shows2.json", "w")
     # json.dump(tv_shows_lst, a_file)
     # a_file.close()
-    tv_shows_lst = add_streaming_platforms()
-    a_file = open("datasets/p2/merged_tv_shows3.json", "w")
+    tv_shows_lst = update_more_shows()
+    a_file = open("datasets/p2/merged_tv_shows_final.json", "w")
     json.dump(tv_shows_lst, a_file)
     a_file.close()
     print("END OF SCRIPT")
