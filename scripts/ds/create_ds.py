@@ -90,6 +90,7 @@ def make_reviews_ds():
     result = df.to_dict(orient="records")
 
     reviews = {}
+
     for show in result:
         d = {}
         val = {
@@ -374,12 +375,12 @@ def main():
     # a_file.close()
 
     # ======= MAKE REVIEWS AND SAVE JSON =========
-    # reviews = make_reviews_ds()
+    reviews = make_reviews_ds()
 
-    # print(len(reviews))
-    # a_file = open("datasets/final/reviews.json", "w")
-    # json.dump(reviews, a_file)
-    # a_file.close()
+    print(len(reviews))
+    a_file = open("datasets/p2/final/reviews2.json", "w")
+    json.dump(reviews, a_file)
+    a_file.close()
 
     # ======= PRINT SAMPLE OUTPUT =========
     # printing sample output
@@ -395,12 +396,12 @@ def main():
     # print(reviews["Friends"])
 
     # ======= MAKE INFO AND SAVE JSON =========
-    info_json = make_info_ds()
-    print(info_json)
-    with open("datasets/p2/final/info.p", "wb") as f:
-        pickle.dump(info_json, f)
-    # a_file.close()
-    print("Made info json")
+    # info_json = make_info_ds()
+    # print(info_json)
+    # with open("datasets/p2/final/info.p", "wb") as f:
+    #     pickle.dump(info_json, f)
+    # # a_file.close()
+    # print("Made info json")
 
     # ======= MAKE TV SHOWS INDEX AND SAVE JSON =========
     # (tv_shows_to_index, index_to_tv_shows) = create_final_index()
@@ -414,20 +415,20 @@ def main():
     # a_file.close()
 
     # ======= CLEAN DESCRIPTIONS AND SAVE JSON =========
-    tv_shows = clean_genre()
+    # tv_shows = clean_genre()
 
-    a_file = open("datasets/p2/final/merged_tv_shows_final.json", "w")
-    json.dump(tv_shows, a_file)
-    a_file.close()
-    print("Cleaned tv shows")
-
-    # ======= MAKE INFO AND SAVE JSON =========
-    info_json = make_info_ds()
-    print(info_json)
-    with open("datasets/p2/final/info.p", "wb") as f:
-        pickle.dump(info_json, f)
+    # a_file = open("datasets/p2/final/merged_tv_shows_final.json", "w")
+    # json.dump(tv_shows, a_file)
     # a_file.close()
-    print("Made info json")
+    # print("Cleaned tv shows")
+
+    # # ======= MAKE INFO AND SAVE JSON =========
+    # info_json = make_info_ds()
+    # print(info_json)
+    # with open("datasets/p2/final/info.p", "wb") as f:
+    #     pickle.dump(info_json, f)
+    # # a_file.close()
+    # print("Made info json")
 
 
 if __name__ == "__main__":
