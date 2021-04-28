@@ -53,10 +53,15 @@ def genre_matrix_generator (genre_dict = genres, info="datasets/p2/merged_tv_sho
 
 genre_matrix = genre_matrix_generator()
 
+
+"""
+this part needs to be done live
+"""
+
 def genre_jacc_sim(genre_input, reverse_ind = "datasets/p2/tv_shows_to_index_final.json", info="datasets/p2/merged_tv_shows_final.json", 
                     genre_dict = genres, mat = genre_matrix ):
     """
-    given a list of desired genres , return a list of jaccard similarities with each show 
+    given a list of desired genres , return a dictionary of format {show:jaccard_similarity} sorted from most to least similar
     """
     
     ind = json.load(open(reverse_ind))
@@ -64,23 +69,25 @@ def genre_jacc_sim(genre_input, reverse_ind = "datasets/p2/tv_shows_to_index_fin
 
     and_count = 0
     or_count = 0
-    result = np.zeros((len(list(ind.keys()))))
+    result = {}
 
     
     for j in range(len(list(ind.keys()))):
+        show = list(ind.keys())[j]
         show_genres = show_info[j]["show_info"]["genre"]
         if len(show_genres) == 0:
-            result[j] = 0
+            result[show] = 0
         else:
             for genre in list(genre_dict.keys()):
                 if genre in show_genres or genre in genre_input:
                     or_count += 1
                     if genre in show_genres and genre in genre_input:
                         and_count += 1
-                result[j] = and_count/or_count 
-
-    #print(result)
-    return result
+                result[show] = and_count/or_count 
+    sortedResult = dict(
+        sorted(result.items(), key=lambda item: item[1], reverse=True))
+    #print(sortedResult)
+    return sortedResult
 
 #genre_jacc_sim(["Thriller", "Crime", "Drama"])
 
