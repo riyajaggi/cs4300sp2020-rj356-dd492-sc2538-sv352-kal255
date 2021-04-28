@@ -193,11 +193,11 @@ def make_info_ds():
         "streaming_platform_list": list(streaming_platform_dict.keys()),
         "genre_list": list(genre_dict.keys()),
         "content_rating_list": list(content_rating_dict.keys()),
-        "min_seasons": min([x for x in seasons_dict.keys() if x!=-1]),
+        "min_seasons": min([x for x in seasons_dict.keys() if x != -1]),
         "max_seasons": max(list(seasons_dict.keys())),
         "shows_count": count,
         "max_year": 2021,
-        "min_year": min([x for x in years_set if x!=-1]),
+        "min_year": min([x for x in years_set if x != -1]),
     }
     # print()
     # print(new_json)
@@ -314,18 +314,53 @@ def clean_genre():
         "1945",
         "1943",
         "1973",
+        "2005",
+        "Netflix",
+        "Free Services",
+        "Starz",
+        "Prime Video",
+        "HBO MAX",
+        "Hulu",
+        "Viceland",
+        "CBS All Access",
+        "Disney+",
+        "BritBox",
+        "Apple TV+",
+        "fuboTV",
+        "DC Universe",
+        "Hoopla",
+        "AcornTV",
+        "AMC",
+        "BET",
+        "TLC",
+        "Cinemax",
+        "NatGeo",
+        "MTV",
+        "Funimation",
+        "Disney",
+        "Food Network",
+        "Lifetime",
+        "FOX",
+        "Showtime",
+        "HBO",
+        "Comedy Central",
+        "HGTV",
+        "Bravo",
+        "VH1",
+        "A&E",
+        "BET+",
+        "Travel Channel",
+        "FYI",
     ]
     count = 0
-    for show in tv_shows:
-        if "show_info" and "show_title" not in show.keys():
-            print(show)
-            continue
+    for num in range(len(tv_shows)):
+        show = tv_shows[num]
         count += 1
         # print(show)
         # print()
         show_genre = show["show_info"]["genre"]
         show["show_info"]["genre"] = [x for x in show_genre if x not in genre_lst]
-        tv_shows[tv_shows_to_index[show["show_title"]]]["show_info"] = show["show_info"]
+        tv_shows[num]["show_info"] = show["show_info"]
     print(count)
     return tv_shows
 
@@ -403,6 +438,14 @@ def main():
     # # a_file.close()
     # print("Made info json")
 
+    # ======= CLEAN DESCRIPTIONS AND SAVE JSON =========
+    tv_shows = clean_genre()
+
+    a_file = open("datasets/p2/final/merged_tv_shows_final.json", "w")
+    json.dump(tv_shows, a_file)
+    a_file.close()
+    print("Cleaned tv shows")
+
     # ======= MAKE TV SHOWS INDEX AND SAVE JSON =========
     (tv_shows_to_index, index_to_tv_shows) = create_final_index()
 
@@ -413,14 +456,6 @@ def main():
     a_file = open("datasets/p2/final/tv_shows_to_index_final.json", "w")
     json.dump(tv_shows_to_index, a_file)
     a_file.close()
-
-    # ======= CLEAN DESCRIPTIONS AND SAVE JSON =========
-    # tv_shows = clean_genre()
-
-    # a_file = open("datasets/p2/final/merged_tv_shows_final.json", "w")
-    # json.dump(tv_shows, a_file)
-    # a_file.close()
-    # print("Cleaned tv shows")
 
     # # ======= MAKE INFO AND SAVE JSON =========
     info_json = make_info_ds()

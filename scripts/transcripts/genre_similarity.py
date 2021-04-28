@@ -1,6 +1,10 @@
 import json
 
-def possible_genres(mat = "datasets/p2/final/index_to_tv_shows_final.json", info = "/Users/siddhichordia/cs4300sp2020-rj356-dd492-sc2538-sv352-kal255-1/datasets/p2/final/merged_tv_shows_final.json"):
+
+def possible_genres(
+    mat="datasets/p2/final/index_to_tv_shows_final.json",
+    info="datasets/p2/final/merged_tv_shows_final.json",
+):
 
     """
     returns a dictionary of format {genre:count} where count is the number of shows that fall into the genre. only include genres that appear more than once.
@@ -23,5 +27,5 @@ def possible_genres(mat = "datasets/p2/final/index_to_tv_shows_final.json", info
     print(above_1)
     return above_1
 
-#possible_genres()
-    
+
+possible_genres()
