@@ -125,7 +125,7 @@ def make_info_ds():
     range of imdb rating, content rating, genre count, max and min seasons, min start date, max
     end date, max and min runtime and chart of that
     """
-    a_file = open("datasets/p2/merged_tv_shows3.json", "r")
+    a_file = open("datasets/p2/final/merged_tv_shows_final.json", "r")
     tv_shows = json.load(a_file)
 
     # streaming_platform_set = {} # dic with count
@@ -206,7 +206,7 @@ def make_info_ds():
 
 
 def create_final_index():
-    a_file = open("datasets/p2/merged_tv_shows2.json", "r")
+    a_file = open("datasets/p2/final/merged_tv_shows_final.json", "r")
     tv_shows = json.load(a_file)
 
     count = 0
@@ -324,7 +324,7 @@ def clean_genre():
         # print(show)
         # print()
         show_genre = show["show_info"]["genre"]
-        show["show_info"]["genre"] = [x for x in show_genre if x != ""]
+        show["show_info"]["genre"] = [x for x in show_genre if x not in genre_lst]
         tv_shows[tv_shows_to_index[show["show_title"]]]["show_info"] = show["show_info"]
     print(count)
     return tv_shows
@@ -375,12 +375,12 @@ def main():
     # a_file.close()
 
     # ======= MAKE REVIEWS AND SAVE JSON =========
-    reviews = make_reviews_ds()
+    # reviews = make_reviews_ds()
 
-    print(len(reviews))
-    a_file = open("datasets/p2/final/reviews2.json", "w")
-    json.dump(reviews, a_file)
-    a_file.close()
+    # print(len(reviews))
+    # a_file = open("datasets/p2/final/reviews2.json", "w")
+    # json.dump(reviews, a_file)
+    # a_file.close()
 
     # ======= PRINT SAMPLE OUTPUT =========
     # printing sample output
@@ -404,15 +404,15 @@ def main():
     # print("Made info json")
 
     # ======= MAKE TV SHOWS INDEX AND SAVE JSON =========
-    # (tv_shows_to_index, index_to_tv_shows) = create_final_index()
+    (tv_shows_to_index, index_to_tv_shows) = create_final_index()
 
-    # a_file = open("datasets/p2/index_to_tv_shows.json", "w")
-    # json.dump(index_to_tv_shows, a_file)
-    # a_file.close()
+    a_file = open("datasets/p2/final/index_to_tv_shows_final.json", "w")
+    json.dump(index_to_tv_shows, a_file)
+    a_file.close()
 
-    # a_file = open("datasets/p2/tv_shows_to_index.json", "w")
-    # json.dump(tv_shows_to_index, a_file)
-    # a_file.close()
+    a_file = open("datasets/p2/final/tv_shows_to_index_final.json", "w")
+    json.dump(tv_shows_to_index, a_file)
+    a_file.close()
 
     # ======= CLEAN DESCRIPTIONS AND SAVE JSON =========
     # tv_shows = clean_genre()
@@ -423,12 +423,12 @@ def main():
     # print("Cleaned tv shows")
 
     # # ======= MAKE INFO AND SAVE JSON =========
-    # info_json = make_info_ds()
-    # print(info_json)
-    # with open("datasets/p2/final/info.p", "wb") as f:
-    #     pickle.dump(info_json, f)
-    # # a_file.close()
-    # print("Made info json")
+    info_json = make_info_ds()
+    print(info_json)
+    with open("datasets/p2/final/info.p", "wb") as f:
+        pickle.dump(info_json, f)
+    # a_file.close()
+    print("Made info json")
 
 
 if __name__ == "__main__":
