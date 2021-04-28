@@ -56,7 +56,7 @@ def edit_dist(query, show):
     return a[(len(query), len(show))]
 
 
-def edit_search(input, shows, data='datasets/kaggle_data.csv'):
+def edit_search(query, data='datasets/kaggle_data.csv'):
     df = pd.read_csv(data, usecols=['Title'])
 
     # print(df)
@@ -65,14 +65,19 @@ def edit_search(input, shows, data='datasets/kaggle_data.csv'):
 
     # print(row[1])
     a = df.to_dict()
-    print(a['Title'][0])
+    # print(a['Title'][0])
 
     ans = []
-    for x in msgs:
-        a = edit_distance(query, x['text'])
-        ans.append((a, x))
+    for x in range(len(a['Title'])):
+        b = edit_dist(query, a['Title'][x])
+        ans.append((b, a['Title'][x]))
     ans.sort(key=lambda tup: tup[0])
-    return ans
+    # top_10 =[]
+    # for y in ans:
+
+    return ans[:10]
 
 
 #print(edit_dist('hell', 'Hall'))
+
+print(edit_search('braking bad'))
