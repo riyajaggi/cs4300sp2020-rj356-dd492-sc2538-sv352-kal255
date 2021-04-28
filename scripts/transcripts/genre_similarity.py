@@ -2,8 +2,8 @@ import json
 
 
 def possible_genres(
-    mat="datasets/p2/final/index_to_tv_shows_final.json",
-    info="datasets/p2/final/merged_tv_shows_final.json",
+    mat="datasets/p2/index_to_tv_shows_final.json",
+    info="datasets/p2/merged_tv_shows_final.json",
 ):
 
     """
