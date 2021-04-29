@@ -194,17 +194,17 @@ def find_n_similar_shows_reviews(show, n):
     return None
 
 # TESTS FOR REVIEWS SIMILARITY
-test_twd = find_n_similar_shows_reviews("The Walking Dead", 10)
-print(test_twd)
-test_twd_lowercase = find_n_similar_shows_reviews("the walking dead", 3)
-print(test_twd_lowercase)
-test_sherlock = find_n_similar_shows_reviews("Sherlock", 10)
-print(test_sherlock)
-test_shameless = find_n_similar_shows_reviews("shameless", 10)
-print(test_shameless)
-test_outlander = find_n_similar_shows_reviews("outlander", 4)
-print(test_outlander)
-test_show_no_reviews = find_n_similar_shows_reviews("askdfjl", 3)
-print(test_show_no_reviews)
+# test_twd = find_n_similar_shows_reviews("The Walking Dead", 10)
+# print(test_twd)
+# test_twd_lowercase = find_n_similar_shows_reviews("the walking dead", 3)
+# print(test_twd_lowercase)
+# test_sherlock = find_n_similar_shows_reviews("Sherlock", 10)
+# print(test_sherlock)
+# test_shameless = find_n_similar_shows_reviews("shameless", 10)
+# print(test_shameless)
+# test_outlander = find_n_similar_shows_reviews("outlander", 4)
+# print(test_outlander)
+# test_show_no_reviews = find_n_similar_shows_reviews("askdfjl", 3)
+# print(test_show_no_reviews)
 
 
