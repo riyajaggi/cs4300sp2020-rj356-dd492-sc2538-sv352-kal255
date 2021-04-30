@@ -6,9 +6,9 @@ import cosine_similarity
 with open('./datasets/p2/tv_shows_reviews_description.json') as tv_shows_reviews_description_file:
   tv_shows_reviews_description = json.load(tv_shows_reviews_description_file)
 with open('./datasets/p2/tv_shows_to_index_final.json') as tv_shows_to_index_file:
-    tv_show_to_index = json.load(tv_shows_to_index_file)
+  tv_show_to_index = json.load(tv_shows_to_index_file)
 with open('./datasets/p2/index_to_tv_shows_final.json') as index_to_tv_show_file:
-    index_to_tv_show = json.load(index_to_tv_show_file)
+  index_to_tv_show = json.load(index_to_tv_show_file)
 
 def build_inverted_index(reviews_description_dict):
   """
