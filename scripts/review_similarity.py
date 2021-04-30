@@ -26,7 +26,8 @@ def tokenize(review):
 
 def build_inverted_index(reviews_dict):
   """
-  Returns: A dictionary of word-idf key-value pairs.
+  Returns: An inverted index represented by a dict with words as keys and show
+  index-tf dictionaries as values
 
   Parameter reviews_dict: a dictionary with info about reviews
   Precondtion: review dictionary
