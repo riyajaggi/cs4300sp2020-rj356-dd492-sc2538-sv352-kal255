@@ -1,7 +1,7 @@
 import json
-import re
 from collections import Counter
 import math
+import cosine_similarity
 
 with open('./datasets/p2/reviews1.json') as review1_file:
   review1 = json.load(review1_file)
@@ -37,16 +37,6 @@ for tv_show in tv_show_info:
 # print(tv_shows_reviews_description['insecure'])
 # print(tv_shows_reviews_description['chernobyl'])
 
-def tokenize(review):
-  """
-  Returns a list of tokens of the given reviews
-
-  Parameter review: a review for a tv show
-  Precondition: a non-empty string
-  """
-  text = review.lower()
-  regex = r'[a-z]+'
-  return re.findall(regex, text)
 
 def build_inverted_index(reviews_description_dict):
   """
@@ -62,10 +52,10 @@ def build_inverted_index(reviews_description_dict):
   for show in reviews_description_dict:
     show_info = reviews_description_dict[show]
     index = tv_show_to_index[show]
-    all_tokens = tokenize(show_info['description'])
+    all_tokens = cosine_similarity.tokenize(show_info['description'])
     show_reviews = show_info['reviews']
     for review in show_reviews:
-          all_tokens += tokenize(review)
+          all_tokens += cosine_similarity.tokenize(review)
     count_dict = Counter(all_tokens)
     for word, count in count_dict.items():
         if word in result.keys():
@@ -85,65 +75,10 @@ def build_inverted_index(reviews_description_dict):
 # print(inverted_index['zombie'])
 # print(inverted_index['smart'])
 
-def compute_idf(index, n_shows, min_df=15, max_df_ratio=0.90):
-  """
-  Returns: A dictionary of word-idf key-value pairs.
-
-  Parameter index: inverted index
-  Precondition: dictionary with words as keys and show-tf tuples as values
-    
-  Parameter n_shows: the number of tv shows
-  Precondition: An integer 
-
-  Parameter min_df: the minimum show frequency
-  Precondition: integer
-
-  Parameter max_df_ratio: the max percentage of show a word can appear in
-  Precondition: number between and 0 and 1
-  """  
-  idf = {}
-  
-  for word, shows in index.items():
-      df = len(shows)
-      df_ratio = df / n_shows
-      if df > min_df and df_ratio < max_df_ratio:
-          value = math.log(n_shows/(1 + df), 2)
-          idf[word] = value
-  
-  return idf
-
-# TESTS FOR IDF
-# print(len(tv_shows_reviews_description))
-# print(idf_dict["zombie"])
-
-def compute_show_norms(index, idf, n_shows):
-  """
-  Returns: A list of norms for each show
-
-  Parameter index: inverted index
-  Precondition: dictionary with words as keys and show-tf tuples as values
-
-  Parameter idf: computed idf values
-  Precondition: dictionary with words as keys and idf as values
-
-  Parameter n_shows: the number of tv shows
-  Precondition: integer 
-  """  
-  norms = [0] * n_shows
-
-  for word, idf in idf.items():
-      for show_id, tf in index[word].items():
-          norms[show_id] += (tf * idf)**2
-  for i in range(n_shows):
-      norms[i] = math.sqrt(norms[i])
-      
-  return norms
-
 inverted_index = build_inverted_index(tv_shows_reviews_description)
-idf_dict = compute_idf(inverted_index, len(index_to_tv_show))
-show_norms = compute_show_norms(inverted_index, idf_dict, len(index_to_tv_show))
+idf_dict = cosine_similarity.compute_idf(inverted_index, len(index_to_tv_show))
+show_norms = cosine_similarity.compute_show_norms(inverted_index, idf_dict, len(index_to_tv_show))
 inverted_index = {key: val for key, val in inverted_index.items() if key in idf_dict}
-
 
 def index_search(query, index, idf, show_norms):
   """
@@ -166,7 +101,7 @@ def index_search(query, index, idf, show_norms):
   result = []
   numerators = {}
   lowercase_query = query.lower()
-  tokenized_query = tokenize(lowercase_query)
+  tokenized_query = cosine_similarity.tokenize(lowercase_query)
   query_tfs = Counter(tokenized_query)
   query_norm = 0
   for token, tf in query_tfs.items():
