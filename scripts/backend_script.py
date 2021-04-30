@@ -2,6 +2,7 @@ import re
 import os
 import numpy as np
 import json
+import pickle
 
 def jaccardRanking(show, N=3):
     """
@@ -29,3 +30,19 @@ def jaccardRanking(show, N=3):
 
 # jaccardRanking ("Friends", 3)
 # print(jaccardRanking("Criminal Minds"))
+
+def descriptionRanking(show, N = 3):
+    """
+    Returns a ranked list of shows and their cosine similarity scores
+
+    Parameters: 
+    show - name of tv show to search for (string)
+    N - number of shows returned (int)
+    """
+
+    description_dict = pickle.load( open( "datasets/p2/description_similarity.p", "rb" ) )
+    description_dict = {k.lower():v for k, v in description_dict.items()}
+
+    result = description_dict[show.lower()][:N]
+
+    return result

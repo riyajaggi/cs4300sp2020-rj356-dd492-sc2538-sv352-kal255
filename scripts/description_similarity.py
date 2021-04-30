@@ -133,7 +133,7 @@ def make_descriptions_model():
         print(show + " " + str(index))
     with open("datasets/p2/description_similarity.p", "wb") as f:
         pickle.dump(descriptions_dict, f)
-    print(descriptions_dict)
+    # print(descriptions_dict)
     print("END OF SCRIPT")
 
 make_descriptions_model()
