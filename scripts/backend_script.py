@@ -102,7 +102,6 @@ def final_search(query_show, n,  free_search=None, genre=None, ):
             tv_sim_score_sum[show] = weights['descriptions'] * score * 100
 
     tv_sim_score_sum = {k: v for k, v in sorted(tv_sim_score_sum.items(), key=lambda item: -item[1])}
-    print(tv_sim_score_sum)
     index = 0
     for key, _ in tv_sim_score_sum.items():
         results.append(key)
