@@ -144,13 +144,13 @@ def final_search(query_show, n, free_search=None, genre=None):
     return results
 
 # TESTS
-the_walking_dead_results = final_search("The Walking Dead", 10)
-print(the_walking_dead_results)
-sherlock_results = final_search("Sherlock", 10, "dogs")
-print(sherlock_results)
-its_always_sunny_results = final_search("It's Always Sunny in Philadephia", 10) # no reviews, no description, no transcripts in transcript2
-print(its_always_sunny_results) 
-insecure_results = final_search("insecure", 10, "Los Angeles")
-print(insecure_results)
+# the_walking_dead_results = final_search("The Walking Dead", 10)
+# print(the_walking_dead_results)
+# sherlock_results = final_search("Sherlock", 10, "dogs")
+# print(sherlock_results)
+# its_always_sunny_results = final_search("It's Always Sunny in Philadephia", 10) # no reviews, no description, no transcripts in transcript2
+# print(its_always_sunny_results) 
+# insecure_results = final_search("insecure", 10, "Los Angeles")
+# print(insecure_results)
 
 
