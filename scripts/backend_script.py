@@ -14,6 +14,9 @@ def jaccardRanking(show, N=3):
 
     with open("shows_lst.txt", "r") as json_file:
         shows = json.load(json_file)
+    
+    if not show in shows:
+        return [] 
 
     showInd = shows.index(show)
     scores = jaccSimMat[showInd]
@@ -45,6 +48,8 @@ def descriptionRanking(show, N = 3):
     description_dict = pickle.load( open( "datasets/p2/description_similarity.p", "rb" ) )
     description_dict = {k.lower():v for k, v in description_dict.items()}
 
+    if show.lower() not in description_dict:
+        return []
     result = description_dict[show.lower()][:N]
 
     return result
@@ -56,8 +61,8 @@ def final_search(query_show, n,  free_search=None, genre=None, ):
 
     weights = {
         'transcripts' : .20 ,
-        'reviews' : .50,
-        'descriptions' : .30,
+        'reviews' : .40,
+        'descriptions' : .40,
         'genre' : 0,
         'free search' : 0,
     }
@@ -66,22 +71,34 @@ def final_search(query_show, n,  free_search=None, genre=None, ):
     tv_sim_score_sum = {}
     transcripts_ranking = jaccardRanking(query_show, n) # list of tv shows
     reviews_ranking = review_similarity.find_n_similar_shows_reviews(query_show, n*2) # list of tv shows and sim scores
+    if reviews_ranking is None:
+        reviews_ranking = []
     desc_ranking = descriptionRanking(query_show, 10)
     free_search_ranking = []
     if free_search is not None:
         free_search_ranking = adhoc_similarity.find_n_similar_shows_free_search(free_search, n*2) # list of tv shows and sim scores
-        weights['transcripts'] = .15
-        weights['reviews'] = .30
-        weights['descriptions'] = .25
+        weights['transcripts'] = weights['transcripts'] - .05
+        weights['reviews'] =  weights['reviews'] - .2
+        weights['descriptions'] = weights['descriptions'] - .05
         weights['free search'] = .30
         for show, score in free_search_ranking:
             if show in tv_sim_score_sum:
                 tv_sim_score_sum[show] += weights['free search'] * score * 100
             else:
                 tv_sim_score_sum[show] = weights['free search'] * score * 100
-    genre_search_ranking = []
+    # genre_search_ranking = []
     # if genre is not None:
-    #     # genre_ranking =   
+    #   genre_ranking =   
+        # weights['transcripts'] = weights['transcripts'] - .05
+        # weights['reviews'] =  weights['reviews'] - .05
+        # weights['descriptions'] = weights['descriptions'] - .05
+        # weights['free search'] = weights['free search'] - .05
+        # weights['genre'] = .2
+        # for show, score in genre_ranking:
+        #     if show in tv_sim_score_sum:
+        #         tv_sim_score_sum[show] += weights['genre'] * score * 100
+        #     else:
+        #         tv_sim_score_sum[show] = weights['genre'] * score * 100
     
     for i in range(len(transcripts_ranking)):
         show = transcripts_ranking[i]
@@ -110,9 +127,14 @@ def final_search(query_show, n,  free_search=None, genre=None, ):
             break
     return results
 
+# TESTS
 the_walking_dead_results = final_search("The Walking Dead", 10)
 print(the_walking_dead_results)
-the_walking_dead_results = final_search("Sherlock", 10, "dogs")
-print(the_walking_dead_results)
+sherlock_results = final_search("Sherlock", 10, "dogs")
+print(sherlock_results)
+its_always_sunny_results = final_search("It's Always Sunny in Philadephia", 10) # no reviews, no description, no transcripts in transcript2
+print(its_always_sunny_results) 
+insecure_results = final_search("insecure", 10, "Los Angeles")
+print(insecure_results)
 
 
