@@ -55,8 +55,24 @@ def descriptionRanking(show, N = 3):
     return result
 
 
-def final_search(query_show, n,  free_search=None, genre=None, ):
+def final_search(query_show, n, free_search=None, genre=None):
     """
+    Returns: A ranked list of similar shows based on reviews, descriptions, 
+    transcripts,and other optional arguments.
+
+    Parameter query_show: the given show
+    Precondition: a non-empty string
+
+    Parameter n: the number of similar shows to output
+    Precondition: an integer
+
+    (Optional) Parameter free_search: a query with extra information to include 
+    in the search 
+    Precondition: (Default is None) None or non-empty string
+
+    (Optional) Parameter genre: a query genre 
+    Precondition: (Default is None) None or non-empty string representation of 
+    a valid genres
     """
 
     weights = {
