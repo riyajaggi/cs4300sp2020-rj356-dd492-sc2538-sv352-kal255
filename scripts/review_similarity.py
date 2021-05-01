@@ -16,6 +16,13 @@ reviews_info = dict((k.lower(), v) for k, v in reviews_info.items())
 shows_with_reviews = list(reviews_info.keys())
 for i in range(len(shows_with_reviews)):
   shows_with_reviews[i] = shows_with_reviews[i].lower()
+with open('./datasets/p2/tv_shows_to_index_final.json') as tv_shows_to_index_file:
+  tv_show_to_index = json.load(tv_shows_to_index_file)
+  lower_show_to_index = {}
+  for show, index in tv_show_to_index.items():
+    lower_show_to_index[show.lower()] = index
+with open('./datasets/p2/index_to_tv_shows_final.json') as index_to_tv_show_file:
+  index_to_tv_show = json.load(index_to_tv_show_file)
 
 def build_inverted_index(reviews_dict):
   """
@@ -24,25 +31,27 @@ def build_inverted_index(reviews_dict):
 
   Parameter reviews_dict: a dictionary with info about reviews
   Precondtion: review dictionary
-  """  
-  result = {}
-  index = 0
+  """    
 
+  result = {}
+  
   for show in reviews_dict:
     show_reviews = reviews_dict[show]
-    for review in show_reviews:
-          tokenized_review = cosine_similarity.tokenize(show_reviews[review]['review_content'])
-          count_dict = Counter(tokenized_review)
-          for word, count in count_dict.items():
-              if word in result.keys():
-                if index in result[word].keys():
-                  result[word][index] += count
+    if show.lower() in lower_show_to_index:
+      index = lower_show_to_index[show]
+      for review in show_reviews:
+            tokenized_review = cosine_similarity.tokenize(show_reviews[review]['review_content'])
+            count_dict = Counter(tokenized_review)
+            for word, count in count_dict.items():
+                if word in result.keys():
+                  if index in result[word].keys():
+                    result[word][index] += count
+                  else:
+                    result[word][index] = count
                 else:
-                  result[word][index] = count
-              else:
-                  result[word] = { index : count }
-          count_dict = {}
-    index += 1
+                    result[word] = { index : count }
+            count_dict = {}
+      index += 1
         
   return result
 
@@ -53,9 +62,10 @@ def build_inverted_index(reviews_dict):
 # print(inverted_index['smart'])
 
 inverted_index = build_inverted_index(reviews_info)
-idf_dict = cosine_similarity.compute_idf(inverted_index, len(shows_with_reviews))
-show_norms = cosine_similarity.compute_show_norms(inverted_index, idf_dict, len(shows_with_reviews))
-inverted_index = {key: val for key, val in inverted_index.items() if key in idf_dict}
+idf_dict = cosine_similarity.compute_idf(inverted_index, len(index_to_tv_show))
+show_norms = cosine_similarity.compute_show_norms(inverted_index, idf_dict, len(index_to_tv_show))
+if inverted_index is not None:
+  inverted_index = {key: val for key, val in inverted_index.items() if key in idf_dict}
 
 
 def index_search(query_show, index, idf, show_norms):
@@ -75,7 +85,6 @@ def index_search(query_show, index, idf, show_norms):
   Parameter: computed norms for every show
   Precondition: list with length of the number of shows with reviews
   """  
-
   result = []
   numerators = {}
   lowercase_query = query_show.lower()
@@ -126,9 +135,12 @@ def find_n_similar_shows_reviews(show, n):
   """
   if show.lower() in shows_with_reviews:
     results = index_search(show.lower(), inverted_index, idf_dict, show_norms)
+    if results is None:
+      print("Couldn't find results for " + show + ".")
+      return None
     final_show_list  = []
     for i in range(1,n+1):
-      final_show_list.append((shows_with_reviews[results[i][1]], results[i][0]))
+      final_show_list.append((index_to_tv_show[str(results[i][1])], results[i][0]))
     return final_show_list
   else:
     return None
@@ -140,7 +152,7 @@ def find_n_similar_shows_reviews(show, n):
 # print(test_twd_lowercase)
 # test_sherlock = find_n_similar_shows_reviews("Sherlock", 10)
 # print(test_sherlock)
-# test_shameless = find_n_similar_shows_reviews("shameless", 10)
+# test_shameless = find_n_similar_shows_reviews("shameless", 5)
 # print(test_shameless)
 # test_outlander = find_n_similar_shows_reviews("outlander", 4)
 # print(test_outlander)
