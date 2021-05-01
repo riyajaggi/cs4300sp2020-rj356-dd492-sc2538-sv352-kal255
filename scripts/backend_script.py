@@ -169,5 +169,3 @@ def final_search(query_show, n, free_search=None, genre=None):
 # print(its_always_sunny_results) 
 # insecure_results = final_search("insecure", 10, "Los Angeles")
 # print(insecure_results)
-
-
