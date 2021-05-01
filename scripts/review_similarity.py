@@ -2,6 +2,10 @@ import json
 from collections import Counter
 import math
 import cosine_similarity
+import pickle
+
+with open('./datasets/p2/tv_shows_to_index_final.json') as a_file:
+  tv_shows_to_index = json.load(a_file)
 
 with open('./datasets/p2/reviews1.json') as review1_file:
   review1 = json.load(review1_file)
@@ -127,7 +131,6 @@ def find_n_similar_shows_reviews(show, n):
       final_show_list.append((shows_with_reviews[results[i][1]], results[i][0]))
     return final_show_list
   else:
-    print( show + " does not have any reviews.")
     return None
 
 # TESTS FOR REVIEWS SIMILARITY
@@ -145,3 +148,21 @@ def find_n_similar_shows_reviews(show, n):
 # print(test_show_no_reviews)
 
 
+def make_reviews_model():
+    print("START OF SCRIPT")
+    reviews_dict = {}
+    for show, index in tv_shows_to_index.items():
+        lst = find_n_similar_shows_reviews(show, 10)
+        if lst is not None:
+            reviews_dict[show] = lst
+        else:
+            reviews_dict[show] = []
+        print(show + " " + str(index))
+    # a_file = open("datasets/p2/review_similarity.json", "w")
+    # json.dump(reviews_dict, a_file)
+    with open("datasets/p2/review_similarity.p", "wb") as f:
+      pickle.dump(reviews_dict, f)
+    # print(descriptions_dict)
+    print("END OF SCRIPT")
+
+make_reviews_model()

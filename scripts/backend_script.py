@@ -46,3 +46,21 @@ def descriptionRanking(show, N = 3):
     result = description_dict[show.lower()][:N]
 
     return result
+
+
+def reviewRanking(show, N = 3):
+    """
+    Returns a ranked list of shows and their cosine similarity scores
+
+    Parameters: 
+    show - name of tv show to search for (string)
+    N - number of shows returned (int)
+    """
+
+    review_dict = pickle.load( open( "datasets/p2/review_similarity.p", "rb" ) )
+    review_dict = {k.lower():v for k, v in review_dict.items()}
+
+    result = review_dict[show.lower()][:N]
+
+    return result
+
