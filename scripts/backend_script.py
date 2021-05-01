@@ -2,8 +2,7 @@ import re
 import os
 import numpy as np
 import json
-import review_similarity
-import adhoc_similarity
+import scripts.adhoc_similarity as adhoc_similarity
 import pickle
 
 def jaccardRanking(show, N=3):
@@ -67,6 +66,9 @@ def reviewRanking(show, N = 3):
     review_dict = pickle.load( open( "datasets/p2/review_similarity.p", "rb" ) )
     review_dict = {k.lower():v for k, v in review_dict.items()}
 
+    if not show in review_dict:
+        return [] 
+
     result = review_dict[show.lower()][:N]
 
     return result
@@ -103,7 +105,7 @@ def final_search(query_show, n, free_search=None, genre=None):
     results = []
     tv_sim_score_sum = {}
     transcripts_ranking = jaccardRanking(query_show, n) # list of tv shows
-    reviews_ranking = review_similarity.find_n_similar_shows_reviews(query_show, n*2) # list of tv shows and sim scores
+    reviews_ranking = reviewRanking(query_show, 10) # list of tv shows and sim scores
     if reviews_ranking is None:
         reviews_ranking = []
     desc_ranking = descriptionRanking(query_show, 10)
