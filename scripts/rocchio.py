@@ -182,7 +182,7 @@ def rankings_with_rocchio(input_queries, query_obj, input_doc_mat, \
     return ret
 
 def main():
-    with open("test.json") as f:
+    with open("relevance.json") as f:
         query_obj = json.load(f)
     f.close()
     with open("index.json") as i:
@@ -190,8 +190,9 @@ def main():
         movie_name_to_index = temp['movie_name_to_index']
         movie_index_to_name = temp['movie_index_to_name']
     i.close()
+    print(movie_name_to_index)
     tfidf_mat = np.load('input_doc_mat.npy')
-    results = rankings_with_rocchio(["Sherlock"], query_obj, tfidf_mat, movie_name_to_index, \
+    results = rankings_with_rocchio(["Fresh Off the Boat"], query_obj, tfidf_mat, movie_name_to_index, \
                 movie_index_to_name)
     print(results)
 
