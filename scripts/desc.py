@@ -8,8 +8,9 @@ def des(shows):
     descript = json.load(open("datasets/p2/tv_shows_reviews_description.json"))
 
     for x in shows:
-        d = descript[x]['description']
-        stuff.append(d)
+        if x in descript:
+            d = descript[x]['description']
+            stuff.append(d)
     return stuff
 
 
