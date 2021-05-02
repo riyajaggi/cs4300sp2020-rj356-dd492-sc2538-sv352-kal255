@@ -2,9 +2,9 @@ import re
 import os
 import numpy as np
 import json
-import adhoc_similarity as adhoc_similarity
+import scripts.adhoc_similarity as adhoc_similarity
 import pickle
-import edit_distance as ed
+import scripts.edit_distance as ed
 
 def jaccardRanking(show, N=3):
     """
