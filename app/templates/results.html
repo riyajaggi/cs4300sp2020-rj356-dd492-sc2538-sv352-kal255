@@ -11,8 +11,8 @@
     stream<span id="title" style="color: #5680E9;">On </span>
   </h1>
   <br>
+  {% for x in range(len(data)) %}
   <div class="form-group">
-    {% for x in range(len(data)) %}
     <br>
     <br>
     <p id="ans" style="text-align: center;
@@ -25,7 +25,6 @@
     color: black;">
         {{descr[x]}}
       </div>
-    {% endfor %}
     <!-- <div id="box2">
       god
     </div>
@@ -33,6 +32,7 @@
       me
     </div> -->
   </div>
+  {% endfor %}
 
 
 
