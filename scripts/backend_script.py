@@ -2,8 +2,9 @@ import re
 import os
 import numpy as np
 import json
-import scripts.adhoc_similarity as adhoc_similarity
+import adhoc_similarity as adhoc_similarity
 import pickle
+import edit_distance as ed
 
 def jaccardRanking(show, N=3):
     """
@@ -47,8 +48,9 @@ def descriptionRanking(show, N = 3):
     description_dict = pickle.load( open( "datasets/p2/description_similarity.p", "rb" ) )
     description_dict = {k.lower():v for k, v in description_dict.items()}
 
-    if show.lower() not in description_dict:
+    if show.lower() not in list(description_dict.keys()):
         return []
+
     result = description_dict[show.lower()][:N]
 
     return result
@@ -64,15 +66,19 @@ def reviewRanking(show, N = 3):
     """
 
     review_dict = pickle.load( open( "datasets/p2/review_similarity.p", "rb" ) )
-    review_dict = {k.lower():v for k, v in review_dict.items()}
-
-    if not show in review_dict:
+    # print(review_dict)
+    review_dict = {k:v for k, v in review_dict.items()}
+    # print()
+    # print(review_dict)
+    # print(show)
+    if show.lower() not in list(review_dict.keys()):
         return [] 
 
     result = review_dict[show.lower()][:N]
 
     return result
 
+# print(reviewRanking("friends"))
     
 def final_search(query_show, n, free_search=None, genre=None):
     """
@@ -101,6 +107,7 @@ def final_search(query_show, n, free_search=None, genre=None):
         'genre' : 0,
         'free search' : 0,
     }
+    query_show = ed.edit_search(query_show)[0][1] # rn it does edit distance on everything, we want only on the shows that are not in the index json
 
     results = []
     tv_sim_score_sum = {}
@@ -163,8 +170,8 @@ def final_search(query_show, n, free_search=None, genre=None):
     return results
 
 # TESTS
-# the_walking_dead_results = final_search("The Walking Dead", 10)
-# print(the_walking_dead_results)
+the_walking_dead_results = final_search("The Walking Dead", 10)
+print(the_walking_dead_results)
 # sherlock_results = final_search("Sherlock", 10, "dogs")
 # print(sherlock_results)
 # its_always_sunny_results = final_search("It's Always Sunny in Philadephia", 10) # no reviews, no description, no transcripts in transcript2

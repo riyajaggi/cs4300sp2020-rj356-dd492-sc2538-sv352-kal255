@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import json
 
 
 def insertion_cost(message, j):
@@ -56,28 +57,31 @@ def edit_dist(query, show):
     return a[(len(query), len(show))]
 
 
-def edit_search(query, data='datasets/kaggle_data.csv'):
-    df = pd.read_csv(data, usecols=['Title'])
+def edit_search(query, data='datasets/p2/tv_shows_to_index_final.json'):
+    # df = pd.read_csv(data, usecols=['Title'])
 
     # print(df)
 
     # for row in df.iterrows():
 
     # print(row[1])
-    a = df.to_dict()
+    # a = df.to_dict()
     # print(a['Title'][0])
+    a_file = open(data, "r")
+    a = json.load(a_file)
+    a = list(a.keys())
 
     ans = []
-    for x in range(len(a['Title'])):
-        b = edit_dist(query, a['Title'][x])
-        ans.append((b, a['Title'][x]))
+    for x in range(len(a)):
+        b = edit_dist(query, a[x])
+        ans.append((b, a[x]))
     ans.sort(key=lambda tup: tup[0])
     # top_10 =[]
     # for y in ans:
+    # print(ans[:10])
+    return ans[:10] # for now just the first result
 
-    return ans[:10]
 
+# print(edit_dist('hell', 'Hall'))
 
-#print(edit_dist('hell', 'Hall'))
-
-print(edit_search('braking bad'))
+# print(edit_search('braking bad'))
