@@ -178,3 +178,6 @@ print(the_walking_dead_results)
 # print(its_always_sunny_results) 
 # insecure_results = final_search("insecure", 10, "Los Angeles")
 # print(insecure_results)
+
+# test2 = final_search("Sherlock", 10, genre="Animation")
+# print(test2)
