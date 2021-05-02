@@ -20,8 +20,9 @@ def search():
         genre_list = ''
     else:
         output_message = "Your results for " + query
-        data = jaccardRanking(query)
-        genre_list = genre_jacc_sim(genre)
+        # data = jaccardRanking(query)
+        # genre_list = genre_jacc_sim(genre)
+        data = final_search(query, genre)
         descript = des(data)
         return render_template('results.html', descr=descript, data=data)
 
