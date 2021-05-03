@@ -10,36 +10,36 @@ with open('./datasets/p2/tv_shows_to_index_final.json') as tv_shows_to_index_fil
 with open('./datasets/p2/index_to_tv_shows_final.json') as index_to_tv_show_file:
   index_to_tv_show = json.load(index_to_tv_show_file)
 
-def build_inverted_index(reviews_description_dict):
-  """
-  Returns: An inverted index represented by a dict with words as keys and show
-  index-tf dictionaries as values
+# def build_inverted_index(reviews_description_dict):
+#   """
+#   Returns: An inverted index represented by a dict with words as keys and show
+#   index-tf dictionaries as values
 
-  Parameter reviews_description_dict: a dictionary with info about reviews 
-  and descriptions
-  Precondtion: review dictionary
-  """  
-  result = {}
+#   Parameter reviews_description_dict: a dictionary with info about reviews 
+#   and descriptions
+#   Precondtion: review dictionary
+#   """  
+#   result = {}
 
-  for show in reviews_description_dict:
-    show_info = reviews_description_dict[show]
-    index = tv_show_to_index[show]
-    all_tokens = cosine_similarity.tokenize(show_info['description'])
-    show_reviews = show_info['reviews']
-    for review in show_reviews:
-          all_tokens += cosine_similarity.tokenize(review)
-    count_dict = Counter(all_tokens)
-    for word, count in count_dict.items():
-        if word in result.keys():
-          if index in result[word].keys():
-            result[word][index] += count
-          else:
-            result[word][index] = count
-        else:
-            result[word] = { index : count }
-    count_dict = {}
+#   for show in reviews_description_dict:
+#     show_info = reviews_description_dict[show]
+#     index = tv_show_to_index[show]
+#     all_tokens = cosine_similarity.tokenize(show_info['description'])
+#     show_reviews = show_info['reviews']
+#     for review in show_reviews:
+#           all_tokens += cosine_similarity.tokenize(review)
+#     count_dict = Counter(all_tokens)
+#     for word, count in count_dict.items():
+#         if word in result.keys():
+#           if index in result[word].keys():
+#             result[word][index] += count
+#           else:
+#             result[word][index] = count
+#         else:
+#             result[word] = { index : count }
+#     count_dict = {}
         
-  return result
+#   return result
 
 # TESTS FOR INVERTED INDEX
 # print(tv_shows_reviews_description['the walking dead'])
@@ -47,10 +47,27 @@ def build_inverted_index(reviews_description_dict):
 # print(inverted_index['zombie'])
 # print(inverted_index['smart'])
 
-inverted_index = build_inverted_index(tv_shows_reviews_description)
-idf_dict = cosine_similarity.compute_idf(inverted_index, len(index_to_tv_show))
-show_norms = cosine_similarity.compute_show_norms(inverted_index, idf_dict, len(index_to_tv_show))
-inverted_index = {key: val for key, val in inverted_index.items() if key in idf_dict}
+# inverted_index = build_inverted_index(tv_shows_reviews_description)
+# idf_dict = cosine_similarity.compute_idf(inverted_index, len(index_to_tv_show))
+# show_norms = cosine_similarity.compute_show_norms(inverted_index, idf_dict, len(index_to_tv_show))
+# inverted_index = {key: val for key, val in inverted_index.items() if key in idf_dict}
+
+# SAVING DATA AS JSON AFTER RUNNING LOCALLY
+# a_file = open("datasets/p2/adhoc_inverted_index.json", "w")
+# json.dump(inverted_index, a_file)
+# b_file = open("datasets/p2/adhoc_show_norms.json", "w")
+# json.dump(show_norms, b_file)
+# c_file = open("datasets/p2/adhoc_idf_dict.json", "w")
+# json.dump(idf_dict, c_file)
+
+# LOADING SAVED JSON
+# with open('./datasets/p2/adhoc_inverted_index.json') as a_file:
+#   inverted_index = json.load(a_file)
+# with open('./datasets/p2/adhoc_show_norms.json') as b_file:
+#   show_norms = json.load(b_file)
+# with open('./datasets/p2/adhoc_idf_dict.json') as c_file:
+#   idf_dict = json.load(c_file)
+
 
 def index_search(query, index, idf, show_norms):
   """
@@ -91,8 +108,9 @@ def index_search(query, index, idf, show_norms):
                     numerators[show] += numerator
                 else:
                     numerators[show] = numerator
+  # print(numerators)
   for show, numerator in numerators.items():
-      denominator = query_norm * show_norms[show]
+      denominator = query_norm * show_norms[int(show)]
       score = numerator / denominator
       result.append((score, show))
   
@@ -124,11 +142,16 @@ def find_n_similar_shows_free_search(query, n):
 # TESTS FOR FREE SEARCH
 # test_anthology = find_n_similar_shows_free_search("anthology", 10)
 # print(test_anthology)
+# print()
 # test_dogs = find_n_similar_shows_free_search("dogs", 10)
 # print(test_dogs)
+# print()
 # test_cars = find_n_similar_shows_free_search("i really like cars", 10)
 # print(test_cars)
+# print()
 # test_school = find_n_similar_shows_free_search("school is hard", 10)
 # print(test_school)
+# print()
 # test_funny = find_n_similar_shows_free_search("funny work", 10)
 # print(test_funny)
+# print()
