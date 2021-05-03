@@ -21,8 +21,7 @@ def jaccardRanking(show, N=3):
     showInd = shows.index(show)
     scores = jaccSimMat[showInd]
 
-    result = sorted(range(len(scores)), key=lambda substr: scores[substr])[
-        (-N-1): -1]
+    result = sorted(range(len(scores)), key=lambda substr: scores[substr])[(-N-1): -1]
     result.reverse()
 
     ranking = []
