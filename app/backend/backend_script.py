@@ -163,26 +163,24 @@ def final_search(query_show, n, free_search=None, genre=None):
             tv_sim_score_sum[show] = weights['descriptions'] * score * 100
 
     tv_sim_score_sum = {k: v for k, v in sorted(tv_sim_score_sum.items(), key=lambda item: -item[1])}
-    print(tv_sim_score_sum)
+    # print(tv_sim_score_sum)
     index = 0
     for key, _ in tv_sim_score_sum.items():
-        for show, _ in tv_shows_to_index.items():
-            if show.lower() == key:
-                results.append(show)
+        results.append(key)
         index += 1
         if index == n:
             break
     return results
 
 # TESTS
-# the_walking_dead_results = final_search("The Walking Dead", 10)
-# print(the_walking_dead_results)
-# sherlock_results = final_search("Sherlock", 10, "dogs")
-# print(sherlock_results)
-# its_always_sunny_results = final_search("It's Always Sunny in Philadephia", 10) # no reviews, no description, no transcripts in transcript2
-# print(its_always_sunny_results) 
-# insecure_results = final_search("insecure", 10, "Los Angeles")
-# print(insecure_results)
+the_walking_dead_results = final_search("The Walking Dead", 10)
+print(the_walking_dead_results)
+sherlock_results = final_search("Sherlock", 10, "dogs")
+print(sherlock_results)
+its_always_sunny_results = final_search("It's Always Sunny in Philadephia", 10) # no reviews, no description, no transcripts in transcript2
+print(its_always_sunny_results) 
+insecure_results = final_search("insecure", 10, "Los Angeles")
+print(insecure_results)
 
-# test2 = final_search("Sherlock", 10, genre="Animation")
-# print(test2)
+test2 = final_search("Sherlock", 10, genre="Animation")
+print(test2)
