@@ -13,12 +13,8 @@
     stream<span id="title" style="color: #5680E9;">On </span>
   </h1>
   <br>
-<<<<<<< HEAD
-=======
-  {% for x in range(n) %}
->>>>>>> riya-p4
   <div class="form-group">
-    {% for x in range(len(data)) %}
+    {% for x in range(data | length) %}
     <br>
     <br>
     <p id="ans" style="text-align: center;
@@ -27,27 +23,15 @@
       border: 4px solid #D8CFCF;
       box-sizing: border-box;
       border-radius: 25px;">{{data[x]}}<br></p>
-      <div id="box1" style="text-align: center;
+    <div id="box1" style="text-align: center;
     color: black;">
-        {{descr[x]}}
-      </div>
-    {% endfor %}
-    <!-- <div id="box2">
-      god
+      {{descr[x]}}
     </div>
-    <div id="box3">
-      me
-    </div> -->
+    {% endfor %}
   </div>
-<<<<<<< HEAD
-
-
-=======
-  {% endfor %}
   <form action="https://stream-on-test.herokuapp.com">
     <button type="submit" class="btn btn-info" style="align-content: center;"> Go Back! </button>
   </form>
->>>>>>> riya-p4
 
 </body>
 

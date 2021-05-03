@@ -167,7 +167,7 @@ def final_search(query_show, n, free_search=None, genre=None):
     index = 0
     for key, _ in tv_sim_score_sum.items():
         for show, _ in tv_shows_to_index.items():
-            if show.lower() == key:
+            if show.lower() == key or show == key:
                 results.append(show)
         index += 1
         if index == n:
