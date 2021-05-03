@@ -2,7 +2,7 @@ import re
 import os
 import numpy as np
 import json
-import scripts.adhoc_similarity as adhoc_similarity
+import backend.adhoc_similarity as adhoc_similarity
 import pickle
 # import scripts.edit_distance as ed
 
