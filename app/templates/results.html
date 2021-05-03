@@ -13,10 +13,9 @@
     stream<span id="title" style="color: #5680E9;">On </span>
   </h1>
   <br>
+  {% for x in range(n) %}
   <div class="form-group">
-    {% for x in range(data | length) %}
-    <br>
-    <br>
+    <br><br>
     <p id="ans" style="text-align: center;
         color: black;
         background: #F7F3F3;
@@ -27,10 +26,12 @@
     color: black;">
       {{descr[x]}}
     </div>
-    {% endfor %}
   </div>
-  <form action="https://stream-on-test.herokuapp.com">
-    <button type="submit" class="btn btn-info" style="align-content: center;"> Go Back! </button>
+  {% endfor %}
+  <br><br>
+  <form></form>
+  <button type="submit" onclick="history.go(-1)" class="btn btn-info" style="align-content: center;"> Go Back!
+  </button>
   </form>
 
 </body>
