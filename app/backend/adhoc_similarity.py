@@ -112,6 +112,10 @@ def find_n_similar_shows_free_search(query, n):
   
   results = index_search(query, inverted_index, idf_dict, show_norms)
   final_show_list  = []
+  
+  if len(results)==0:
+    return final_show_list
+
   for i in range(1,n+1):
     final_show_list.append((index_to_tv_show[str(results[i][1])], results[i][0]))
   return final_show_list
