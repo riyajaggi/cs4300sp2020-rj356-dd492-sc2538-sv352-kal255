@@ -2,9 +2,9 @@ import re
 import os
 import numpy as np
 import json
-import adhoc_similarity as adhoc_similarity
+import scripts.adhoc_similarity as adhoc_similarity
 import pickle
-import edit_distance as ed
+import scripts.edit_distance as ed
 
 def jaccardRanking(show, N=3):
     """
@@ -170,8 +170,8 @@ def final_search(query_show, n, free_search=None, genre=None):
     return results
 
 # TESTS
-the_walking_dead_results = final_search("The Walking Dead", 10)
-print(the_walking_dead_results)
+# the_walking_dead_results = final_search("The Walking Dead", 10)
+# print(the_walking_dead_results)
 # sherlock_results = final_search("Sherlock", 10, "dogs")
 # print(sherlock_results)
 # its_always_sunny_results = final_search("It's Always Sunny in Philadephia", 10) # no reviews, no description, no transcripts in transcript2
