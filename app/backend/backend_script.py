@@ -126,8 +126,8 @@ def final_search(query_show, n, free_search=None, genre=None):
     if reviews_ranking is None:
         reviews_ranking = []
     desc_ranking = descriptionRanking(query_show, 10)
-    print("Description")
-    print(desc_ranking)
+    # print("Description")
+    # print(desc_ranking)
     free_search_ranking = []
     if free_search is not None:
         free_search_ranking = adhoc_similarity.find_n_similar_shows_free_search(free_search, n*2) # list of tv shows and sim scores
@@ -173,7 +173,7 @@ def final_search(query_show, n, free_search=None, genre=None):
             tv_sim_score_sum[show] = weights['descriptions'] * score * 100
 
     tv_sim_score_sum = {k: v for k, v in sorted(tv_sim_score_sum.items(), key=lambda item: -item[1])}
-    print(tv_sim_score_sum)
+    # print(tv_sim_score_sum)
     index = 0
     for key, _ in tv_sim_score_sum.items():
         if capitalize_show_name(key) is not None:
