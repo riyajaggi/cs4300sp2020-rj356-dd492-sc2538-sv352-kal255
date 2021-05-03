@@ -4,7 +4,7 @@ import numpy as np
 import json
 import scripts.adhoc_similarity as adhoc_similarity
 import pickle
-import scripts.edit_distance as ed
+# import scripts.edit_distance as ed
 
 def jaccardRanking(show, N=3):
     """
@@ -107,7 +107,7 @@ def final_search(query_show, n, free_search=None, genre=None):
         'genre' : 0,
         'free search' : 0,
     }
-    query_show = ed.edit_search(query_show)[0][1] # rn it does edit distance on everything, we want only on the shows that are not in the index json
+    # query_show = ed.edit_search(query_show)[0][1] # rn it does edit distance on everything, we want only on the shows that are not in the index json
 
     results = []
     tv_sim_score_sum = {}
