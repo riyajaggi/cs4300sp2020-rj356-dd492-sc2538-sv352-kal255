@@ -1,7 +1,7 @@
 import json
 from collections import Counter
 import math
-import scripts.cosine_similarity as cosine_similarity
+import app.backend.cosine_similarity as cosine_similarity
 
 with open('./datasets/p2/tv_shows_reviews_description.json') as tv_shows_reviews_description_file:
   tv_shows_reviews_description = json.load(tv_shows_reviews_description_file)
@@ -112,9 +112,14 @@ def find_n_similar_shows_free_search(query, n):
   
   results = index_search(query, inverted_index, idf_dict, show_norms)
   final_show_list  = []
+  
+  if len(results)==0:
+    return final_show_list
+
   for i in range(1,n+1):
     final_show_list.append((index_to_tv_show[str(results[i][1])], results[i][0]))
   return final_show_list
+
 
 # TESTS FOR FREE SEARCH
 # test_anthology = find_n_similar_shows_free_search("anthology", 10)

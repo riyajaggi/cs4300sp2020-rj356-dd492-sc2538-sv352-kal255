@@ -39,7 +39,9 @@
 
 .btn {
     background-color: #4285F4;
-    border: none
+    border: none;
+    position: center;
+    text-align: center;
 }
 
 .step-links a {
