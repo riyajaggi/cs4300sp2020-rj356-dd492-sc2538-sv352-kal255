@@ -3,7 +3,7 @@ from app.irsystem.models.helpers import *
 from app.irsystem.models.helpers import NumpyEncoder as NumpyEncoder
 # from scripts.transcript_similarity import *
 from scripts.backend_script import *
-# from scripts.transcripts.genre_similarity import *
+# from scripts.transcripts.genre_sim≈ilarity import *
 from scripts.desc import *
 
 project_name = "Stream On"
