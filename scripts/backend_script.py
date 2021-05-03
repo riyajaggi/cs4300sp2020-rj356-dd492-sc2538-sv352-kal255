@@ -4,6 +4,7 @@ import numpy as np
 import json
 import scripts.adhoc_similarity as adhoc_similarity
 import pickle
+import scripts.edit_distance as ed
 
 with open('./datasets/p2/tv_shows_to_index_final.json') as a_file:
   tv_shows_to_index = json.load(a_file)
@@ -50,8 +51,9 @@ def descriptionRanking(show, N = 3):
     description_dict = pickle.load( open( "datasets/p2/description_similarity.p", "rb" ) )
     description_dict = {k.lower():v for k, v in description_dict.items()}
 
-    if show.lower() not in description_dict.keys():
+    if show.lower() not in list(description_dict.keys()):
         return []
+
     result = description_dict[show.lower()][:N]
 
     return result
@@ -67,15 +69,19 @@ def reviewRanking(show, N = 3):
     """
 
     review_dict = pickle.load( open( "datasets/p2/review_similarity.p", "rb" ) )
-    review_dict = {k.lower():v for k, v in review_dict.items()}
-
-    if not show in review_dict.keys():
+    # print(review_dict)
+    review_dict = {k:v for k, v in review_dict.items()}
+    # print()
+    # print(review_dict)
+    # print(show)
+    if show.lower() not in list(review_dict.keys()):
         return [] 
 
     result = review_dict[show.lower()][:N]
     print(result)
     return result
 
+# print(reviewRanking("friends"))
     
 def final_search(query_show, n, free_search=None, genre=None):
     """
@@ -104,6 +110,7 @@ def final_search(query_show, n, free_search=None, genre=None):
         'genre' : 0,
         'free search' : 0,
     }
+    query_show = ed.edit_search(query_show)[0][1] # rn it does edit distance on everything, we want only on the shows that are not in the index json
 
     results = []
     tv_sim_score_sum = {}
@@ -177,3 +184,6 @@ def final_search(query_show, n, free_search=None, genre=None):
 # print(its_always_sunny_results) 
 # insecure_results = final_search("insecure", 10, "Los Angeles")
 # print(insecure_results)
+
+# test2 = final_search("Sherlock", 10, genre="Animation")
+# print(test2)
