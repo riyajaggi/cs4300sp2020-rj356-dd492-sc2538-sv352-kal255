@@ -2,9 +2,9 @@ import re
 import os
 import numpy as np
 import json
-import adhoc_similarity as adhoc_similarity
+import scripts.adhoc_similarity as adhoc_similarity
 import pickle
-import edit_distance as ed
+import scripts.edit_distance as ed
 
 def jaccardRanking(show, N=3):
     """
@@ -178,3 +178,6 @@ def final_search(query_show, n, free_search=None, genre=None):
 # print(its_always_sunny_results) 
 # insecure_results = final_search("insecure", 10, "Los Angeles")
 # print(insecure_results)
+
+# test2 = final_search("Sherlock", 10, genre="Animation")
+# print(test2)
