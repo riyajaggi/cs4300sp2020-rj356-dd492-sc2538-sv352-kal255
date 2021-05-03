@@ -76,21 +76,20 @@
   position: center;
   width: 302px;
   height: 56px;
-  /* left: 608px;
-top: 601px; */
   border-radius: 10px;
   background: #5680E9;
 
+  
   font-family: Roboto Condensed;
   font-style: normal;
   font-weight: bold;
-  font-size: 35px;
-  line-height: 41px;
+  font-size: 30px;
+  line-height: 35px;
+  padding: 20px;
   display: flex;
   align-items: center;
   text-align: center;
   letter-spacing: -0.02em;
-  margin: auto;
 
   color: #FFFFFF;
 

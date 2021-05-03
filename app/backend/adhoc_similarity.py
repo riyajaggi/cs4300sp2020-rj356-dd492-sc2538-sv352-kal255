@@ -61,12 +61,12 @@ with open('./datasets/p2/index_to_tv_shows_final.json') as index_to_tv_show_file
 # json.dump(idf_dict, c_file)
 
 # LOADING SAVED JSON
-# with open('./datasets/p2/adhoc_inverted_index.json') as a_file:
-#   inverted_index = json.load(a_file)
-# with open('./datasets/p2/adhoc_show_norms.json') as b_file:
-#   show_norms = json.load(b_file)
-# with open('./datasets/p2/adhoc_idf_dict.json') as c_file:
-#   idf_dict = json.load(c_file)
+with open('./datasets/p2/adhoc_inverted_index.json') as a_file:
+  inverted_index = json.load(a_file)
+with open('./datasets/p2/adhoc_show_norms.json') as b_file:
+  show_norms = json.load(b_file)
+with open('./datasets/p2/adhoc_idf_dict.json') as c_file:
+  idf_dict = json.load(c_file)
 
 
 def index_search(query, index, idf, show_norms):
