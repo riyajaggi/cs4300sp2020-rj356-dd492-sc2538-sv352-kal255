@@ -79,16 +79,13 @@ def reviewRanking(show, N = 3):
     """
 
     review_dict = pickle.load( open( "datasets/p2/review_similarity.p", "rb" ) )
-    # print(review_dict)
     review_dict = {k:v for k, v in review_dict.items()}
-    # print()
     review_show = capitalize_show_name(show)
+
     if review_show not in list(review_dict.keys()):
         return [] 
-
     result = review_dict[review_show][:N]
-    print("Reviews")
-    print(result)
+
     return result
 
 # print(reviewRanking("friends"))
@@ -129,6 +126,7 @@ def final_search(query_show, n, free_search=None, genre=None):
     if reviews_ranking is None:
         reviews_ranking = []
     desc_ranking = descriptionRanking(query_show, 10)
+    print(desc_ranking)
     free_search_ranking = []
     if free_search is not None:
         free_search_ranking = adhoc_similarity.find_n_similar_shows_free_search(free_search, n*2) # list of tv shows and sim scores
@@ -177,8 +175,9 @@ def final_search(query_show, n, free_search=None, genre=None):
     print(tv_sim_score_sum)
     index = 0
     for key, _ in tv_sim_score_sum.items():
-        results.append(capitalize_show_name(key))
-        index += 1
+        if capitalize_show_name(key) is not None:
+            results.append(capitalize_show_name(key))
+            index += 1
         if index == n:
             break
     return results
