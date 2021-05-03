@@ -9,6 +9,17 @@ import pickle
 with open('./datasets/p2/tv_shows_to_index_final.json') as a_file:
   tv_shows_to_index = json.load(a_file)
 
+def capitalize_show_name(show):
+    """
+    Returns the name of the given show capitalized
+
+    Parameter show: a show title
+    Precondition: a non-empty string
+    """
+    for capitalized_show, _ in tv_shows_to_index.items():
+        if capitalized_show.lower() == show.lower():
+           return capitalized_show
+
 def jaccardRanking(show, N=3):
     """
     given an input string show name, return a ranked list of the N most similar shows using the jaccSimMat (using N = 3 for demo)
@@ -71,12 +82,12 @@ def reviewRanking(show, N = 3):
     # print(review_dict)
     review_dict = {k:v for k, v in review_dict.items()}
     # print()
-    # print(review_dict)
-    # print(show)
-    if show.lower() not in list(review_dict.keys()):
+    review_show = capitalize_show_name(show)
+    if review_show not in list(review_dict.keys()):
         return [] 
 
-    result = review_dict[show.lower()][:N]
+    result = review_dict[review_show][:N]
+    print("Reviews")
     print(result)
     return result
 
@@ -163,12 +174,10 @@ def final_search(query_show, n, free_search=None, genre=None):
             tv_sim_score_sum[show] = weights['descriptions'] * score * 100
 
     tv_sim_score_sum = {k: v for k, v in sorted(tv_sim_score_sum.items(), key=lambda item: -item[1])}
-    # print(tv_sim_score_sum)
+    print(tv_sim_score_sum)
     index = 0
     for key, _ in tv_sim_score_sum.items():
-        for show, _ in tv_shows_to_index.items():
-            if show.lower() == key.lower():
-                results.append(show)
+        results.append(capitalize_show_name(key))
         index += 1
         if index == n:
             break
