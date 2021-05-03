@@ -6,6 +6,9 @@ import app.backend.adhoc_similarity as adhoc_similarity
 import pickle
 # import scripts.edit_distance as ed
 
+with open('./datasets/p2/tv_shows_to_index_final.json') as a_file:
+  tv_shows_to_index = json.load(a_file)
+
 def jaccardRanking(show, N=3):
     """
     given an input string show name, return a ranked list of the N most similar shows using the jaccSimMat (using N = 3 for demo)
@@ -74,7 +77,7 @@ def reviewRanking(show, N = 3):
         return [] 
 
     result = review_dict[show.lower()][:N]
-
+    print(result)
     return result
 
 # print(reviewRanking("friends"))
@@ -160,9 +163,12 @@ def final_search(query_show, n, free_search=None, genre=None):
             tv_sim_score_sum[show] = weights['descriptions'] * score * 100
 
     tv_sim_score_sum = {k: v for k, v in sorted(tv_sim_score_sum.items(), key=lambda item: -item[1])}
+    print(tv_sim_score_sum)
     index = 0
     for key, _ in tv_sim_score_sum.items():
-        results.append(key)
+        for show, _ in tv_shows_to_index.items():
+            if show.lower() == key:
+                results.append(show)
         index += 1
         if index == n:
             break
