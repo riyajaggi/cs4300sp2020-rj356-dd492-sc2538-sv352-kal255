@@ -22,6 +22,7 @@ def search():
         data = []
         output_message = ""
         genre_list = ""
+        free_search = ""
     else:
         output_message = "Your results for " + query
         # data = jaccardRanking(query)

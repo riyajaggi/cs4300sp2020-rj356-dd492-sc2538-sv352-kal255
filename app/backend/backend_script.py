@@ -100,9 +100,9 @@ def final_search(query_show, n, free_search=None, genre=None):
     """
 
     weights = {
-        'transcripts' : .20 ,
-        'reviews' : .40,
-        'descriptions' : .40,
+        'transcripts' : .10 ,
+        'reviews' : .60,
+        'descriptions' : .30,
         'genre' : 0,
         'free search' : 0,
     }
