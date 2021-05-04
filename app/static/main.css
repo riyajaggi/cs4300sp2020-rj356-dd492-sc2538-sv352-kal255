@@ -17,9 +17,7 @@
         height: 100%;
         padding-top: 15%;
         padding-bottom: 15px;
-        background-image: url("streamOn_background.png");
-
-
+        background-image: image-url("static/streamOn_background.png");
     }
 
     .global-search {
