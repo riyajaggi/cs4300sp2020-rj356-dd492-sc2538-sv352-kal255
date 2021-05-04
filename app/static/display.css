@@ -1,30 +1,29 @@
 
 /* streamOn */
 #title {
-  /*
-  position: absolute;
-  width: 355px;
-  height: 113px;
-  left: 543px;
-  top: 185px;
-  */
-  
+  /* streamOn */
   font-family: Roboto Condensed;
   font-style: normal;
   font-weight: normal;
   font-size: 96px;
   line-height: 112px;
-  /* identical to box height */
   text-align: center;
   letter-spacing: -0.02em;
-  
-  color: #000000;}
 
+  color: #000000;
+}
 
+#displaybox {
+  position: absolute;
+  width: 80%;
+  height: 70%;
+  left: 10%;
+  top: 15%;
 
-
-
-
+  background: #FFFFFF;
+  box-shadow: 0px 6px 6px rgba(0, 0, 0, 0.5);
+  border-radius: 20px;
+}
 
 /* Rectangle 1 */
 #box1 {
@@ -70,8 +69,41 @@
   border-radius: 25px;
 }
 
+#message {
+  position: center;
+  width: 614px;
+  height: 126px;
+
+  font-family: Roboto Condensed;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 36px;
+  line-height: 42px;
+  text-align: center;
+  letter-spacing: -0.02em;
+  color: #000000;
+}
+
+#button {
+  position: center;
+  width: 152px;
+  height: 34px;
+  border-radius: 10px;
+  background: #5680E9;
 
 
+  font-family: Roboto Condensed;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 18px;
+  margin: auto;
+  display: table-cell;
+  align-items: center;
+  text-align: center;
+  vertical-align: middle;
+  letter-spacing: -0.02em;
+  color: #FFFFFF;
+}
 
 
 

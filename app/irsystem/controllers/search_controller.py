@@ -23,14 +23,17 @@ def search():
         genre_list = ""
         free_search = ""
     else:
-        output_message = "Your results for " + query
         # data = jaccardRanking(query)
         # genre_list = genre_jacc_sim(genre)
-        data = final_search(query_show=query, n=10, free_search=free_search, genre = genre)
+        query_show, data = final_search(query_show=query, n=10, free_search=free_search, genre = genre)
+        output_message = "Your results for " + query_show
+        
         if len(data) == 0:
             abort(500)
+
         descript = des(data)
-        return render_template("results.html", descr=descript, data=data)
+
+        return render_template("results.html", descr=descript, data=data, query_show=query_show)
 
     return render_template(
         "search.html",

@@ -4,7 +4,7 @@ import numpy as np
 import json
 import app.backend.adhoc_similarity as adhoc_similarity
 import pickle
-# import scripts.edit_distance as ed
+import app.backend.edit_distance as ed
 
 with open('./datasets/p2/tv_shows_to_index_final.json') as a_file:
   tv_shows_to_index = json.load(a_file)
@@ -20,9 +20,11 @@ def capitalize_show_name(show):
         if capitalized_show.lower() == show.lower():
            return capitalized_show
 
+
 def jaccardRanking(show, N=3):
     """
-    given an input string show name, return a ranked list of the N most similar shows using the jaccSimMat (using N = 3 for demo)
+    given an input string show name, return a ranked list of the N most similar shows 
+    using the jaccSimMat (using N = 3 for demo)
     """
     jaccSimMat = np.load("MainModel.npy")
 
@@ -90,6 +92,7 @@ def reviewRanking(show, N = 3):
 
 # print(reviewRanking("friends"))
     
+
 def final_search(query_show, n, free_search=None, genre=None):
     """
     Returns: A ranked list of similar shows based on reviews, descriptions, 
@@ -109,7 +112,6 @@ def final_search(query_show, n, free_search=None, genre=None):
     Precondition: (Default is None) None or non-empty string representation of 
     a valid genres
     """
-
     weights = {
         'transcripts' : .10 ,
         'reviews' : .45,
@@ -117,7 +119,9 @@ def final_search(query_show, n, free_search=None, genre=None):
         'genre' : 0,
         'free search' : 0,
     }
-    # query_show = ed.edit_search(query_show)[0][1] # rn it does edit distance on everything, we want only on the shows that are not in the index json
+
+    if query_show not in tv_shows_to_index.keys():
+        query_show = ed.edit_search(query_show)[0][1]
 
     results = []
     tv_sim_score_sum = {}
@@ -181,7 +185,7 @@ def final_search(query_show, n, free_search=None, genre=None):
             index += 1
         if index == n:
             break
-    return results
+    return (query_show, results)
 
 # TESTS
 # the_walking_dead_results = final_search("The Walking Dead", 10)
@@ -195,3 +199,6 @@ def final_search(query_show, n, free_search=None, genre=None):
 
 # test2 = final_search("Sherlock", 10, genre="Animation")
 # print(test2)
+
+# test3 = final_search("braking bd", 10)
+# print(test3)

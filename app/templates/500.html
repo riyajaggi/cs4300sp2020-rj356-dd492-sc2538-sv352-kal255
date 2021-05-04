@@ -9,7 +9,7 @@
 </head>
 
 <body>
-    <form action="https://stream-on.herokuapp.com">
+    <form>
         <h1 id="title" style = "align-content: center;">
             stream<span id="title" style="color: #5680E9;">On </span>
         </h1>
@@ -17,7 +17,8 @@
             Sorry no result found! Please try another search!
         </p>
         <br><br>
-        <button type="submit" class="btn btn-info" id="button" style="align-content: center; position:center"> Go Back! </button>
+        <button type="submit" onclick="history.go(-1)" class="btn btn-info" id="button"
+            style="align-content: center; position:center"> Go Back! </button>
     </form>
 </body>
 
