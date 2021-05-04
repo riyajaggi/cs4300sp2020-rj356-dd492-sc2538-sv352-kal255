@@ -16,16 +16,18 @@ net_id = "Divya Damodaran: dd492, Riya Jaggi: rj356, Siddhi Chordia: sc2538, Sid
 def search():
     query = request.args.get("search")
     free_search = request.args.get("freeSearch")
+    if free_search == "":
+        free_search = None
     genre = request.args.get("genre")
+    if genre == "":
+        genre = None
     if not query:
         data = []
         output_message = ""
         genre_list = ""
         free_search = ""
     else:
-        # data = jaccardRanking(query)
-        # genre_list = genre_jacc_sim(genre)
-        query_show, data = final_search(query_show=query, n=10, free_search=free_search, genre = genre)
+        query_show, data = final_search(query_show=query, n=10, free_search=free_search, genre=genre)
         output_message = "Your results for " + query_show
         
         if len(data) == 0:
