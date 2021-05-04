@@ -8,6 +8,8 @@ import pickle
 
 with open('./datasets/p2/tv_shows_to_index_final.json') as a_file:
   tv_shows_to_index = json.load(a_file)
+with open('./datasets/p2/merged_tv_shows_final.json') as merged_tv_file:
+  merged_tv_shows = json.load(merged_tv_file)
 
 def capitalize_show_name(show):
     """
@@ -90,7 +92,7 @@ def reviewRanking(show, N = 3):
 
 # print(reviewRanking("friends"))
     
-def final_search(query_show, n, free_search=None, genre=None):
+def final_search(query_show, n, free_search=None, genre=None, streaming_platform=None):
     """
     Returns: A ranked list of similar shows based on reviews, descriptions, 
     transcripts,and other optional arguments.
@@ -105,18 +107,32 @@ def final_search(query_show, n, free_search=None, genre=None):
     in the search 
     Precondition: (Default is None) None or non-empty string
 
-    (Optional) Parameter genre: a query genre 
+    (Optional) Parameter genre: genre that all the resulting shows must be in
     Precondition: (Default is None) None or non-empty string representation of 
     a valid genres
+
+    (Optional) Parameter streaming platform: streaming platform that all the 
+    resulting shows must be on
+    Precondition: (Default is None) None or non-empty string representation of 
+    a valid streaming platforms
     """
 
-    weights = {
-        'transcripts' : .10 ,
-        'reviews' : .45,
-        'descriptions' : .45,
-        'genre' : 0,
-        'free search' : 0,
+    various_weight_combos = {
+        'basic' : {
+            'transcripts' : .10 ,
+            'reviews' : .45,
+            'descriptions' : .45,
+            'free search' : 0,
+        },
+        'basic w/ free search' : {
+            'transcripts' : .05 ,
+            'reviews' : .45,
+            'descriptions' : .3,
+            'free search' : .2,
+        }
     }
+    weights = various_weight_combos['basic']
+
     # query_show = ed.edit_search(query_show)[0][1] # rn it does edit distance on everything, we want only on the shows that are not in the index json
 
     results = []
@@ -126,15 +142,10 @@ def final_search(query_show, n, free_search=None, genre=None):
     if reviews_ranking is None:
         reviews_ranking = []
     desc_ranking = descriptionRanking(query_show, 10)
-    # print("Description")
-    # print(desc_ranking)
     free_search_ranking = []
     if free_search is not None:
         free_search_ranking = adhoc_similarity.find_n_similar_shows_free_search(free_search, n*2) # list of tv shows and sim scores
-        weights['transcripts'] = weights['transcripts'] - .05
-        weights['reviews'] =  weights['reviews']
-        weights['descriptions'] = weights['descriptions'] - .15
-        weights['free search'] = .2
+        weights = various_weight_combos['basic w/ free search']
         for show, score in free_search_ranking:
             lowercase_show = show.lower()
             if lowercase_show in tv_sim_score_sum:
@@ -181,8 +192,12 @@ def final_search(query_show, n, free_search=None, genre=None):
     index = 0
     for key, _ in tv_sim_score_sum.items():
         if capitalize_show_name(key) is not None:
-            results.append(capitalize_show_name(key))
-            index += 1
+            capitalized_show = capitalize_show_name(key)
+            show_info = merged_tv_shows[tv_shows_to_index[capitalized_show]]
+            if genre is None or (genre is not None and genre in show_info['show_info']['genre']):
+                if streaming_platform is None or (streaming_platform is not None and streaming_platform in show_info['show_info']['streaming platform']):
+                    results.append(capitalize_show_name(key))
+                    index += 1
         if index == n:
             break
     return results
@@ -200,5 +215,11 @@ def final_search(query_show, n, free_search=None, genre=None):
 # test2 = final_search("Sherlock", 10, genre="Animation")
 # print(test2)
 
-test2 = final_search("Elementary", 10)
+# test2 = final_search("Elementary", 10)
+# print(test2)
+
+test2 = final_search("Sherlock", 10, genre="Drama", streaming_platform="HBO")
+print(test2)
+
+test2 = final_search("Sherlock", 10,)
 print(test2)
