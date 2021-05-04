@@ -8,13 +8,16 @@
   <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap" rel="stylesheet" />
 </head>
 
-<body style="background-image: url(static/streamOn_background.png);">
-  <div id="displaybox">
+<body style="background-image: url(static/streamOn_background.png); padding-left: 5%;">
+  <div class="display-box">
     <h1 id="title">
       stream<span id="title" style="color: #5680E9;">On </span>
     </h1>
+    <br>
     <h1 id="message" style="text-align:center;">Showing results for <span id="message"
-        style="color: #5680E9;">{{query_show}}</span></h1>
+        style="color: #5680E9;">{{query_show}}</span>
+    </h1>
+    <br>
     {% for x in range(data | length) %}
     <div class="form-group">
       <p id="ans" style="text-align: center;
