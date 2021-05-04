@@ -120,7 +120,7 @@ def final_search(query_show, n, free_search=None, genre=None):
         'free search' : 0,
     }
 
-    if query_show not in tv_shows_to_index.keys():
+    if capitalize_show_name(query_show) not in tv_shows_to_index.keys():
         query_show = ed.edit_search(query_show)[0][1]
 
     results = []
