@@ -194,10 +194,10 @@ def final_search(query_show, n, free_search=None, genre=None, streaming_platform
         if capitalize_show_name(key) is not None:
             capitalized_show = capitalize_show_name(key)
             show_info = merged_tv_shows[tv_shows_to_index[capitalized_show]]
-            if genre is None or (genre is not None and genre in show_info['show_info']['genre']):
-                if streaming_platform is None or (streaming_platform is not None and streaming_platform in show_info['show_info']['streaming platform']):
-                    results.append(capitalize_show_name(key))
-                    index += 1
+            # if genre is None or (genre is not None and genre in show_info['show_info']['genre']):
+            #     if streaming_platform is None or (streaming_platform is not None and streaming_platform in show_info['show_info']['streaming platform']):
+            results.append(capitalize_show_name(key))
+            index += 1
         if index == n:
             break
     return results
