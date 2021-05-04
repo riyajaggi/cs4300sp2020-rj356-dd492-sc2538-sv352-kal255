@@ -16,7 +16,7 @@ net_id = "Divya Damodaran: dd492, Riya Jaggi: rj356, Siddhi Chordia: sc2538, Sid
 def search():
     query = request.args.get("search")
     free_search = request.args.get("freeSearch")
-    genre = None
+    genre = request.args.get("genre")
     if not query:
         data = []
         output_message = ""
