@@ -195,8 +195,8 @@ def final_search(query_show, n, free_search=None, genre=None, streaming_platform
     # print(tv_sim_score_sum)
     index = 0
     for key, _ in tv_sim_score_sum.items():
-        if capitalize_show_name(key) is not None:
-            capitalized_show = capitalize_show_name(key)
+        capitalized_show = capitalize_show_name(key)
+        if capitalized_show is not None and capitalize_show_name(query_show) != capitalized_show:
             show_info = merged_tv_shows[tv_shows_to_index[capitalized_show]]
             results.append(capitalize_show_name(key))
             index += 1
