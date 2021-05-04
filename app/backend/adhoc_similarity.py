@@ -1,8 +1,8 @@
 import json
 from collections import Counter
 import math
-# import app.backend.cosine_similarity as cosine_similarity
-import cosine_similarity as cosine_similarity
+import app.backend.cosine_similarity as cosine_similarity
+# import cosine_similarity as cosine_similarity
 
 with open('./datasets/p2/tv_shows_reviews_description.json') as tv_shows_reviews_description_file:
   tv_shows_reviews_description = json.load(tv_shows_reviews_description_file)
@@ -174,10 +174,10 @@ def find_n_similar_shows_free_search(query, n):
 # print(test_funny)
 # print()
 
-test_new_york = find_n_similar_shows_free_search('"New York"', 10)
-print(test_new_york)
-test_los_angeles = find_n_similar_shows_free_search('"Los Angeles"', 10)
-print(test_los_angeles)
-test_LA_and_NY = find_n_similar_shows_free_search('"Los Angeles" and  "New York"', 10)
-print(test_LA_and_NY)
-print()
+# test_new_york = find_n_similar_shows_free_search('"New York"', 10)
+# print(test_new_york)
+# test_los_angeles = find_n_similar_shows_free_search('"Los Angeles"', 10)
+# print(test_los_angeles)
+# test_LA_and_NY = find_n_similar_shows_free_search('"Los Angeles" and  "New York"', 10)
+# print(test_LA_and_NY)
+# print()
