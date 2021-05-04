@@ -1,7 +1,8 @@
 import json
 from collections import Counter
 import math
-import app.backend.cosine_similarity as cosine_similarity
+# import app.backend.cosine_similarity as cosine_similarity
+import cosine_similarity as cosine_similarity
 
 with open('./datasets/p2/tv_shows_reviews_description.json') as tv_shows_reviews_description_file:
   tv_shows_reviews_description = json.load(tv_shows_reviews_description_file)
@@ -90,25 +91,42 @@ def index_search(query, index, idf, show_norms):
   result = []
   numerators = {}
   lowercase_query = query.lower()
-  tokenized_query = cosine_similarity.tokenize(lowercase_query)
+  tokenized_query = cosine_similarity.tokenizeQuotes(lowercase_query)
   query_tfs = Counter(tokenized_query)
   query_norm = 0
   for token, tf in query_tfs.items():
-      if token in idf.keys():
-          query_norm += (tf * idf[token])**2
+    if token.find(" ") >= 0:
+      tf = 1
+      idf_multi = cosine_similarity.compute_idf_multi_words(index, token, len(index_to_tv_show))
+      query_norm += (tf * idf_multi)**2
+    elif token in idf.keys():
+        query_norm += (tf * idf[token])**2
   query_norm = math.sqrt(query_norm)
 
   for token, q_tf in query_tfs.items():
-    if token in index and token in idf:
-        token_idf = idf[token]
-        for show, show_tf in index[token].items():
-            if q_tf != 0 and token_idf != 0:
-                numerator = q_tf * token_idf * show_tf * token_idf
-                if show in numerators:
-                    numerators[show] += numerator
-                else:
-                    numerators[show] = numerator
-  # print(numerators)
+    if token.find(" ") >= 0:
+      multi_word_dict = cosine_similarity.create_multi_word_dict(index, token)
+      show_count_tf_dict = multi_word_dict['shows_count_tf_dict']
+      q_tf = 1
+      token_idf = cosine_similarity.compute_idf_multi_words(index, token, len(index_to_tv_show))
+      for show in show_count_tf_dict.keys():
+        if show_count_tf_dict[show]['count'] == multi_word_dict['n_words_in_quotes']:
+          if q_tf != 0 and token_idf != 0:
+            numerator = q_tf * token_idf * show_count_tf_dict[show]['tf'] * token_idf
+            if show in numerators:
+              numerators[show] += numerator
+            else:
+              numerators[show] = numerator
+    else:   
+      if token in index and token in idf:
+          token_idf = idf[token]
+          for show, show_tf in index[token].items():
+              if q_tf != 0 and token_idf != 0:
+                  numerator = q_tf * token_idf * show_tf * token_idf
+                  if show in numerators:
+                      numerators[show] += numerator
+                  else:
+                      numerators[show] = numerator
   for show, numerator in numerators.items():
       denominator = query_norm * show_norms[int(show)]
       score = numerator / denominator
@@ -134,7 +152,7 @@ def find_n_similar_shows_free_search(query, n):
   if len(results)==0:
     return final_show_list
 
-  for i in range(1,n+1):
+  for i in range(0,n+1):
     final_show_list.append((index_to_tv_show[str(results[i][1])], results[i][0]))
   return final_show_list
 
@@ -155,3 +173,11 @@ def find_n_similar_shows_free_search(query, n):
 # test_funny = find_n_similar_shows_free_search("funny work", 10)
 # print(test_funny)
 # print()
+
+test_new_york = find_n_similar_shows_free_search('"New York"', 10)
+print(test_new_york)
+test_los_angeles = find_n_similar_shows_free_search('"Los Angeles"', 10)
+print(test_los_angeles)
+test_LA_and_NY = find_n_similar_shows_free_search('"Los Angeles" and  "New York"', 10)
+print(test_LA_and_NY)
+print()
