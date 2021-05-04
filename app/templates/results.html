@@ -2,38 +2,42 @@
 
 <head>
   <!-- <link rel="stylesheet" href="/static/bootstrap.min.css"> -->
-  <link rel="stylesheet" href="/static/main.css">
-  <link rel="stylesheet" href="/static/display.css">
+  <link rel="stylesheet" href="/static/main.css?v=1.0.0">
+  <link rel="stylesheet" href="/static/display.css?v=1.0.0">
   <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed&display=swap" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css?family=Lucida+Grande&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap" rel="stylesheet" />
 </head>
 
-<body>
-  <h1 id="title">
-    stream<span id="title" style="color: #5680E9;">On </span>
-  </h1>
-  <br>
-  {% for x in range(data | length) %}
-  <div class="form-group">
-    <p id="ans" style="text-align: center;
+<body style="background-image: url(static/streamOn_background.png); padding-top: 5%; padding-bottom: 5%; position: relative;">
+  <div class="display-box">
+    <h1 id="title">
+      stream<span id="title" style="color: #5680E9;">On </span>
+    </h1>
+    <br>
+    <h1 id="message" style="text-align:center;">Showing results for <span id="message"
+        style="color: #5680E9;">{{query_show}}</span>
+    </h1>
+    <br>
+    {% for x in range(data | length) %}
+    <div class="form-group">
+      <p id="ans" style="text-align: center;
         color: black;
         background: #F7F3F3;
       border: 4px solid #D8CFCF;
       box-sizing: border-box;
       border-radius: 25px;">{{data[x]}}<br></p>
-    <div id="box1" style="text-align: center;
+      <div id="box1" style="text-align: center;
     color: black;">
-      {{descr[x]}}
+        {{descr[x]}}
+      </div>
+      <br><br>
     </div>
+    {% endfor %}
     <br><br>
+    <form>
+      <button type="submit" onclick="history.go(-1)" id="button" position="center"> Go Back!</button>
+    </form>
   </div>
-  {% endfor %}
-  <br><br>
-  <form></form>
-  <button type="submit" onclick="history.go(-1)" class="btn btn-info" style="align-content: center;"> Go Back!
-  </button>
-  </form>
-
 </body>
 
 </html>

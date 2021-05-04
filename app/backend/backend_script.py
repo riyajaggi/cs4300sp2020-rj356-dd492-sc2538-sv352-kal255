@@ -4,7 +4,7 @@ import numpy as np
 import json
 import app.backend.adhoc_similarity as adhoc_similarity
 import pickle
-# import scripts.edit_distance as ed
+import app.backend.edit_distance as ed
 
 with open('./datasets/p2/tv_shows_to_index_final.json') as a_file:
   tv_shows_to_index = json.load(a_file)
@@ -22,9 +22,11 @@ def capitalize_show_name(show):
         if capitalized_show.lower() == show.lower():
            return capitalized_show
 
+
 def jaccardRanking(show, N=3):
     """
-    given an input string show name, return a ranked list of the N most similar shows using the jaccSimMat (using N = 3 for demo)
+    given an input string show name, return a ranked list of the N most similar shows 
+    using the jaccSimMat (using N = 3 for demo)
     """
     jaccSimMat = np.load("MainModel.npy")
 
@@ -133,7 +135,9 @@ def final_search(query_show, n, free_search=None, genre=None, streaming_platform
     }
     weights = various_weight_combos['basic']
 
-    # query_show = ed.edit_search(query_show)[0][1] # rn it does edit distance on everything, we want only on the shows that are not in the index json
+    # EDIT DISTANCE 
+    if capitalize_show_name(query_show) not in tv_shows_to_index.keys():
+        query_show = ed.edit_search(query_show)[0][1]
 
     results = []
     tv_sim_score_sum = {}
@@ -200,7 +204,7 @@ def final_search(query_show, n, free_search=None, genre=None, streaming_platform
             index += 1
         if index == n:
             break
-    return results
+    return (query_show, results)
 
 # TESTS
 # the_walking_dead_results = final_search("The Walking Dead", 10)
@@ -218,8 +222,8 @@ def final_search(query_show, n, free_search=None, genre=None, streaming_platform
 # test2 = final_search("Elementary", 10)
 # print(test2)
 
-test2 = final_search("Sherlock", 10, genre="Drama", streaming_platform="HBO")
-print(test2)
+# test2 = final_search("Sherlock", 10, genre="Drama", streaming_platform="HBO")
+# print(test2)
 
-test2 = final_search("Sherlock", 10,)
-print(test2)
+# test2 = final_search("Sherlock", 10,)
+# print(test2)

@@ -18,7 +18,7 @@
   /*     left: 384px;
     top: 298px; */
 
-  font-family: Lucida Grande;
+  font-family: 'Source Sans Pro', sans-serif;
   font-style: normal;
   font-weight: normal;
   font-size: 22px;
@@ -41,7 +41,7 @@
   border-radius: 25px;
   margin: auto;
 
-  font-family: Lucida Grande;
+  font-family: 'Source Sans Pro', sans-serif;
   font-style: normal;
   font-weight: normal;
   font-size: 22px;
@@ -62,7 +62,7 @@
   border: 2px solid #D8CFCF;
   box-sizing: border-box;
   border-radius: 25px;
-  font-family: Lucida Grande;
+  font-family: 'Source Sans Pro', sans-serif;
   font-style: normal;
   font-weight: normal;
   font-size: 22px;
@@ -74,8 +74,8 @@
 
 #button {
   position: center;
-  width: 302px;
-  height: 56px;
+  width: 152px;
+  height: 34px;
   border-radius: 10px;
   background: #5680E9;
 
@@ -83,14 +83,26 @@
   font-family: Roboto Condensed;
   font-style: normal;
   font-weight: bold;
-  font-size: 30px;
-  line-height: 35px;
-  padding: 20px;
-  display: flex;
+  font-size: 18px;
+  margin: auto;
+  display: table-cell;
   align-items: center;
   text-align: center;
+  vertical-align: middle;
   letter-spacing: -0.02em;
-
   color: #FFFFFF;
+}
 
+#message {
+  position: center;
+  width: 614px;
+  height: 126px;
+
+  font-family: Roboto Condensed;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 36px;
+  text-align: center;
+  letter-spacing: -0.02em;
+  color: #000000;
 }
