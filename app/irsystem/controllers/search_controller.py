@@ -21,21 +21,28 @@ def search():
     genre = request.args.get("genre")
     if genre == "":
         genre = None
-    if not query:
-        data = []
-        output_message = ""
-        genre_list = ""
-        free_search = ""
-    else:
+
+    if query or free_search or genre:
         query_show, data = final_search(query_show=query, n=10, free_search=free_search, genre=genre)
-        output_message = "Your results for " + query_show
-        
+        output_query_msg= ""
+        if query:
+            output_query_msg += "Similar Show: " + query_show + " "
+        if free_search:
+            output_query_msg += "Keywords: " + free_search + " "
+        if genre:
+            output_query_msg += "Genre: " + genre + " "
+
         if len(data) == 0:
             abort(500)
 
         descript = des(data)
 
-        return render_template("results.html", descr=descript, data=data, query_show=query_show)
+        return render_template("results.html", descr=descript, data=data, output_query=output_query_msg)
+    else:
+        data = []
+        output_message = ""
+        genre_list = ""
+        free_search = ""
 
     return render_template(
         "search.html",

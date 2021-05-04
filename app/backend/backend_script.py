@@ -94,7 +94,7 @@ def reviewRanking(show, N = 3):
 
 # print(reviewRanking("friends"))
     
-def final_search(query_show, n, free_search=None, genre=None, streaming_platform=None):
+def final_search(query_show=None, n=10, free_search=None, genre=None, streaming_platform=None):
     """
     Returns: A ranked list of similar shows based on reviews, descriptions, 
     transcripts,and other optional arguments.
@@ -120,89 +120,87 @@ def final_search(query_show, n, free_search=None, genre=None, streaming_platform
     """
 
     various_weight_combos = {
-        'basic' : {
+        'just show' : {
             'transcripts' : .10 ,
             'reviews' : .45,
             'descriptions' : .45,
-            'free search' : 0,
         },
-        'basic w/ free search' : {
+        'show & free search' : {
             'transcripts' : .05 ,
             'reviews' : .45,
             'descriptions' : .3,
             'free search' : .2,
+        },
+        'just free search' : {
+            'free search' : 1,
         }
     }
-    weights = various_weight_combos['basic']
-
-    # EDIT DISTANCE 
-    if capitalize_show_name(query_show) not in tv_shows_to_index.keys():
-        query_show = ed.edit_search(query_show)[0][1]
-
     results = []
     tv_sim_score_sum = {}
-    transcripts_ranking = jaccardRanking(query_show, n) # list of tv shows
-    reviews_ranking = reviewRanking(query_show, 10) # list of tv shows and sim scores
-    if reviews_ranking is None:
-        reviews_ranking = []
-    desc_ranking = descriptionRanking(query_show, 10)
-    free_search_ranking = []
+    weights = {}
+    capitalized_query = capitalize_show_name(query_show)
+
+    if query_show is not None and free_search is not None:
+        weights = various_weight_combos['show & free search']
+    elif query_show is not None:
+        weights = various_weight_combos['just show']
+        print("just_show")
+    elif free_search is not None:
+        weights = various_weight_combos['just free search']
+
+    # EDIT DISTANCE 
+    if capitalized_query not in tv_shows_to_index.keys():
+        query_show = ed.edit_search(query_show)[0][1]
+
+    if query_show is not None:
+        transcripts_ranking = jaccardRanking(query_show, n) # list of tv shows
+        reviews_ranking = reviewRanking(query_show, 10) # list of tv shows and sim scores
+        if reviews_ranking is None:
+            reviews_ranking = []
+        desc_ranking = descriptionRanking(query_show, 10)
+        for i in range(len(transcripts_ranking)):
+            show = transcripts_ranking[i]
+            lowercase_show = show.lower()
+            score = (.5 - ((i+1)/100))
+            if lowercase_show in tv_sim_score_sum:
+                tv_sim_score_sum[lowercase_show] += weights['transcripts'] * score * 100
+            else:
+                tv_sim_score_sum[lowercase_show] = weights['transcripts'] * score * 100
+        for show, score in reviews_ranking:
+            lowercase_show = show.lower()
+            if lowercase_show in tv_sim_score_sum:
+                tv_sim_score_sum[lowercase_show] += weights['reviews'] * score * 100
+            else:
+                tv_sim_score_sum[lowercase_show] = weights['reviews'] * score * 100
+        for show, score in desc_ranking:
+            lowercase_show = show.lower()
+            if lowercase_show in tv_sim_score_sum:
+                tv_sim_score_sum[lowercase_show] += weights['descriptions'] * score * 100
+            else:
+                tv_sim_score_sum[lowercase_show] = weights['descriptions'] * score * 100
+
     if free_search is not None:
         free_search_ranking = adhoc_similarity.find_n_similar_shows_free_search(free_search, n*2) # list of tv shows and sim scores
-        weights = various_weight_combos['basic w/ free search']
         for show, score in free_search_ranking:
             lowercase_show = show.lower()
             if lowercase_show in tv_sim_score_sum:
                 tv_sim_score_sum[lowercase_show] += weights['free search'] * score * 100
             else:
                 tv_sim_score_sum[lowercase_show] = weights['free search'] * score * 100
-    # genre_search_ranking = []
-    # if genre is not None:
-    #   genre_ranking =   
-        # weights['transcripts'] = weights['transcripts'] - .05
-        # weights['reviews'] =  weights['reviews'] - .05
-        # weights['descriptions'] = weights['descriptions'] - .05
-        # weights['free search'] = weights['free search'] - .05
-        # weights['genre'] = .2
-        # for show, score in genre_ranking:
-        #     if show in tv_sim_score_sum:
-        #         tv_sim_score_sum[show] += weights['genre'] * score * 100
-        #     else:
-        #         tv_sim_score_sum[show] = weights['genre'] * score * 100
     
-    for i in range(len(transcripts_ranking)):
-        show = transcripts_ranking[i]
-        lowercase_show = show.lower()
-        score = (.5 - ((i+1)/100))
-        if lowercase_show in tv_sim_score_sum:
-            tv_sim_score_sum[lowercase_show] += weights['transcripts'] * score * 100
-        else:
-            tv_sim_score_sum[lowercase_show] = weights['transcripts'] * score * 100
-    for show, score in reviews_ranking:
-        lowercase_show = show.lower()
-        if lowercase_show in tv_sim_score_sum:
-            tv_sim_score_sum[lowercase_show] += weights['reviews'] * score * 100
-        else:
-            tv_sim_score_sum[lowercase_show] = weights['reviews'] * score * 100
-    for show, score in desc_ranking:
-        lowercase_show = show.lower()
-        if lowercase_show in tv_sim_score_sum:
-            tv_sim_score_sum[lowercase_show] += weights['descriptions'] * score * 100
-        else:
-            tv_sim_score_sum[lowercase_show] = weights['descriptions'] * score * 100
 
     tv_sim_score_sum = {k: v for k, v in sorted(tv_sim_score_sum.items(), key=lambda item: -item[1])}
     # print(tv_sim_score_sum)
     index = 0
     for key, _ in tv_sim_score_sum.items():
         capitalized_show = capitalize_show_name(key)
-        if capitalized_show is not None and capitalize_show_name(query_show) != capitalized_show:
+        if capitalized_show is not None and capitalized_query!= capitalized_show:
             show_info = merged_tv_shows[tv_shows_to_index[capitalized_show]]
             results.append(capitalize_show_name(key))
             index += 1
         if index == n:
             break
-    return (query_show, results)
+    return (capitalized_query, results)
 
 # TESTS
 # the_walking_dead_results = final_search("The Walking Dead", 10)
