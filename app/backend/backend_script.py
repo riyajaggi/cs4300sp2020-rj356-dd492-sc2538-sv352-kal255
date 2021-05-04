@@ -132,9 +132,9 @@ def final_search(query_show, n, free_search=None, genre=None):
     if free_search is not None:
         free_search_ranking = adhoc_similarity.find_n_similar_shows_free_search(free_search, n*2) # list of tv shows and sim scores
         weights['transcripts'] = weights['transcripts'] - .05
-        weights['reviews'] =  weights['reviews'] - .05
-        weights['descriptions'] = weights['descriptions'] - .2
-        weights['free search'] = .30
+        weights['reviews'] =  weights['reviews']
+        weights['descriptions'] = weights['descriptions'] - .15
+        weights['free search'] = .2
         for show, score in free_search_ranking:
             if show in tv_sim_score_sum:
                 tv_sim_score_sum[show] += weights['free search'] * score * 100
