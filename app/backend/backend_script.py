@@ -136,10 +136,11 @@ def final_search(query_show, n, free_search=None, genre=None):
         weights['descriptions'] = weights['descriptions'] - .15
         weights['free search'] = .2
         for show, score in free_search_ranking:
-            if show in tv_sim_score_sum:
-                tv_sim_score_sum[show] += weights['free search'] * score * 100
+            lowercase_show = show.lower()
+            if lowercase_show in tv_sim_score_sum:
+                tv_sim_score_sum[lowercase_show] += weights['free search'] * score * 100
             else:
-                tv_sim_score_sum[show] = weights['free search'] * score * 100
+                tv_sim_score_sum[lowercase_show] = weights['free search'] * score * 100
     # genre_search_ranking = []
     # if genre is not None:
     #   genre_ranking =   
@@ -156,21 +157,24 @@ def final_search(query_show, n, free_search=None, genre=None):
     
     for i in range(len(transcripts_ranking)):
         show = transcripts_ranking[i]
+        lowercase_show = show.lower()
         score = (.5 - ((i+1)/100))
-        if show in tv_sim_score_sum:
-            tv_sim_score_sum[show] += weights['transcripts'] * score * 100
+        if lowercase_show in tv_sim_score_sum:
+            tv_sim_score_sum[lowercase_show] += weights['transcripts'] * score * 100
         else:
-            tv_sim_score_sum[show] = weights['transcripts'] * score * 100
+            tv_sim_score_sum[lowercase_show] = weights['transcripts'] * score * 100
     for show, score in reviews_ranking:
-        if show in tv_sim_score_sum:
-            tv_sim_score_sum[show] += weights['reviews'] * score * 100
+        lowercase_show = show.lower()
+        if lowercase_show in tv_sim_score_sum:
+            tv_sim_score_sum[lowercase_show] += weights['reviews'] * score * 100
         else:
-            tv_sim_score_sum[show] = weights['reviews'] * score * 100
+            tv_sim_score_sum[lowercase_show] = weights['reviews'] * score * 100
     for show, score in desc_ranking:
-        if show in tv_sim_score_sum:
-            tv_sim_score_sum[show] += weights['descriptions'] * score * 100
+        lowercase_show = show.lower()
+        if lowercase_show in tv_sim_score_sum:
+            tv_sim_score_sum[lowercase_show] += weights['descriptions'] * score * 100
         else:
-            tv_sim_score_sum[show] = weights['descriptions'] * score * 100
+            tv_sim_score_sum[lowercase_show] = weights['descriptions'] * score * 100
 
     tv_sim_score_sum = {k: v for k, v in sorted(tv_sim_score_sum.items(), key=lambda item: -item[1])}
     # print(tv_sim_score_sum)
@@ -195,3 +199,6 @@ def final_search(query_show, n, free_search=None, genre=None):
 
 # test2 = final_search("Sherlock", 10, genre="Animation")
 # print(test2)
+
+test2 = final_search("Elementary", 10)
+print(test2)
