@@ -129,7 +129,7 @@ def find_n_similar_shows_descriptions(show, n=10):
 def make_descriptions_model():
     print("START OF SCRIPT")
     descriptions_dict = {}
-    size = 250
+    size = 100
     for show, index in tv_shows_to_index.items():
         lst = find_n_similar_shows_descriptions(show, size)
         if lst is not None:
@@ -137,7 +137,7 @@ def make_descriptions_model():
         else:
             descriptions_dict[show] = []
         print(show + ": index " + str(index) + " len " + str(len(lst)))
-    with open("datasets/p2/description_similarity_250.p", "wb") as f:
+    with open("datasets/p2/description_similarity_100.p", "wb") as f:
         pickle.dump(descriptions_dict, f)
     # print(descriptions_dict)
     print("END OF SCRIPT")
