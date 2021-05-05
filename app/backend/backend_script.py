@@ -95,6 +95,18 @@ def reviewRanking(show, N = 3):
 
 # print(reviewRanking("friends"))
     
+def select_weights(query_show, free_search, various_weight_combos):
+    """
+    """
+    weights = {}
+    if query_show and free_search:
+        weights = various_weight_combos['show & free search']
+    elif query_show:
+        weights = various_weight_combos['just show']
+    elif free_search:
+        weights = various_weight_combos['just free search']
+    return weights
+    
 def final_search(slider_weights, query_show=None, n=10, free_search=None, genre=None, 
 streaming_platform=None, not_like_show=None, not_like_free_search=None):
     """
@@ -158,29 +170,24 @@ streaming_platform=None, not_like_show=None, not_like_free_search=None):
     weights = {}
     not_like_weights = {}
     capitalized_query = capitalize_show_name(query_show)
+    print(query_show)
+    print(capitalized_query)
     capitalized_not_like_query = capitalize_show_name(not_like_show)
 
-    if query_show and free_search:
-        weights = various_weight_combos['show & free search']
-    elif query_show:
-        weights = various_weight_combos['just show']
-    elif free_search:
-        weights = various_weight_combos['just free search']
 
-    if not_like_show and not_like_free_search:
-        not_like_weights = various_weight_combos['show & free search']
-    elif not_like_show:
-        not_like_weights = various_weight_combos['just show']
-    elif not_like_free_search:
-        not_like_weights = various_weight_combos['just free search']
+    weights = select_weights(query_show, free_search, various_weight_combos)
+    not_like_weights = select_weights(not_like_show, not_like_free_search,various_weight_combos)
 
     # EDIT DISTANCE
-    if capitalized_query and capitalized_query not in tv_shows_to_index.keys():
+    if not capitalized_query and capitalized_query not in tv_shows_to_index.keys():
         query_show = ed.edit_search(query_show)[0][1]
+        print(query_show)
         capitalized_query = capitalize_show_name(query_show)
-    if capitalized_not_like_query and capitalized_not_like_query not in tv_shows_to_index.keys():
+    if not_like_show and not capitalized_not_like_query and capitalized_not_like_query not in tv_shows_to_index.keys():
         not_like_show = ed.edit_search(not_like_show)[0][1]
+        print(not_like_show)
         capitalized_not_like_query = capitalize_show_name(not_like_show)
+        print(capitalized_not_like_query)
 
     if not_like_show and slider_weights['not like'] > 0:
         transcripts_ranking = jaccardRanking(not_like_show, n) # list of tv shows
