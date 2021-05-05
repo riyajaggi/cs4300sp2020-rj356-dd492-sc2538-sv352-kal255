@@ -13,6 +13,57 @@
 
   <style>
     body {font-family: Helvetica, Arial, sans-serif}
+    h2 {
+      font-size: 26 ;
+      font-weight: 550;
+      /*text-align: left;
+      padding-left: 5%;*/
+      padding-top: 3%; 
+      font-variant: small-caps;
+    }
+    h3{
+      font-size: 23 ;
+      font-weight: 550;
+      font-variant: small-caps;
+    }
+    .required {
+      font-weight: 300;
+      font-size: 16;
+      padding-left: 5%;
+      padding-top: 1%;
+      padding-bottom: 1%;
+      background-color: lavender;
+      border-radius: 25px;
+      text-align: center;
+    }
+    
+    .slidecontainer {
+      background-color: lavender;
+      border-radius: 25px;
+      text-align: center;
+      font-weight: 300;
+      font-size: 14;
+    }
+
+    .slid{
+      
+      text-align: left;
+      margin-left: 35%;
+      font-weight: 300;
+      font-size: 14;
+      padding-bottom: 3%;
+
+    }
+
+    .weights{
+      text-align: left;
+      
+    }
+
+    .genrediv{
+      align: center;
+      
+    }
   </style>
 
 </head>
@@ -26,9 +77,9 @@
     <div class="form-group">
 
       <div class="required">
-        <p class="btw">TV Show</p>
+        <p class="btw">TV Show*</p>
         <input id="query" type="text" name="search" class="form-control" placeholder="Enter TV Show">
-        <p class="btw">Or/And (keywords can be grouped using quotes)</p>
+        <p class="btw">Or/And* (keywords can be grouped using quotes)</p>
         <input id="query" type="text" name="freeSearch" class="form-control" placeholder="Enter keyword">
         <br><br>
       </div>
@@ -37,8 +88,9 @@
         <input id="not" type="text" name="notShow" class="form-control" placeholder="Shows not to include">
         <input id="type" type="text" name="Genre" class="form-control" placeholder="Genre">
         <input id="stream" type="text" name="platform" class="form-control" placeholder="Platforms"> -->
-      Additional Options:
+      
       <div class="slidecontainer">
+        <h2>additional options </h2> 
         <p class="btw" style="color:red">Not like:</p>
         <input id="query-not" type="text" name="not-tv" class="form-control" placeholder="Enter TV Show">
         <p class="btw" style="color:red">Or/And</p>
@@ -66,8 +118,10 @@
         <p></p>
         <p></p>
         <p></p>
+        <h3>assign weights </h3>
+        <div class = "weights">
         <p class="slid">
-          <label>Assign Weights: </label>
+          
           <br>
           <label>Similarity</label>
           <br>
@@ -82,6 +136,7 @@
           <br>
           <input type="range" min="0" max="100" value="50" class="slider weight" id="keyword" name="keyword-weight">
         </p>
+      </div>
 
 
         <p></p>
@@ -90,6 +145,7 @@
         <p></p>
         <p></p>
         <p></p>
+        <div class = "genrediv"></div>
         <p class="slid">
           <input id="smallquery-genre" type="text" name="genre" class="random" placeholder="Genre" style="  position: center;
             width: 240px;
@@ -103,6 +159,7 @@
           <input type="range" min="1946" max="2021" value="2021" class="slider max" id="maxYear">
           max: <span id="max_val_year"></span>
         </p>
+      </div>
 
 
       </div>
