@@ -245,6 +245,8 @@ def transcript_similarity(query):
     f.close()
     with open("./datasets/p2/index.json") as i:
         temp = json.load(i)
+        if not query in temp:
+            return []
         movie_name_to_index = temp['movie_name_to_index']
         movie_index_to_name = temp['movie_index_to_name']
     i.close()
