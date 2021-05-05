@@ -207,14 +207,8 @@ streaming_platform=None, not_like_show=None, not_like_free_search=None):
     weights = not_like_weights = {}
     capitalized_query = capitalize_show_name(query_show)
     capitalized_not_like_query = capitalize_show_name(not_like_show)
-
     weights = select_weights(query_show, free_search, various_weight_combos)
     not_like_weights = select_weights(not_like_show, not_like_free_search,various_weight_combos)
-
-    # EDIT DISTANCE
-    if not capitalized_query and capitalized_query not in tv_shows_to_index.keys():
-        query_show = ed.edit_search(query_show)[0][1]
-        capitalized_query = capitalize_show_name(query_show)
 
     if not_like_show and slider_weights['not like'] > 0:
         # EDIT DISTANCE
@@ -260,6 +254,10 @@ streaming_platform=None, not_like_show=None, not_like_free_search=None):
     shows_not_to_include = create_shows_not_to_include_list(capitalized_query, not_like_show, not_like_free_search, not_like_tv_sim_score_sum, slider_weights, capitalized_not_like_query)
 
     if query_show:
+        # EDIT DISTANCE
+        if not capitalized_query and capitalized_query not in tv_shows_to_index.keys():
+            query_show = ed.edit_search(query_show)[0][1]
+            capitalized_query = capitalize_show_name(query_show)
         transcripts_ranking = jaccardRanking(query_show, n) # list of tv shows
         reviews_ranking = reviewRanking(query_show, 100) # list of tv shows and sim scores
         if reviews_ranking is None:
