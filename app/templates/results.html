@@ -6,6 +6,7 @@
   <link rel="stylesheet" href="/static/display.css?v=1.0.0">
   <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap" rel="stylesheet" />
+  <script src="/static/js/jquery.min.js"></script>
 </head>
 
 <body
@@ -21,6 +22,8 @@
     <br>
     {% for x in range(data | length) %}
     <div class="form-group">
+      <input type="button" value="Like" onclick="posRel(1, '{{data[x]}}', '{{ show }}', '{{ keyword }}')">
+      <input type="button" value="Dislike" onclick="posRel(0, '{{data[x]}}', '{{ show }}', '{{ keyword }}')">
       <p id="ans" style="text-align: center;
         color: black;
         background: #F7F3F3;
@@ -40,5 +43,18 @@
     </form>
   </div>
 </body>
+
+<script>
+
+  function posRel(rel, result, show, keyword) {
+    $.ajax({
+      url: '/addrel/'.concat(rel, '/', result, '/', show, '/', keyword),
+      type: 'post',
+      success: function () {
+        alert(result);
+      }
+    });
+  }
+</script>
 
 </html>
