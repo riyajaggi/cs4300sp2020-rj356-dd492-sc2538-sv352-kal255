@@ -95,7 +95,7 @@ def reviewRanking(show, N = 3):
 
 # print(reviewRanking("friends"))
     
-def final_search(query_show=None, n=10, free_search=None, genre=None, 
+def final_search(slider_weights, query_show=None, n=10, free_search=None, genre=None, 
 streaming_platform=None, not_like_show=None, not_like_free_search=None):
     """
     Returns: A ranked list of similar shows based on reviews, descriptions, 
@@ -138,15 +138,15 @@ streaming_platform=None, not_like_show=None, not_like_free_search=None):
 
     various_weight_combos = {
         'just show' : {
-            'transcripts' : .10 ,
+            'transcripts' : .10,
             'reviews' : .45,
             'descriptions' : .45,
         },
         'show & free search' : {
-            'transcripts' : .05 ,
-            'reviews' : .45,
-            'descriptions' : .3,
-            'free search' : .2,
+            'transcripts' : .1 * slider_weights["tv show"],
+            'reviews' : .45 * slider_weights["tv show"] ,
+            'descriptions' : .45 * slider_weights["tv show"] ,
+            'free search' : slider_weights["keyword"] ,
         },
         'just free search' : {
             'free search' : 1,

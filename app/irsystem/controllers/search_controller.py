@@ -56,18 +56,31 @@ def search():
         not_keyword = None
 
     if query or free_search:
-        query_show, data = final_search(query_show=query, n=10, free_search=free_search, genre=genre, not_like_show=not_tv_show, not_like_free_search=not_keyword)
+        slider_weights = {
+            "similarity" : int(simWeight)/100,
+            "not like" : int(notWeight)/100,
+            "keyword" : int(keywordWeight)/100,
+            "tv show" :  int(showWeight)/100
+        }
+        print(str(slider_weights['keyword']) + " " + str(slider_weights["tv show"]))
+        query_show, data = final_search(slider_weights, query_show=query, n=10, free_search=free_search, genre=genre, not_like_show=not_tv_show, not_like_free_search=not_keyword)
+        
         output_query_msg= ""
         if query and query_show:
             output_query_msg += "Similar Show: " + query_show + " "
+            if free_search:
+                output_query_msg += "with Weight: " + showWeight + "% "
         if free_search:
             output_query_msg += "Keywords: " + free_search + " "
+            if query:
+                output_query_msg += "with Weight: " + keywordWeight + "% "
         if genre:
             output_query_msg += "Genre: " + genre + " "
         if not_tv_show:
             output_query_msg += "Not Like: " + not_tv_show + " "
         if not_keyword:
             output_query_msg += "Not Keywords: " + not_keyword + " "
+       
         
         if len(data) == 0:
             abort(500)
