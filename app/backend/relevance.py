@@ -104,7 +104,7 @@ def updateRelevanceWords(keywords, result, rel):
 
         show_results = data["scores"][show]
         if result in data["scores"][show].keys():
-            
+
             prev_score = show_results[result][0]/ show_results[result][1]
 
             show_results[result] = [show_results[result][0]+rel,
@@ -138,7 +138,7 @@ def updateRelevanceWords(keywords, result, rel):
         else:
             show_results[result] = [rel, 1]
 
-    return data   
+    return data
 
 def updateData(result, rel, show = None, keywords = None):
     all_data = loadData()
@@ -161,5 +161,5 @@ def resetData():
     json.dump(data, a_file)
     a_file.close()
 
-resetData()
+#resetData()
 #Call updateData()
