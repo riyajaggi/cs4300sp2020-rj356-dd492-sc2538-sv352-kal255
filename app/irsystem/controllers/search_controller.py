@@ -68,7 +68,7 @@ def search():
         if (query and query_show) or free_search:
             output_query = ""
             if query and free_search:
-                output_query = query_show + " and " + not_keyword + " "
+                output_query = query_show + " and " + free_search + " "
             elif query:
                 output_query = query_show + " "
             elif free_search:
