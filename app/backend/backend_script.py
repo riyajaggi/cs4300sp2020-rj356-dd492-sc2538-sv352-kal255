@@ -76,14 +76,8 @@ def reviewRanking(show, N=3):
 
 
 # print(reviewRanking("friends"))
-<<<<<<< HEAD
     
 def select_weights(query_show, free_search, various_weight_combos, not_like=False):
-=======
-
-
-def select_weights(query_show, free_search, various_weight_combos):
->>>>>>> a8484f78c7783981d5ccd4eeab25794a2c7a5557
     """
     Returns weights represented for the final result similarity score
     based on the query inputs
@@ -96,25 +90,19 @@ def select_weights(query_show, free_search, various_weight_combos):
     Precondition: None or non-empty string
 
     Parameter various_weight_combos: a dictionary with different weight combinations
-<<<<<<< HEAD
-    Precondition: a dictionary with at least three keys: "show & free_search", 
+    Precondition: a dictionary with at least four keys: "show & free_search", 
     "not like show & free_search", "just show", and "just free search" and values 
     must be floats between 0 and 1 
-=======
-    Precondition: a dictionary with at least three keys: "show & free_search",
-    "just show", and "just free search" and values must be floats between 0 and 1
->>>>>>> a8484f78c7783981d5ccd4eeab25794a2c7a5557
+
+    Parameter not_like: whether or not this search contains not like inputs
+    Precondition: boolean
     """
     weights = {}
     show_and_free_search = 'show & free search'
     if not_like:
         show_and_free_search = 'not like show & free search'
     if query_show and free_search:
-<<<<<<< HEAD
         weights = various_weight_combos[show_and_free_search]
-=======
-        weights = various_weight_combos["show & free search"]
->>>>>>> a8484f78c7783981d5ccd4eeab25794a2c7a5557
     elif query_show:
         weights = various_weight_combos["just show"]
     elif free_search:
@@ -171,14 +159,9 @@ def final_search(
     transcripts,and other optional arguments.
 
     Parameter slider_weights: a dictionary with input weights for sliders
-<<<<<<< HEAD
     Precondition: a dictionary with four keys: "similarity",  "not like", 
     "show/keyword", and "not like show/keyword" and values must be floats 
     between 0 and 1
-=======
-    Precondition: a dictionary with four keys: "similarity",  "not like",
-    "keyword", and "tv shows" and values must be floats between 0 and 1
->>>>>>> a8484f78c7783981d5ccd4eeab25794a2c7a5557
 
     (Optional if free_search is not None)
     Parameter query_show: the given show
@@ -221,7 +204,6 @@ def final_search(
             "reviews": 0.40,
             "descriptions": 0.35,
         },
-<<<<<<< HEAD
         'just free search' : {
             'free search' : 1,
         },
@@ -237,17 +219,6 @@ def final_search(
             'descriptions' : .35 * (1 - slider_weights["not like show/keyword"]),
             'free search' : slider_weights["not like show/keyword"] ,
         }
-=======
-        "show & free search": {
-            "transcripts": 0.25 * slider_weights["tv show"],
-            "reviews": 0.40 * slider_weights["tv show"],
-            "descriptions": 0.35 * slider_weights["tv show"],
-            "free search": slider_weights["keyword"],
-        },
-        "just free search": {
-            "free search": 1,
-        },
->>>>>>> a8484f78c7783981d5ccd4eeab25794a2c7a5557
     }
     results = []
     not_like_tv_sim_score_sum = tv_sim_score_sum = {}
@@ -255,17 +226,9 @@ def final_search(
     capitalized_query = capitalize_show_name(query_show)
     capitalized_not_like_query = capitalize_show_name(not_like_show)
     weights = select_weights(query_show, free_search, various_weight_combos)
-<<<<<<< HEAD
     not_like_weights = select_weights(not_like_show, not_like_free_search, various_weight_combos, True)
 
     if not_like_show and slider_weights['not like'] > 0:        
-=======
-    not_like_weights = select_weights(
-        not_like_show, not_like_free_search, various_weight_combos
-    )
-
-    if not_like_show and slider_weights["not like"] > 0:
->>>>>>> a8484f78c7783981d5ccd4eeab25794a2c7a5557
         # EDIT DISTANCE
         if (
             not capitalized_not_like_query
@@ -341,16 +304,9 @@ def final_search(
         if not capitalized_query and capitalized_query not in tv_shows_to_index.keys():
             query_show = ed.edit_search(query_show)[0][1]
             capitalized_query = capitalize_show_name(query_show)
-<<<<<<< HEAD
         
         transcripts_ranking = transcriptRanking(query_show, 100) # list of tv shows
         reviews_ranking = reviewRanking(query_show, 100) # list of tv shows and sim scores
-=======
-        transcripts_ranking = transcriptRanking(query_show, 100)  # list of tv shows
-        reviews_ranking = reviewRanking(
-            query_show, 100
-        )  # list of tv shows and sim scores
->>>>>>> a8484f78c7783981d5ccd4eeab25794a2c7a5557
         if reviews_ranking is None:
             reviews_ranking = []
         desc_ranking = descriptionRanking(query_show, 100)
