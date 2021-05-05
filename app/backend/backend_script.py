@@ -18,9 +18,10 @@ def capitalize_show_name(show):
     Parameter show: a show title
     Precondition: a non-empty string
     """
-    for capitalized_show, _ in tv_shows_to_index.items():
-        if capitalized_show.lower() == show.lower():
-           return capitalized_show
+    if show is not None:
+        for capitalized_show, _ in tv_shows_to_index.items():
+            if capitalized_show.lower() == show.lower():
+                return capitalized_show
 
 
 def jaccardRanking(show, N=3):
@@ -94,19 +95,22 @@ def reviewRanking(show, N = 3):
 
 # print(reviewRanking("friends"))
     
-def final_search(query_show=None, n=10, free_search=None, genre=None, streaming_platform=None):
+def final_search(query_show=None, n=10, free_search=None, genre=None, 
+streaming_platform=None, not_like_show=None, not_like_free_search=None):
     """
     Returns: A ranked list of similar shows based on reviews, descriptions, 
     transcripts,and other optional arguments.
 
+    (Optional if free_search is not None) 
     Parameter query_show: the given show
-    Precondition: a non-empty string
+    Precondition: (Default is None) None or non-empty string
 
     Parameter n: the number of similar shows to output
     Precondition: an integer
 
-    (Optional) Parameter free_search: a query with extra information to include 
-    in the search 
+    (Optional if query_show is not None) 
+    Parameter free_search: a query with extra information to include in the 
+    search 
     Precondition: (Default is None) None or non-empty string
 
     (Optional) Parameter genre: genre that all the resulting shows must be in
@@ -117,6 +121,19 @@ def final_search(query_show=None, n=10, free_search=None, genre=None, streaming_
     resulting shows must be on
     Precondition: (Default is None) None or non-empty string representation of 
     a valid streaming platforms
+    
+    (Optional) Parameter streaming platform: streaming platform that all the 
+    resulting shows must be on
+    Precondition: (Default is None) None or non-empty string representation of 
+    a valid streaming platforms
+
+    (Optional) Parameter not_like_show: the show that you dont want the results 
+    to be like
+    Precondition: (Default is None) None or non-empty string
+
+    (Optional) Parameter not_like_free_search: a query with extra information 
+    to not include in the search 
+    Precondition: (Default is None) None or non-empty string
     """
 
     various_weight_combos = {
@@ -136,9 +153,12 @@ def final_search(query_show=None, n=10, free_search=None, genre=None, streaming_
         }
     }
     results = []
+    not_like_tv_sim_score_sum = {}
     tv_sim_score_sum = {}
     weights = {}
+    not_like_weights = {}
     capitalized_query = capitalize_show_name(query_show)
+    capitalized_not_like_query = capitalize_show_name(not_like_show)
 
     if query_show is not None and free_search is not None:
         weights = various_weight_combos['show & free search']
@@ -147,14 +167,63 @@ def final_search(query_show=None, n=10, free_search=None, genre=None, streaming_
     elif free_search is not None:
         weights = various_weight_combos['just free search']
 
-    # EDIT DISTANCE 
-    if capitalized_query not in tv_shows_to_index.keys():
+    if not_like_show is not None and not_like_free_search is not None:
+        not_like_weights = various_weight_combos['show & free search']
+    elif not_like_show is not None:
+        not_like_weights = various_weight_combos['just show']
+    elif not_like_free_search is not None:
+        not_like_weights = various_weight_combos['just free search']
+
+    # EDIT DISTANCE
+    if capitalized_query is not None and capitalized_query not in tv_shows_to_index.keys():
         query_show = ed.edit_search(query_show)[0][1]
         capitalized_query = capitalize_show_name(query_show)
+    if capitalized_not_like_query is not None and capitalized_not_like_query not in tv_shows_to_index.keys():
+        not_like_show = ed.edit_search(not_like_show)[0][1]
+        capitalized_not_like_query = capitalize_show_name(not_like_show)
+
+    if not_like_show is not None:
+        transcripts_ranking = jaccardRanking(not_like_show, n) # list of tv shows
+        reviews_ranking = reviewRanking(not_like_show, 50) # list of tv shows and sim scores
+        if reviews_ranking is None:
+            reviews_ranking = []
+        desc_ranking = descriptionRanking(not_like_show, 10)
+        for i in range(len(transcripts_ranking)):
+            show = transcripts_ranking[i]
+            lowercase_show = show.lower()
+            score = (.5 - ((i+1)/100))
+            if lowercase_show in not_like_tv_sim_score_sum:
+                not_like_tv_sim_score_sum[lowercase_show] += not_like_weights['transcripts'] * score * 100
+            else:
+                not_like_tv_sim_score_sum[lowercase_show] = not_like_weights['transcripts'] * score * 100
+        for show, score in reviews_ranking:
+            lowercase_show = show.lower()
+            if lowercase_show in not_like_tv_sim_score_sum:
+                not_like_tv_sim_score_sum[lowercase_show] += not_like_weights['reviews'] * score * 100
+            else:
+                not_like_tv_sim_score_sum[lowercase_show] = not_like_weights['reviews'] * score * 100
+        for show, score in desc_ranking:
+            lowercase_show = show.lower()
+            if lowercase_show in not_like_tv_sim_score_sum:
+                not_like_tv_sim_score_sum[lowercase_show] += not_like_weights['descriptions'] * score * 100
+            else:
+                not_like_tv_sim_score_sum[lowercase_show] = not_like_weights['descriptions'] * score * 100
+
+    if not_like_free_search is not None:
+        free_search_ranking = adhoc_similarity.find_n_similar_shows_free_search(not_like_free_search, n*2) # list of tv shows and sim scores
+        for show, score in free_search_ranking:
+            lowercase_show = show.lower()
+            if lowercase_show in not_like_tv_sim_score_sum:
+                not_like_tv_sim_score_sum[lowercase_show] += not_like_weights['free search'] * score * 100
+            else:
+                not_like_tv_sim_score_sum[lowercase_show] = not_like_weights['free search'] * score * 100
+    
+    not_like_tv_sim_score_sum = {k: v for k, v in sorted(not_like_tv_sim_score_sum.items(), key=lambda item: -item[1])}
+    # print(not_like_tv_sim_score_sum)
 
     if query_show is not None:
         transcripts_ranking = jaccardRanking(query_show, n) # list of tv shows
-        reviews_ranking = reviewRanking(query_show, 10) # list of tv shows and sim scores
+        reviews_ranking = reviewRanking(query_show, 50) # list of tv shows and sim scores
         if reviews_ranking is None:
             reviews_ranking = []
         desc_ranking = descriptionRanking(query_show, 10)
@@ -194,7 +263,7 @@ def final_search(query_show=None, n=10, free_search=None, genre=None, streaming_
     index = 0
     for key, _ in tv_sim_score_sum.items():
         capitalized_show = capitalize_show_name(key)
-        if capitalized_show is not None and capitalized_query != capitalized_show:
+        if capitalized_show is not None and capitalized_query != capitalized_show and not key in not_like_tv_sim_score_sum.keys():
             show_info = merged_tv_shows[tv_shows_to_index[capitalized_show]]
             results.append(capitalized_show)
             index += 1
