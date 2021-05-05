@@ -97,6 +97,19 @@ def reviewRanking(show, N = 3):
     
 def select_weights(query_show, free_search, various_weight_combos):
     """
+    Returns weights represented for the final result similarity score
+    based on the query inputs
+
+    Parameter query_show: the given show
+    Precondition: None or non-empty string
+
+    Parameter free_search: a query with extra information to include in the 
+    search 
+    Precondition: None or non-empty string
+
+    Parameter various_weight_combos: a dictionary with different weight combinations
+    Precondition: a dictionary with at least three keys: "show & free_search", 
+    "just show", and "just free search" and values must be floats between 0 and 1 
     """
     weights = {}
     if query_show and free_search:
@@ -113,12 +126,16 @@ streaming_platform=None, not_like_show=None, not_like_free_search=None):
     Returns: A ranked list of similar shows based on reviews, descriptions, 
     transcripts,and other optional arguments.
 
+    Parameter slider_weights: a dictionary with input weights for sliders
+    Precondition: a dictionary with four keys: "similarity",  "not like", 
+    "keyword", and "tv shows" and values must be floats between 0 and 1
+
     (Optional if free_search is not None) 
     Parameter query_show: the given show
     Precondition: (Default is None) None or non-empty string
 
-    Parameter n: the number of similar shows to output
-    Precondition: an integer
+    (Optional) Parameter n: the number of similar shows to output
+    Precondition: (Default is 10) an integer
 
     (Optional if query_show is not None) 
     Parameter free_search: a query with extra information to include in the 
@@ -165,15 +182,10 @@ streaming_platform=None, not_like_show=None, not_like_free_search=None):
         }
     }
     results = []
-    not_like_tv_sim_score_sum = {}
-    tv_sim_score_sum = {}
-    weights = {}
-    not_like_weights = {}
+    not_like_tv_sim_score_sum = tv_sim_score_sum = {}
+    weights = not_like_weights = {}
     capitalized_query = capitalize_show_name(query_show)
-    print(query_show)
-    print(capitalized_query)
     capitalized_not_like_query = capitalize_show_name(not_like_show)
-
 
     weights = select_weights(query_show, free_search, various_weight_combos)
     not_like_weights = select_weights(not_like_show, not_like_free_search,various_weight_combos)
