@@ -16,8 +16,6 @@
     h2 {
       font-size: 26 ;
       font-weight: 550;
-      /*text-align: left;
-      padding-left: 5%;*/
       padding-top: 3%; 
       font-variant: small-caps;
     }
@@ -26,6 +24,11 @@
       font-weight: 550;
       font-variant: small-caps;
     }
+
+    body {
+      font-family: Helvetica, Arial, sans-serif
+    }
+
     .required {
       font-weight: 300;
       font-size: 16;
@@ -55,15 +58,6 @@
 
     }
 
-    .weights{
-      text-align: left;
-      
-    }
-
-    .genrediv{
-      align: center;
-      
-    }
   </style>
 
 </head>
@@ -131,10 +125,11 @@
           <input type="range" min="0" max="100" value="0" class="slider weight" id="not-like" name="not-weight">
           <label>TV Show - Keyword</label>
           <br>
-          <input type="range" min="0" max="100" value="50" class="slider weight" id="show" name="show-weight">
+          <input type="range" min="0" max="100" value="50" class="slider weight" id="show" name="show-keyword-weight">
           <label>Not like: TV Show - Keyword</label>
           <br>
-          <input type="range" min="0" max="100" value="50" class="slider weight" id="keyword" name="keyword-weight">
+          <input type="range" min="0" max="100" value="50" class="slider weight" id="keyword"
+            name="not-like-show-keyword-weight">
         </p>
       </div>
 
