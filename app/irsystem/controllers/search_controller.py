@@ -16,9 +16,36 @@ net_id = "Divya Damodaran: dd492, Riya Jaggi: rj356, Siddhi Chordia: sc2538, Sid
 def search():
     query = request.args.get("search")
     free_search = request.args.get("freeSearch")
+    #genre is a comma seperate string of genres; it is an empty string when there are no genres
+    genre = request.args.get("genre")
+    #subscription is a comma seperate string of subscriptions; it is an empty string when there are no subscriptions
+    subscription = request.args.get("subscriptions")
+
+    #seasMin is a string representing min seasons; default is 1
+    seasMin = request.args.get("seasonMin")
+    #seasMax is a string representing max seasons; default is 187
+    seasMax = request.args.get("seasonMax")
+
+    #yearMin is a string representing min years; default is 1946
+    yearMin = request.args.get("yearMin")
+    #yearMax is a string representing max years; default is 2021
+    yearMax = request.args.get("yearMax")
+
+
+    #simWeight is a string representing weight of similarity 1-100; default is 100
+    simWeight = request.args.get("similarity-weight")
+    #notWeight is a string representing weight of <not like> 1-100; default is 0
+    notWeight = request.args.get("not-weight")
+
+    #keywordWeight is a string representing weight of keyword 1-100; default is 100 if only keyword, 50 if both, 0 if not at all
+    keywordWeight = request.args.get("keyword-weight")
+    #showWeight is a string representing weight of show 1-100; default is 100 if only show, 50 if both, 0 if not at all
+    showWeight = request.args.get("show-weight")
+
+
     if free_search == "":
         free_search = None
-    genre = request.args.get("genre")
+
     if genre == "":
         genre = None
 

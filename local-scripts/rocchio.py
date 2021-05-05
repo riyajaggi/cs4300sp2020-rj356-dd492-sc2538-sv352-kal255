@@ -192,7 +192,7 @@ def main():
     i.close()
     print(movie_name_to_index)
     tfidf_mat = np.load('input_doc_mat.npy')
-    results = rankings_with_rocchio(["Fresh Off the Boat"], query_obj, tfidf_mat, movie_name_to_index, \
+    results = rankings_with_rocchio(["Sherlock"], query_obj, tfidf_mat, movie_name_to_index, \
                 movie_index_to_name)
     print(results)
 

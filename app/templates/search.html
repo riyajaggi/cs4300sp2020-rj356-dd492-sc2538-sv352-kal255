@@ -1,35 +1,236 @@
 <html>
 
 <head>
-    <link rel="stylesheet" href="/static/bootstrap.min.css?v=1.0.0">
-    <link rel="stylesheet" href="/static/main.css?v=1.0.0">
-    <link rel="stylesheet" href="/static/prototype1.css?v=1.0.0">
-    <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed&display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" type="text/css" media="all" href="../static/selectize.css">
+  <link rel="stylesheet" href="/static/bootstrap.min.css?v=1.0.0">
+  <link rel="stylesheet" href="/static/main.css?v=1.0.0">
+  <link rel="stylesheet" href="/static/prototype1.css?v=1.0.0">
+
+  <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap" rel="stylesheet" />
+  <script src="/static/js/jquery.min.js"></script>
+  <script src="/static/js/selectize.min.js"></script>
 </head>
 
-<body style="background-image: url(static/streamOn_background.png);">
-    <form class="form-inline global-search" id="main-search">
-        <h1 id="title">
-            stream<span id="title" style="color: #5680E9;">On</span>
-        </h1>
-        <br><br>
+<body style="background-image: url('../static/streamOn_background.png');">
+  <form class="form-inline global-search" id="main-search">
+    <h1 id="title">
+      stream<span id="title" style="color: #5680E9;">On</span>
+    </h1>
+    <br>
+    <div class="form-group">
 
-        <div class="form-group">
-            <input id="query" type="text" name="search" class="form-control" placeholder="Enter TV Show *">
-            <br><br>
-            <input id="smallquery" type="text" name="freeSearch" class="form-control" placeholder="Enter keyword">
-            <input id="smallquery" type="text" name="genre" class="form-control" placeholder="Genre">
-        </div>
-        <!--     <form class="form-inline global-search">
+      <div class="required">
+
+        <input id="query" type="text" name="search" class="form-control" placeholder="Enter TV Show">
+        <p class="btw">Or/And</p>
+        <input id="query" type="text" name="freeSearch" class="form-control" placeholder="Enter keyword">
+        <br><br>
+      </div>
+      <br>
+      <!--     <form class="form-inline global-search">
         <input id="not" type="text" name="notShow" class="form-control" placeholder="Shows not to include">
         <input id="type" type="text" name="Genre" class="form-control" placeholder="Genre">
         <input id="stream" type="text" name="platform" class="form-control" placeholder="Platforms"> -->
-<br><br>
-        <p>
-    <button id="button" type="submit" position="center" form="main-search"> Find Shows! </button>
-  </p>
-    </form>
+      Additional Options:
+      <div class="slidecontainer">
+        <p class="btw" style="color:red">Not like:</p>
+        <input id="query-not" type="text" name="not-tv" class="form-control" placeholder="Enter TV Show">
+        <p class="btw" style="color:red">Or/And</p>
+        <input id="query-not" type="text" name="not-keyword" class="form-control" placeholder="Enter keyword">
+        <br><br>
+
+        <p class="slid">
+
+          <input id="smallquery-subscriptions" type="text" name="subscriptions" class="random"
+            placeholder="Enter subscriptions" style="  position: center;
+            width: 240px;
+            height: 45px;">
+          <br><br>
+          <label>No. of Seasons</label>
+          <br>
+
+          <input type="range" min="1" max="187" value="1" class="slider min" id="minSeasons" name="seasonMin">
+          min: <span id="min_val"></span>
+          <input type="range" min="1" max="187" value="187" class="slider max" id="maxSeasons" name="seasonMax">
+          max: <span id="max_val"></span>
+        </p>
+        <p></p>
+        <p></p>
+        <p></p>
+        <p></p>
+        <p></p>
+        <p></p>
+        <p class="slid">
+          <label>Assign Weights: </label>
+          <br>
+          <label>Similarity</label>
+          <br>
+          <input type="range" min="0" max="100" value="100" class="slider weight" id="simil" name="similarity-weight">
+          <label>Not like</label>
+          <br>
+          <input type="range" min="0" max="100" value="0" class="slider weight" id="not-like" name="not-weight">
+          <label>TV Show</label>
+          <br>
+          <input type="range" min="0" max="100" value="50" class="slider weight" id="show" name="show-weight">
+          <label>Keyword</label>
+          <br>
+          <input type="range" min="0" max="100" value="50" class="slider weight" id="keyword" name="keyword-weight">
+        </p>
+
+
+        <p></p>
+        <p></p>
+        <p></p>
+        <p></p>
+        <p></p>
+        <p></p>
+        <p class="slid">
+          <input id="smallquery-genre" type="text" name="genre" class="random" placeholder="Genre" style="  position: center;
+            width: 240px;
+            height: 45px;">
+          <br><br>
+          <label>Year</label>
+          <br>
+
+          <input type="range" min="1946" max="2021" value="1946" class="slider min" id="minYear">
+          min: <span id="min_val_year"></span>
+          <input type="range" min="1946" max="2021" value="2021" class="slider max" id="maxYear">
+          max: <span id="max_val_year"></span>
+        </p>
+
+
+      </div>
+    </div>
+    <br><br>
+    <p>
+      <button id="button" type="submit" position="center" form="main-search"> Find Shows! </button>
+    </p>
+  </form>
+
+  <script>
+    $('#smallquery-genre').selectize({
+      delimiter: ',',
+      persist: false,
+      maxItems: null,
+      valueField: 'genre',
+      labelField: 'genre',
+      searchField: ['genre'],
+      options: [{ genre: 'Thriller' }, { genre: 'Crime' }, { genre: 'Drama' }, { genre: 'Action & Adventure' }, { genre: 'Action' }, { genre: 'Adventure' }, { genre: 'Comedy' }, { genre: 'Animation' }, { genre: 'Horror' }, { genre: 'Fantasy' }, { genre: 'Mystery' }, { genre: 'History' }, { genre: 'Romance' }, { genre: 'News' }, { genre: 'Anime' }, { genre: 'Sci-Fi' }, { genre: 'Science-Fiction' }, { genre: 'Music' }, { genre: 'Reality-TV' }, { genre: 'LGBTQ' }, { genre: 'Biography' }, { genre: 'Documentary' }, { genre: 'Stand-up & Talk' }, { genre: 'Talk-Show' }, { genre: 'War' }, { genre: 'Short' }, { genre: 'Sport' }, { genre: 'Family' }, { genre: 'Musical' }, { genre: 'Children' }, { genre: 'Travel' }, { genre: 'Game-Show' }, { genre: 'Reality' }, { genre: 'Cult' }, { genre: 'Western' }, { genre: 'Food' }, { genre: 'Game Show' }, { genre: 'Home & Garden' }, { genre: 'Pet' }, { genre: 'Science' }, { genre: 'DIY' }
+      ],
+      create: function (input) {
+        if (input in ['Thriller', 'Crime', 'Drama', 'Action & Adventure', 'Action', 'Adventure', 'Comedy', 'Animation', 'Horror', 'Fantasy', 'Mystery', 'History', 'Romance', 'News', 'Anime', 'Sci-Fi', 'Science-Fiction', 'Music', 'Reality-TV', 'LGBTQ', 'Biography', 'Documentary', 'Stand-up & Talk', 'Talk-Show', 'War', 'Short', 'Sport', 'Family', 'Musical', 'Children', 'Travel', 'Game-Show', 'Reality', 'Cult', 'Western', 'Food', 'Game Show', 'Home & Garden', 'Pet', 'Science', 'DIY']) {
+          return {
+            value: input,
+            text: input
+          }
+        }
+        else {
+          return {
+          }
+        }
+      }
+    });
+
+    $('#smallquery-subscriptions').selectize({
+      delimiter: ',',
+      persist: false,
+      maxItems: null,
+      valueField: 'subscription',
+      labelField: 'subscription',
+      searchField: ['subscription'],
+      options: [{ subscription: 'Netflix' }, { subscription: 'HBO MAX' }, { subscription: 'HBO' }, { subscription: 'Free Services' }, { subscription: 'Hulu' }, { subscription: 'Youtube TV' }, { subscription: 'Prime Video' }, { subscription: 'CBS All Access' }, { subscription: 'Hoopla' }, { subscription: 'Paramount+' }, { subscription: 'TBS' }, { subscription: 'Comedy Central' }, { subscription: 'fuboTV' }, { subscription: 'TNT' }, { subscription: 'NBC' }, { subscription: 'USA' }, { subscription: 'YouTube Premium' }, { subscription: 'FX' }, { subscription: 'Disney+' }, { subscription: 'FOX' }, { subscription: 'AMC' }, { subscription: 'Showtime' }, { subscription: 'ABC' }, { subscription: 'Viceland' }, { subscription: 'BritBox' }, { subscription: 'Crunchyroll' }, { subscription: 'Starz' }, { subscription: 'Syfy' }, { subscription: 'BBC America' }, { subscription: 'DC Universe' }, { subscription: 'Discovery+' }, { subscription: 'Apple TV+' }, { subscription: 'AcornTV' }, { subscription: 'Adult Swim' }, { subscription: 'Funimation' }, { subscription: 'Cinemax' }, { subscription: 'Tubi' }, { subscription: 'iTunes' }, { subscription: 'Apple TV' }, { subscription: 'Peacock+' }, { subscription: 'MTV' }, { subscription: 'TVLand' }, { subscription: 'Nick' }, { subscription: 'IFC' }, { subscription: 'Peacock Premium' }, { subscription: 'Cartoon Network' }, { subscription: 'Epix' }, { subscription: 'Science' }, { subscription: 'History' }, { subscription: 'Shudder' }, { subscription: 'AMC Premiere' }, { subscription: 'VH1' }, { subscription: 'Sundance' }, { subscription: 'BET' }, { subscription: 'NatGeo' }, { subscription: 'TruTV' }, { subscription: 'Hallmark' }, { subscription: 'Travel Channel' }, { subscription: 'BET+' }, { subscription: 'A&E' }, { subscription: 'Food Network' }, { subscription: 'Disney' }, { subscription: 'Lifetime' }, { subscription: 'Hallmark Movies Now' }, { subscription: 'Bravo' }, { subscription: 'TLC' }, { subscription: 'HGTV' }, { subscription: 'CNBC' }, { subscription: 'IndieFlix' }, { subscription: 'DIY' }, { subscription: 'FYI' }, { subscription: 'YouTube TV' }
+      ],
+      create: function (input) {
+        if (input in ['Netflix', 'HBO MAX', 'HBO', 'Free Services', 'Hulu', 'Youtube TV', 'Prime Video', 'CBS All Access', 'Hoopla', 'Paramount+', 'TBS', 'Comedy Central', 'fuboTV', 'TNT', 'NBC', 'USA', 'YouTube Premium', 'FX', 'Disney+', 'FOX', 'AMC', 'Showtime', 'ABC', 'Viceland', 'BritBox', 'Crunchyroll', 'Starz', 'Syfy', 'BBC America', 'DC Universe', 'Discovery+', 'Apple TV+', 'AcornTV', 'Adult Swim', 'Funimation', 'Cinemax', 'Tubi', 'iTunes', 'Apple TV', 'Peacock+', 'MTV', 'TVLand', 'Nick', 'IFC', 'Peacock Premium', 'Cartoon Network', 'Epix', 'Science', 'History', 'Shudder', 'AMC Premiere', 'VH1', 'Sundance', 'BET', 'NatGeo', 'TruTV', 'Hallmark', 'Travel Channel', 'BET+', 'A&E', 'Food Network', 'Disney', 'Lifetime', 'Hallmark Movies Now', 'Bravo', 'TLC', 'HGTV', 'CNBC', 'IndieFlix', 'DIY', 'FYI', 'YouTube TV']) {
+          return {
+            value: input,
+            text: input
+          }
+        }
+        else {
+          return {
+          }
+        }
+      }
+    });
+
+
+
+    var minSeasonSlider = document.getElementById("minSeasons");
+    var maxSeasonSlider = document.getElementById("maxSeasons");
+    var min_val = document.getElementById("min_val");
+    var max_val = document.getElementById("max_val");
+    min_val.innerHTML = minSeasonSlider.value;
+    max_val.innerHTML = maxSeasonSlider.value;
+
+    minSeasonSlider.oninput = function () {
+      maxVal = parseInt(maxSeasonSlider.value)
+      minVal = parseInt(this.value);
+
+      if (minVal > maxVal) {
+        maxSeasonSlider.value = minVal;
+        min_val.innerHTML = this.value;
+        max_val.innerHTML = maxSeasonSlider.value
+
+      }
+      min_val.innerHTML = this.value;
+      max_val.innerHTML = maxSeasonSlider.value
+    };
+
+    maxSeasonSlider.oninput = function () {
+      maxVal = parseInt(this.value)
+      minVal = parseInt(minSeasonSlider.value);
+
+      if (minVal > maxVal) {
+        minSeasonSlider.value = maxVal;
+        max_val.innerHTML = this.value;
+        min_val.innerHTML = minSeasonSlider.value
+      }
+      max_val.innerHTML = this.value;
+      min_val.innerHTML = minSeasonSlider.value
+
+    };
+
+
+
+    var minYearSlider = document.getElementById("minYear");
+    var maxYearSlider = document.getElementById("maxYear");
+    var min_val_year = document.getElementById("min_val_year");
+    var max_val_year = document.getElementById("max_val_year");
+    min_val_year.innerHTML = minYearSlider.value;
+    max_val_year.innerHTML = maxYearSlider.value;
+
+    minYearSlider.oninput = function () {
+      maxVal = parseInt(maxYearSlider.value)
+      minVal = parseInt(this.value);
+
+      if (minVal > maxVal) {
+        maxYearSlider.value = minVal;
+        min_val_year.innerHTML = this.value;
+        max_val_year.innerHTML = maxYearSlider.value
+
+      }
+      min_val_year.innerHTML = this.value;
+      max_val_year.innerHTML = maxYearSlider.value
+    };
+
+    maxYearSlider.oninput = function () {
+      maxVal = parseInt(this.value)
+      minVal = parseInt(minYearSlider.value);
+
+      if (minVal > maxVal) {
+        minYearSlider.value = maxVal;
+        max_val_year.innerHTML = this.value;
+        min_val_year.innerHTML = minYearSlider.value
+      }
+      max_val_year.innerHTML = this.value;
+      min_val_year.innerHTML = minYearSlider.value
+
+    };
+
+
+  </script>
 
 </body>
 

@@ -3,7 +3,7 @@
   font-family: Roboto Condensed;
   font-style: normal;
   font-weight: normal;
-  font-size: 96px;
+  font-size: 78px;
   line-height: 112px;
   text-align: center;
   letter-spacing: -0.02em;
@@ -30,7 +30,7 @@
 
 #query {
   position: center;
-  width: 727px;
+  width: 363.5px;
   height: 51px;
   /* left: 357px; */
   /* top: 326px; */
@@ -51,26 +51,30 @@
   color: #8A8A8A;
 }
 
-#smallquery {
+#query-not {
   position: center;
-  width: 363px;
+  width: 363.5px;
   height: 51px;
-  /* left: 136px;
-  top: 421px; */
+  /* left: 357px; */
+  /* top: 326px; */
 
-  background: #F7F3F3;
+  background: white;
   border: 2px solid #D8CFCF;
   box-sizing: border-box;
   border-radius: 25px;
+  margin: auto;
+
   font-family: 'Source Sans Pro', sans-serif;
   font-style: normal;
   font-weight: normal;
-  font-size: 22px;
-  line-height: 26px;
+  font-size: 18px;
+  line-height: 22px;
   letter-spacing: -0.02em;
 
   color: #8A8A8A;
 }
+
+
 
 #button {
   position: center;
