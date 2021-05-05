@@ -95,18 +95,68 @@ def reviewRanking(show, N = 3):
 
 # print(reviewRanking("friends"))
     
+def select_weights(query_show, free_search, various_weight_combos):
+    """
+    Returns weights represented for the final result similarity score
+    based on the query inputs
+
+    Parameter query_show: the given show
+    Precondition: None or non-empty string
+
+    Parameter free_search: a query with extra information to include in the 
+    search 
+    Precondition: None or non-empty string
+
+    Parameter various_weight_combos: a dictionary with different weight combinations
+    Precondition: a dictionary with at least three keys: "show & free_search", 
+    "just show", and "just free search" and values must be floats between 0 and 1 
+    """
+    weights = {}
+    if query_show and free_search:
+        weights = various_weight_combos['show & free search']
+    elif query_show:
+        weights = various_weight_combos['just show']
+    elif free_search:
+        weights = various_weight_combos['just free search']
+    return weights
+
+def create_shows_not_to_include_list(capitalized_query, not_like_show, not_like_free_search, not_like_tv_sim_score_sum, slider_weights, capitalized_not_like_query=None):
+    """
+    Returns a list of shows not to include in the final search results
+    """
+    shows_not_to_include = [capitalized_query]
+    if not_like_show or not_like_free_search:
+        shows_not_to_include.append(capitalized_not_like_query)
+        not_like_tv_sim_score_sum = {k: v for k, v in sorted(not_like_tv_sim_score_sum.items(), key=lambda item: -item[1])}
+        n_not_like_shows = len(not_like_tv_sim_score_sum)
+        n_not_including = int(slider_weights['not like'] * n_not_like_shows)
+        print(n_not_including)
+        count = 0
+        for key, _ in not_like_tv_sim_score_sum.items():
+            if count == n_not_including:
+                break
+            capitalized_show = capitalize_show_name(key)
+            if capitalized_show:
+                shows_not_to_include.append(capitalized_show)
+                count += 1
+    return shows_not_to_include
+
 def final_search(slider_weights, query_show=None, n=10, free_search=None, genre=None, 
 streaming_platform=None, not_like_show=None, not_like_free_search=None):
     """
     Returns: A ranked list of similar shows based on reviews, descriptions, 
     transcripts,and other optional arguments.
 
+    Parameter slider_weights: a dictionary with input weights for sliders
+    Precondition: a dictionary with four keys: "similarity",  "not like", 
+    "keyword", and "tv shows" and values must be floats between 0 and 1
+
     (Optional if free_search is not None) 
     Parameter query_show: the given show
     Precondition: (Default is None) None or non-empty string
 
-    Parameter n: the number of similar shows to output
-    Precondition: an integer
+    (Optional) Parameter n: the number of similar shows to output
+    Precondition: (Default is 10) an integer
 
     (Optional if query_show is not None) 
     Parameter free_search: a query with extra information to include in the 
@@ -138,7 +188,7 @@ streaming_platform=None, not_like_show=None, not_like_free_search=None):
 
     various_weight_combos = {
         'just show' : {
-            'transcripts' : .10,
+            'transcripts' : .1,
             'reviews' : .45,
             'descriptions' : .45,
         },
@@ -153,41 +203,30 @@ streaming_platform=None, not_like_show=None, not_like_free_search=None):
         }
     }
     results = []
-    not_like_tv_sim_score_sum = {}
-    tv_sim_score_sum = {}
-    weights = {}
-    not_like_weights = {}
+    not_like_tv_sim_score_sum = tv_sim_score_sum = {}
+    weights = not_like_weights = {}
     capitalized_query = capitalize_show_name(query_show)
     capitalized_not_like_query = capitalize_show_name(not_like_show)
 
-    if query_show is not None and free_search is not None:
-        weights = various_weight_combos['show & free search']
-    elif query_show is not None:
-        weights = various_weight_combos['just show']
-    elif free_search is not None:
-        weights = various_weight_combos['just free search']
-
-    if not_like_show is not None and not_like_free_search is not None:
-        not_like_weights = various_weight_combos['show & free search']
-    elif not_like_show is not None:
-        not_like_weights = various_weight_combos['just show']
-    elif not_like_free_search is not None:
-        not_like_weights = various_weight_combos['just free search']
+    weights = select_weights(query_show, free_search, various_weight_combos)
+    not_like_weights = select_weights(not_like_show, not_like_free_search,various_weight_combos)
 
     # EDIT DISTANCE
-    if capitalized_query is not None and capitalized_query not in tv_shows_to_index.keys():
+    if not capitalized_query and capitalized_query not in tv_shows_to_index.keys():
         query_show = ed.edit_search(query_show)[0][1]
         capitalized_query = capitalize_show_name(query_show)
-    if capitalized_not_like_query is not None and capitalized_not_like_query not in tv_shows_to_index.keys():
-        not_like_show = ed.edit_search(not_like_show)[0][1]
-        capitalized_not_like_query = capitalize_show_name(not_like_show)
 
-    if not_like_show is not None:
+    if not_like_show and slider_weights['not like'] > 0:
+        # EDIT DISTANCE
+        if not capitalized_not_like_query and capitalized_not_like_query not in tv_shows_to_index.keys():
+            not_like_show = ed.edit_search(not_like_show)[0][1]
+            capitalized_not_like_query = capitalize_show_name(not_like_show)
+
         transcripts_ranking = jaccardRanking(not_like_show, n) # list of tv shows
-        reviews_ranking = reviewRanking(not_like_show, 50) # list of tv shows and sim scores
+        reviews_ranking = reviewRanking(not_like_show, 100) # list of tv shows and sim scores
         if reviews_ranking is None:
             reviews_ranking = []
-        desc_ranking = descriptionRanking(not_like_show, 10)
+        desc_ranking = descriptionRanking(not_like_show, 100)
         for i in range(len(transcripts_ranking)):
             show = transcripts_ranking[i]
             lowercase_show = show.lower()
@@ -209,7 +248,7 @@ streaming_platform=None, not_like_show=None, not_like_free_search=None):
             else:
                 not_like_tv_sim_score_sum[lowercase_show] = not_like_weights['descriptions'] * score * 100
 
-    if not_like_free_search is not None:
+    if not_like_free_search and slider_weights['not like'] > 0:
         free_search_ranking = adhoc_similarity.find_n_similar_shows_free_search(not_like_free_search, n*2) # list of tv shows and sim scores
         for show, score in free_search_ranking:
             lowercase_show = show.lower()
@@ -217,16 +256,15 @@ streaming_platform=None, not_like_show=None, not_like_free_search=None):
                 not_like_tv_sim_score_sum[lowercase_show] += not_like_weights['free search'] * score * 100
             else:
                 not_like_tv_sim_score_sum[lowercase_show] = not_like_weights['free search'] * score * 100
-    
-    not_like_tv_sim_score_sum = {k: v for k, v in sorted(not_like_tv_sim_score_sum.items(), key=lambda item: -item[1])}
-    # print(not_like_tv_sim_score_sum)
 
-    if query_show is not None:
+    shows_not_to_include = create_shows_not_to_include_list(capitalized_query, not_like_show, not_like_free_search, not_like_tv_sim_score_sum, slider_weights, capitalized_not_like_query)
+
+    if query_show:
         transcripts_ranking = jaccardRanking(query_show, n) # list of tv shows
-        reviews_ranking = reviewRanking(query_show, 50) # list of tv shows and sim scores
+        reviews_ranking = reviewRanking(query_show, 100) # list of tv shows and sim scores
         if reviews_ranking is None:
             reviews_ranking = []
-        desc_ranking = descriptionRanking(query_show, 10)
+        desc_ranking = descriptionRanking(query_show, 100)
         for i in range(len(transcripts_ranking)):
             show = transcripts_ranking[i]
             lowercase_show = show.lower()
@@ -248,8 +286,8 @@ streaming_platform=None, not_like_show=None, not_like_free_search=None):
             else:
                 tv_sim_score_sum[lowercase_show] = weights['descriptions'] * score * 100
 
-    if free_search is not None:
-        free_search_ranking = adhoc_similarity.find_n_similar_shows_free_search(free_search, n*2) # list of tv shows and sim scores
+    if free_search:
+        free_search_ranking = adhoc_similarity.find_n_similar_shows_free_search(free_search, 100) # list of tv shows and sim scores
         for show, score in free_search_ranking:
             lowercase_show = show.lower()
             if lowercase_show in tv_sim_score_sum:
@@ -259,17 +297,28 @@ streaming_platform=None, not_like_show=None, not_like_free_search=None):
     
 
     tv_sim_score_sum = {k: v for k, v in sorted(tv_sim_score_sum.items(), key=lambda item: -item[1])}
+    n_sim_shows = len(tv_sim_score_sum)
     # print(tv_sim_score_sum)
+    # print(n_sim_shows)
+
+    count = 0
+    starting_index = int(n_sim_shows - (slider_weights['similarity'] * n_sim_shows) - n)
+    if starting_index < 0:
+        starting_index = 0
+    elif starting_index > n_sim_shows - n:
+        starting_index = n_sim_shows - n
     index = 0
     for key, _ in tv_sim_score_sum.items():
         capitalized_show = capitalize_show_name(key)
-        if capitalized_show is not None and capitalized_query != capitalized_show and not key in not_like_tv_sim_score_sum.keys():
-            show_info = merged_tv_shows[tv_shows_to_index[capitalized_show]]
-            results.append(capitalized_show)
-            index += 1
-        if index == n:
+        if index >= starting_index:
+            if capitalized_show and not capitalized_show in shows_not_to_include:
+                show_info = merged_tv_shows[tv_shows_to_index[capitalized_show]]
+                results.append(capitalized_show)
+                count += 1
+        index += 1
+        if count == n:
             break
-    return (capitalized_query, results)
+    return (capitalized_query, capitalized_not_like_query, results)
 
 # TESTS
 # the_walking_dead_results = final_search("The Walking Dead", 10)
