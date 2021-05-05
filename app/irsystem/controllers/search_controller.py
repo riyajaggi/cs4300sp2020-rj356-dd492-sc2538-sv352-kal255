@@ -68,7 +68,7 @@ def search():
         if (query and query_show) or free_search:
             output_query = ""
             if query and free_search:
-                output_query = query_show + " and " + free_search + " "
+                output_query = query_show + " (" + showWeight + "%) and " + free_search + " (" + keywordWeight + "%) "
             elif query:
                 output_query = query_show + " "
             elif free_search:
@@ -78,7 +78,7 @@ def search():
         if (not_tv_show and not_like_query_show) or not_keyword:
             output_query = ""
             if not_tv_show and not_keyword:
-                output_query = not_like_query_show + " and " + not_keyword + " "
+                output_query = not_tv_show + " (" + showWeight + ") and " +not_keywordfree_search + " (" + keywordWeight + ") " 
             elif not_tv_show:
                 output_query = not_like_query_show + " "
             elif not_keyword:
