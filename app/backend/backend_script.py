@@ -138,7 +138,7 @@ streaming_platform=None, not_like_show=None, not_like_free_search=None):
 
     various_weight_combos = {
         'just show' : {
-            'transcripts' : .10,
+            'transcripts' : .1,
             'reviews' : .45,
             'descriptions' : .45,
         },
@@ -259,7 +259,7 @@ streaming_platform=None, not_like_show=None, not_like_free_search=None):
     
 
     tv_sim_score_sum = {k: v for k, v in sorted(tv_sim_score_sum.items(), key=lambda item: -item[1])}
-    # print(tv_sim_score_sum)
+    print(tv_sim_score_sum)
     index = 0
     for key, _ in tv_sim_score_sum.items():
         capitalized_show = capitalize_show_name(key)
@@ -269,7 +269,7 @@ streaming_platform=None, not_like_show=None, not_like_free_search=None):
             index += 1
         if index == n:
             break
-    return (capitalized_query, results)
+    return (capitalized_query, capitalized_not_like_query, results)
 
 # TESTS
 # the_walking_dead_results = final_search("The Walking Dead", 10)

@@ -63,7 +63,7 @@ def search():
             "tv show" :  int(showWeight)/100
         }
         print(str(slider_weights['keyword']) + " " + str(slider_weights["tv show"]))
-        query_show, data = final_search(slider_weights, query_show=query, n=10, free_search=free_search, genre=genre, not_like_show=not_tv_show, not_like_free_search=not_keyword)
+        query_show, not_like_query_show, data = final_search(slider_weights, query_show=query, n=10, free_search=free_search, genre=genre, not_like_show=not_tv_show, not_like_free_search=not_keyword)
         
         output_query_msg= ""
         if query and query_show:
@@ -76,8 +76,8 @@ def search():
                 output_query_msg += "with Weight: " + keywordWeight + "% "
         if genre:
             output_query_msg += "Genre: " + genre + " "
-        if not_tv_show:
-            output_query_msg += "Not Like: " + not_tv_show + " "
+        if not_tv_show and not_like_query_show:
+            output_query_msg += "Not Like: " + not_like_query_show + " "
         if not_keyword:
             output_query_msg += "Not Keywords: " + not_keyword + " "
        
