@@ -138,8 +138,13 @@
 #     if results is None:
 #       print("Couldn't find results for " + show + ".")
 #       return None
+#     results_length = len(results)
+#     n_results = n
+#     if results_length < n_results:
+#       n_results = results_length
 #     final_show_list  = []
-#     for i in range(1,n+1):
+
+#     for i in range(n_results):
 #       final_show_list.append((index_to_tv_show[str(results[i][1])], results[i][0]))
 #     return final_show_list
 #   else:
@@ -177,4 +182,4 @@
 # #     # print(descriptions_dict)
 # #     print("END OF SCRIPT")
 
-# # make_reviews_model()
+# make_reviews_model()
