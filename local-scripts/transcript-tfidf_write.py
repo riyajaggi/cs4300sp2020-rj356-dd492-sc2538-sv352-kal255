@@ -62,7 +62,7 @@ def allShowTokens(transcriptsFolder):
         filepath = sub + os.sep
         folder = filepath[:-1]
         name = folder[(folder.rfind("\\")) + 1:]
-        name = name[len(transcriptsFolder)+1:]
+        name = name[len(transcriptsFolder)+1:].lower()
         file = ""
 
         for file in shows:
@@ -90,12 +90,12 @@ def build_vectorizer(max_n_terms=5000, max_prop_docs=0.8, min_n_docs=10):
 
 def write():
     tfidf_vec = build_vectorizer()
-    data, movie_name_to_index, movie_index_to_name = allShowTokens("../transcripts")
+    data, movie_name_to_index, movie_index_to_name = allShowTokens("../transcripts2")
     tfidf_mat = tfidf_vec.fit_transform([d['script'] for d in data]).toarray()
     print(movie_name_to_index)
-    np.save('input_doc_mat.npy', tfidf_mat)
-
-
+    np.save('input_doc_mat.npy', tfidf_mat[:len(tfidf_mat)//2])
+    np.save('input_doc_mat2.npy', tfidf_mat[len(tfidf_mat)//2:])
+    print(len(tfidf_mat))
     idx = {"movie_name_to_index": movie_name_to_index, "movie_index_to_name": movie_index_to_name}
     a_file = open("index.json", "w")
     json.dump(idx, a_file)

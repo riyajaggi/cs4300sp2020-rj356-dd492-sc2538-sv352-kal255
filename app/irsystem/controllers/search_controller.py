@@ -8,6 +8,8 @@ from app.backend.backend_script import *
 # from scripts.transcripts.genre_sim≈ilarity import *
 from app.backend.desc import *
 
+from app.backend.relevance import updateData
+
 project_name = "Stream On"
 net_id = "Divya Damodaran: dd492, Riya Jaggi: rj356, Siddhi Chordia: sc2538, Sidharth Vadduri: sv352, Kendall Lane: kal255"
 
@@ -46,6 +48,8 @@ def search():
     showWeight = request.args.get("show-weight")
 
 
+    if query == "":
+        query = None
     if free_search == "":
         free_search = None
     if genre == "":
@@ -87,7 +91,7 @@ def search():
 
         descript = des(data)
 
-        return render_template("results.html", descr=descript, data=data, output_query=output_query_msg)
+        return render_template("results.html", descr=descript, data=data, show=query, keyword=free_search, output_query=output_query_msg)
     else:
         data = []
         output_message = ""
@@ -102,3 +106,23 @@ def search():
         data=data,
         genre_list=genre_list,
     )
+
+@irsystem.route("/addrel/<int:rel>/<string:result>/<string:show>/<string:keywords>", methods=["POST"])
+def relevence(rel, result, show, keywords):
+    print("enterned")
+    print(rel)
+    print(result)
+    print(show)
+    result = result.lower()
+    if show != "None" and keywords!= "None":
+        print("oh noosssssss")
+        show = show.lower()
+        updateData(result, rel, show = show, keywords = keywords)
+    elif show != "None":
+        show = show.lower()
+        updateData(result, rel, show = show)
+    else:
+        result = result.lower()
+        updateData(result, rel, keywords = keywords)
+
+    return {"success": True}
