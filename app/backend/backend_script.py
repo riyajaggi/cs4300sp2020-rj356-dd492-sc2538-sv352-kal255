@@ -144,13 +144,13 @@ def final_search(query_show=None, n=10, free_search=None, genre=None, streaming_
         weights = various_weight_combos['show & free search']
     elif query_show is not None:
         weights = various_weight_combos['just show']
-        print("just_show")
     elif free_search is not None:
         weights = various_weight_combos['just free search']
 
     # EDIT DISTANCE 
     if capitalized_query not in tv_shows_to_index.keys():
         query_show = ed.edit_search(query_show)[0][1]
+        capitalized_query = capitalize_show_name(query_show)
 
     if query_show is not None:
         transcripts_ranking = jaccardRanking(query_show, n) # list of tv shows
@@ -194,9 +194,9 @@ def final_search(query_show=None, n=10, free_search=None, genre=None, streaming_
     index = 0
     for key, _ in tv_sim_score_sum.items():
         capitalized_show = capitalize_show_name(key)
-        if capitalized_show is not None and capitalized_query!= capitalized_show:
+        if capitalized_show is not None and capitalized_query != capitalized_show:
             show_info = merged_tv_shows[tv_shows_to_index[capitalized_show]]
-            results.append(capitalize_show_name(key))
+            results.append(capitalized_show)
             index += 1
         if index == n:
             break
