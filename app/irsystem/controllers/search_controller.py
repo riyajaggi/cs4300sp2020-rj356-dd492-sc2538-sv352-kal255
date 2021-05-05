@@ -43,9 +43,9 @@ def search():
     notWeight = request.args.get("not-weight")
 
     #keywordWeight is a string representing weight of keyword 1-100; default is 100 if only keyword, 50 if both, 0 if not at all
-    keywordWeight = request.args.get("keyword-weight")
+    showKeywordWeight = request.args.get("show-keyword-weight")
     #showWeight is a string representing weight of show 1-100; default is 100 if only show, 50 if both, 0 if not at all
-    showWeight = request.args.get("show-weight")
+    notLikeShowKeywordWeight = request.args.get("not-like-show-keyword-weight")
 
 
     if query == "":
@@ -63,8 +63,8 @@ def search():
         slider_weights = {
             "similarity" : int(simWeight)/100,
             "not like" : int(notWeight)/100,
-            "keyword" : int(keywordWeight)/100,
-            "tv show" :  int(showWeight)/100
+            "show/keyword" : int(showKeywordWeight)/100,
+            "not like show/keyword" :  int(notLikeShowKeywordWeight)/100
         }
         query_show, not_like_query_show, data = final_search(slider_weights, query_show=query, n=10, free_search=free_search, genre=genre, not_like_show=not_tv_show, not_like_free_search=not_keyword)
         
@@ -72,7 +72,7 @@ def search():
         if (query and query_show) or free_search:
             output_query = ""
             if query and free_search:
-                output_query = query_show + " (" + showWeight + "%) and " + free_search + " (" + keywordWeight + "%) "
+                output_query = query_show + " (" + str(100 - int(showKeywordWeight)) + "%) and " + free_search + " (" + showKeywordWeight + "%) "
             elif query:
                 output_query = query_show + " "
             elif free_search:
@@ -82,7 +82,7 @@ def search():
         if (not_tv_show and not_like_query_show) or not_keyword:
             output_query = ""
             if not_tv_show and not_keyword:
-                output_query = not_tv_show + " (" + showWeight + ") and " +not_keywordfree_search + " (" + keywordWeight + ") " 
+                output_query = not_like_query_show + " (" + str(100 - int(notLikeShowKeywordWeight)) + "%) and " + not_keyword + " (" + notLikeShowKeywordWeight + "%) " 
             elif not_tv_show:
                 output_query = not_like_query_show + " "
             elif not_keyword:

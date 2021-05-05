@@ -73,7 +73,7 @@ def reviewRanking(show, N = 3):
 
 # print(reviewRanking("friends"))
     
-def select_weights(query_show, free_search, various_weight_combos):
+def select_weights(query_show, free_search, various_weight_combos, not_like=False):
     """
     Returns weights represented for the final result similarity score
     based on the query inputs
@@ -87,11 +87,15 @@ def select_weights(query_show, free_search, various_weight_combos):
 
     Parameter various_weight_combos: a dictionary with different weight combinations
     Precondition: a dictionary with at least three keys: "show & free_search", 
-    "just show", and "just free search" and values must be floats between 0 and 1 
+    "not like show & free_search", "just show", and "just free search" and values 
+    must be floats between 0 and 1 
     """
     weights = {}
+    show_and_free_search = 'show & free search'
+    if not_like:
+        show_and_free_search = 'not like show & free search'
     if query_show and free_search:
-        weights = various_weight_combos['show & free search']
+        weights = various_weight_combos[show_and_free_search]
     elif query_show:
         weights = various_weight_combos['just show']
     elif free_search:
@@ -127,7 +131,8 @@ streaming_platform=None, not_like_show=None, not_like_free_search=None):
 
     Parameter slider_weights: a dictionary with input weights for sliders
     Precondition: a dictionary with four keys: "similarity",  "not like", 
-    "keyword", and "tv shows" and values must be floats between 0 and 1
+    "show/keyword", and "not like show/keyword" and values must be floats 
+    between 0 and 1
 
     (Optional if free_search is not None) 
     Parameter query_show: the given show
@@ -170,14 +175,20 @@ streaming_platform=None, not_like_show=None, not_like_free_search=None):
             'reviews' : .40,
             'descriptions' : .35,
         },
-        'show & free search' : {
-            'transcripts' : .25 * slider_weights["tv show"],
-            'reviews' : .40 * slider_weights["tv show"] ,
-            'descriptions' : .35 * slider_weights["tv show"] ,
-            'free search' : slider_weights["keyword"] ,
-        },
         'just free search' : {
             'free search' : 1,
+        },
+        'show & free search' : {
+            'transcripts' : .25 * (1 - slider_weights["show/keyword"]),
+            'reviews' : .40 * (1 - slider_weights["show/keyword"]),
+            'descriptions' : .35 * (1 - slider_weights["show/keyword"]),
+            'free search' : slider_weights["show/keyword"] ,
+        },
+        'not like show & free search' : {
+            'transcripts' : .25 * (1 - slider_weights["not like show/keyword"]),
+            'reviews' : .40 * (1 - slider_weights["not like show/keyword"]),
+            'descriptions' : .35 * (1 - slider_weights["not like show/keyword"]),
+            'free search' : slider_weights["not like show/keyword"] ,
         }
     }
     results = []
@@ -186,9 +197,9 @@ streaming_platform=None, not_like_show=None, not_like_free_search=None):
     capitalized_query = capitalize_show_name(query_show)
     capitalized_not_like_query = capitalize_show_name(not_like_show)
     weights = select_weights(query_show, free_search, various_weight_combos)
-    not_like_weights = select_weights(not_like_show, not_like_free_search,various_weight_combos)
+    not_like_weights = select_weights(not_like_show, not_like_free_search, various_weight_combos, True)
 
-    if not_like_show and slider_weights['not like'] > 0:
+    if not_like_show and slider_weights['not like'] > 0:        
         # EDIT DISTANCE
         if not capitalized_not_like_query and capitalized_not_like_query not in tv_shows_to_index.keys():
             not_like_show = ed.edit_search(not_like_show)[0][1]
@@ -234,6 +245,7 @@ streaming_platform=None, not_like_show=None, not_like_free_search=None):
         if not capitalized_query and capitalized_query not in tv_shows_to_index.keys():
             query_show = ed.edit_search(query_show)[0][1]
             capitalized_query = capitalize_show_name(query_show)
+        
         transcripts_ranking = transcriptRanking(query_show, 100) # list of tv shows
         reviews_ranking = reviewRanking(query_show, 100) # list of tv shows and sim scores
         if reviews_ranking is None:
