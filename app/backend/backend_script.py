@@ -5,6 +5,7 @@ import json
 import app.backend.adhoc_similarity as adhoc_similarity
 import pickle
 import app.backend.edit_distance as ed
+import app.backend.rocchio as rocchio
 
 with open('./datasets/p2/tv_shows_to_index_final.json') as a_file:
   tv_shows_to_index = json.load(a_file)
@@ -23,36 +24,13 @@ def capitalize_show_name(show):
             if capitalized_show.lower() == show.lower():
                 return capitalized_show
 
-
-def jaccardRanking(show, N=3):
+def transcriptRanking(show, N = 3):
     """
-    given an input string show name, return a ranked list of the N most similar shows 
-    using the jaccSimMat (using N = 3 for demo)
+    Returns a ranked list of shows and their cosine simliarity scores
     """
-    jaccSimMat = np.load("MainModel.npy")
+    results = rocchio.transcript_similarity(show)
 
-    with open("shows_lst.txt", "r") as json_file:
-        shows = json.load(json_file)
-    
-    if not show in shows:
-        return [] 
-
-    showInd = shows.index(show)
-    scores = jaccSimMat[showInd]
-
-    result = sorted(range(len(scores)), key=lambda substr: scores[substr])[(-N-1): -1]
-    result.reverse()
-
-    ranking = []
-    for x in result:
-        name = shows[x]
-        ranking.append(name)
-
-    # print(ranking)
-    return ranking
-
-# jaccardRanking ("Friends", 3)
-# print(jaccardRanking("Criminal Minds"))
+    return results[:N]
 
 def descriptionRanking(show, N = 3):
     """
@@ -188,14 +166,14 @@ streaming_platform=None, not_like_show=None, not_like_free_search=None):
 
     various_weight_combos = {
         'just show' : {
-            'transcripts' : .1,
-            'reviews' : .45,
-            'descriptions' : .45,
+            'transcripts' : .25,
+            'reviews' : .40,
+            'descriptions' : .35,
         },
         'show & free search' : {
-            'transcripts' : .1 * slider_weights["tv show"],
-            'reviews' : .45 * slider_weights["tv show"] ,
-            'descriptions' : .45 * slider_weights["tv show"] ,
+            'transcripts' : .25 * slider_weights["tv show"],
+            'reviews' : .40 * slider_weights["tv show"] ,
+            'descriptions' : .35 * slider_weights["tv show"] ,
             'free search' : slider_weights["keyword"] ,
         },
         'just free search' : {
@@ -216,15 +194,13 @@ streaming_platform=None, not_like_show=None, not_like_free_search=None):
             not_like_show = ed.edit_search(not_like_show)[0][1]
             capitalized_not_like_query = capitalize_show_name(not_like_show)
 
-        transcripts_ranking = jaccardRanking(not_like_show, n) # list of tv shows
+        transcripts_ranking = transcriptRanking(not_like_show, 100) # list of tv shows
         reviews_ranking = reviewRanking(not_like_show, 100) # list of tv shows and sim scores
         if reviews_ranking is None:
             reviews_ranking = []
         desc_ranking = descriptionRanking(not_like_show, 100)
-        for i in range(len(transcripts_ranking)):
-            show = transcripts_ranking[i]
+        for show, score in transcripts_ranking:
             lowercase_show = show.lower()
-            score = (.5 - ((i+1)/100))
             if lowercase_show in not_like_tv_sim_score_sum:
                 not_like_tv_sim_score_sum[lowercase_show] += not_like_weights['transcripts'] * score * 100
             else:
@@ -258,15 +234,13 @@ streaming_platform=None, not_like_show=None, not_like_free_search=None):
         if not capitalized_query and capitalized_query not in tv_shows_to_index.keys():
             query_show = ed.edit_search(query_show)[0][1]
             capitalized_query = capitalize_show_name(query_show)
-        transcripts_ranking = jaccardRanking(query_show, n) # list of tv shows
+        transcripts_ranking = transcriptRanking(query_show, 100) # list of tv shows
         reviews_ranking = reviewRanking(query_show, 100) # list of tv shows and sim scores
         if reviews_ranking is None:
             reviews_ranking = []
         desc_ranking = descriptionRanking(query_show, 100)
-        for i in range(len(transcripts_ranking)):
-            show = transcripts_ranking[i]
+        for show, score in transcripts_ranking:
             lowercase_show = show.lower()
-            score = (.5 - ((i+1)/100))
             if lowercase_show in tv_sim_score_sum:
                 tv_sim_score_sum[lowercase_show] += weights['transcripts'] * score * 100
             else:
@@ -296,7 +270,7 @@ streaming_platform=None, not_like_show=None, not_like_free_search=None):
 
     tv_sim_score_sum = {k: v for k, v in sorted(tv_sim_score_sum.items(), key=lambda item: -item[1])}
     n_sim_shows = len(tv_sim_score_sum)
-    # print(tv_sim_score_sum)
+    print(tv_sim_score_sum)
     # print(n_sim_shows)
 
     count = 0
