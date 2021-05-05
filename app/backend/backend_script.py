@@ -63,7 +63,7 @@ def descriptionRanking(show, N = 3):
     N - number of shows returned (int)
     """
 
-    description_dict = pickle.load( open( "datasets/p2/description_similarity.p", "rb" ) )
+    description_dict = pickle.load( open( "datasets/p2/description_similarity_250.p", "rb" ) )
     description_dict = {k.lower():v for k, v in description_dict.items()}
 
     if show.lower() not in list(description_dict.keys()):
