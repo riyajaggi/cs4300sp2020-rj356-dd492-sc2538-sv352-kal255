@@ -126,7 +126,7 @@ def create_shows_not_to_include_list(
         }
         n_not_like_shows = len(not_like_tv_sim_score_sum)
         n_not_including = int(slider_weights["not like"] * n_not_like_shows)
-        print(n_not_including)
+        # print(n_not_including)
         count = 0
         for key, _ in not_like_tv_sim_score_sum.items():
             if count == n_not_including:
@@ -138,8 +138,66 @@ def create_shows_not_to_include_list(
     return shows_not_to_include
 
 
+def filter_out_shows(filters):
+    """
+    Returns a list of titles of shows that can be included in the results based on
+    the filters entered by the user.
+
+    filters are genre, subscription, season min, season max, year min and year max
+    """
+    shows_to_include = list(tv_shows_to_index.keys())
+    print("before shows to include: " + str(len(shows_to_include)))
+
+    count = 0
+    for k, v in filters.items():
+        if (k == "genre" or k == "subscription") and v == []:
+            count += 1
+        elif k=="seasMin" and v == 1:
+            count += 1
+        elif k=="seasMax" and v == 187:
+            count += 1
+        elif k == "yearMin" and v == 1946:
+            count += 1
+        elif k == "yearMax" and v == 2021:
+            count += 1
+    
+    # if filters are default (i.e. no filters entered) include all shows
+    if count == 6:
+        return shows_to_include 
+    
+    # if filters are not default, remove shows from include list
+    for show in merged_tv_shows:
+        show_title = show["show_title"]
+        show_info = show["show_info"]
+
+        # filter out based on genre
+        if filters["genre"] != [] and show_info["genre"] != []:
+            show_genre = show_info["genre"]
+            if len((set(filters["genre"]).intersection(show_genre))) == 0:
+                del shows_to_include[show_title]
+
+        # filter out based on subscription
+        if filters["subscription"] != [] and show_info["show_subscriptions"] != []:
+            show_subscriptions = show_info["streaming platform"]
+            if len((set(filters["subscription"]).intersection(show_subscriptions))) == 0:
+                del shows_to_include[show_title]
+        
+        # filter out based on min and max seasons
+        if show_info["no of seasons"]!= -1 and (show_info["no of seasons"] < filters["seasMin"] or show_info["no of seasons"] > filters["seasMax"]):
+            del shows_to_include[show_title]
+        
+        # filter out based on min and max years
+        if show_info["start year"]!= -1 and (show_info["start year"] < filters["yearMin"] or show_info["start year"] > filters["yearMax"]):
+            del shows_to_include[show_title]
+    
+    print("after shows to include: " + str(len(shows_to_include)))
+    return shows_to_include
+
+
+
 def final_search(
     slider_weights,
+    filters,
     query_show=None,
     n=10,
     free_search=None,
@@ -216,6 +274,8 @@ def final_search(
     not_like_weights = select_weights(
         not_like_show, not_like_free_search, various_weight_combos
     )
+    
+    shows_to_include = filter_out_shows(filters)
 
     if not_like_show and slider_weights["not like"] > 0:
         # EDIT DISTANCE
@@ -334,7 +394,7 @@ def final_search(
         k: v for k, v in sorted(tv_sim_score_sum.items(), key=lambda item: -item[1])
     }
     n_sim_shows = len(tv_sim_score_sum)
-    print(tv_sim_score_sum)
+    # print(tv_sim_score_sum)
     # print(n_sim_shows)
 
     count = 0
@@ -347,7 +407,7 @@ def final_search(
     for key, _ in tv_sim_score_sum.items():
         capitalized_show = capitalize_show_name(key)
         if index >= starting_index:
-            if capitalized_show and not capitalized_show in shows_not_to_include:
+            if capitalized_show and capitalized_show in shows_to_include and not capitalized_show in shows_not_to_include:
                 show_info = merged_tv_shows[tv_shows_to_index[capitalized_show]]
                 results.append(capitalized_show)
                 count += 1
@@ -357,9 +417,13 @@ def final_search(
     return (capitalized_query, capitalized_not_like_query, results)
 
 
-# TESTS
+# # TESTS
+# filters = {"genre": [], "subscriptions": [], "seasMin": 1, "seasMax": 187, "yearMin": 1946, "yearMax": 2021}
+# filters1 = {"genre": [], "subscriptions": ["Netflix"], "seasMin": 1, "seasMax": 187, "yearMin": 2000, "yearMax": 2021}
 # the_walking_dead_results = final_search("The Walking Dead", 10)
 # print(the_walking_dead_results)
+
+# the_walking_dead_results_2 = final_search("The Walking Dead")
 # sherlock_results = final_search("Sherlock", 10, "dogs")
 # print(sherlock_results)
 # its_always_sunny_results = final_search("It's Always Sunny in Philadephia", 10) # no reviews, no description, no transcripts in transcript2
