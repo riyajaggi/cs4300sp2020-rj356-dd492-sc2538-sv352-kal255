@@ -10,9 +10,14 @@
   <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap" rel="stylesheet" />
   <script src="/static/js/jquery.min.js"></script>
   <script src="/static/js/selectize.min.js"></script>
+
+  <style>
+    body {font-family: Helvetica, Arial, sans-serif}
+  </style>
+
 </head>
 
-<body style="background-image: url('../static/streamOn_background.png');">
+<body style="background-image: url('../static/streamOn_background.png')">
   <form class="form-inline global-search" id="main-search">
     <h1 id="title">
       stream<span id="title" style="color: #5680E9;">On</span>
@@ -21,9 +26,9 @@
     <div class="form-group">
 
       <div class="required">
-
+        <p class="btw">TV Show</p>
         <input id="query" type="text" name="search" class="form-control" placeholder="Enter TV Show">
-        <p class="btw">Or/And</p>
+        <p class="btw">Or/And (keywords can be grouped using quotes)</p>
         <input id="query" type="text" name="freeSearch" class="form-control" placeholder="Enter keyword">
         <br><br>
       </div>
