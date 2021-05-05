@@ -68,10 +68,12 @@ def search():
         output_query_msg= ""
         if query and query_show:
             output_query_msg += "Similar Show: " + query_show + " "
-            output_query_msg += "with Weight: " + showWeight + "% \n"
+            if free_search:
+                output_query_msg += "with Weight: " + showWeight + "% "
         if free_search:
             output_query_msg += "Keywords: " + free_search + " "
-            output_query_msg += "with Weight: " + keywordWeight + "% \n"
+            if query:
+                output_query_msg += "with Weight: " + keywordWeight + "% "
         if genre:
             output_query_msg += "Genre: " + genre + " "
         if not_tv_show:
