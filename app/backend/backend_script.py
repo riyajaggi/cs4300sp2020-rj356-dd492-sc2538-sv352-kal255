@@ -218,8 +218,9 @@ streaming_platform=None, not_like_show=None, not_like_free_search=None):
             else:
                 not_like_tv_sim_score_sum[lowercase_show] = not_like_weights['free search'] * score * 100
     
-    shows_not_to_include = [capitalized_not_like_query, capitalized_query]
+    shows_not_to_include = [capitalized_query]
     if not_like_show or not_like_free_search:
+        shows_not_to_include = [capitalized_not_like_query]
         not_like_tv_sim_score_sum = {k: v for k, v in sorted(not_like_tv_sim_score_sum.items(), key=lambda item: -item[1])}
         n_not_like_shows = len(not_like_tv_sim_score_sum)
         n_not_including = int(slider_weights['not like'] * n_not_like_shows)
@@ -233,7 +234,7 @@ streaming_platform=None, not_like_show=None, not_like_free_search=None):
                 shows_not_to_include.append(capitalized_show)
                 count += 1
 
-    print(shows_not_to_include)
+    # print(shows_not_to_include)
     if query_show:
         transcripts_ranking = jaccardRanking(query_show, n) # list of tv shows
         reviews_ranking = reviewRanking(query_show, 100) # list of tv shows and sim scores
