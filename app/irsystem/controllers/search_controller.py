@@ -71,7 +71,7 @@ def search():
             output_query_msg += "with Weight: " + showWeight + "% \n"
         if free_search:
             output_query_msg += "Keywords: " + free_search + " "
-            output_query_msg += "with Keyword Weight: " + keywordWeight + "% \n"
+            output_query_msg += "with Weight: " + keywordWeight + "% \n"
         if genre:
             output_query_msg += "Genre: " + genre + " "
         if not_tv_show:
