@@ -41,19 +41,10 @@ def search():
     # notWeight is a string representing weight of <not like> 1-100; default is 0
     notWeight = request.args.get("not-weight")
 
-<<<<<<< HEAD
     #keywordWeight is a string representing weight of keyword 1-100; default is 100 if only keyword, 50 if both, 0 if not at all
     showKeywordWeight = request.args.get("show-keyword-weight")
     #showWeight is a string representing weight of show 1-100; default is 100 if only show, 50 if both, 0 if not at all
     notLikeShowKeywordWeight = request.args.get("not-like-show-keyword-weight")
-=======
-    # keywordWeight is a string representing weight of keyword 1-100; default is 
-    # 100 if only keyword, 50 if both, 0 if not at all
-    keywordWeight = request.args.get("keyword-weight")
-    # showWeight is a string representing weight of show 1-100; default is 100 if 
-    # only show, 50 if both, 0 if not at all
-    showWeight = request.args.get("show-weight")
->>>>>>> a8484f78c7783981d5ccd4eeab25794a2c7a5557
 
     if query == "":
         query = None
