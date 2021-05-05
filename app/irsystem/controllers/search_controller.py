@@ -22,7 +22,7 @@ def search():
     if genre == "":
         genre = None
 
-    if query or free_search or genre:
+    if query or free_search:
         query_show, data = final_search(query_show=query, n=10, free_search=free_search, genre=genre)
         output_query_msg= ""
         if query:
@@ -31,6 +31,7 @@ def search():
             output_query_msg += "Keywords: " + free_search + " "
         if genre:
             output_query_msg += "Genre: " + genre + " "
+        
 
         if len(data) == 0:
             abort(500)
