@@ -169,7 +169,7 @@
 # #     print("START OF SCRIPT")
 # #     reviews_dict = {}
 # #     for show, index in tv_shows_to_index.items():
-# #         lst = find_n_similar_shows_reviews(show, 10)
+# #         lst = find_n_similar_shows_reviews(show, 250)
 # #         if lst is not None:
 # #             reviews_dict[show] = lst
 # #         else:
