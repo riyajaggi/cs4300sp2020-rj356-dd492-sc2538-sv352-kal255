@@ -21,6 +21,9 @@ def search():
     #subscription is a comma seperate string of subscriptions; it is an empty string when there are no subscriptions
     subscription = request.args.get("subscriptions")
 
+    not_tv_show = request.args.get("not-tv")
+    not_keyword = request.args.get("not-keyword")
+
     #seasMin is a string representing min seasons; default is 1
     seasMin = request.args.get("seasonMin")
     #seasMax is a string representing max seasons; default is 187
@@ -45,12 +48,15 @@ def search():
 
     if free_search == "":
         free_search = None
-
     if genre == "":
         genre = None
+    if not_tv_show == "":
+        not_tv_show = None
+    if not_keyword == "":
+        not_keyword = None
 
     if query or free_search:
-        query_show, data = final_search(query_show=query, n=10, free_search=free_search, genre=genre)
+        query_show, data = final_search(query_show=query, n=10, free_search=free_search, genre=genre, not_like_show=not_tv_show, not_like_free_search=not_keyword)
         output_query_msg= ""
         if query and query_show:
             output_query_msg += "Similar Show: " + query_show + " "
@@ -58,6 +64,10 @@ def search():
             output_query_msg += "Keywords: " + free_search + " "
         if genre:
             output_query_msg += "Genre: " + genre + " "
+        if not_tv_show:
+            output_query_msg += "Not Like: " + not_tv_show + " "
+        if not_keyword:
+            output_query_msg += "Not Keywords: " + not_keyword + " "
         
         if len(data) == 0:
             abort(500)
