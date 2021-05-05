@@ -230,50 +230,33 @@ def final_search(
 
     if not_like_show and slider_weights['not like'] > 0:        
         # EDIT DISTANCE
-        if (
-            not capitalized_not_like_query
-            and capitalized_not_like_query not in tv_shows_to_index.keys()
-        ):
+        if (not capitalized_not_like_query and capitalized_not_like_query not in tv_shows_to_index.keys()):
             not_like_show = ed.edit_search(not_like_show)[0][1]
             capitalized_not_like_query = capitalize_show_name(not_like_show)
 
         transcripts_ranking = transcriptRanking(not_like_show, 100)  # list of tv shows
-        reviews_ranking = reviewRanking(
-            not_like_show, 100
-        )  # list of tv shows and sim scores
+        reviews_ranking = reviewRanking(not_like_show, 100)  # list of tv shows and sim scores
         if reviews_ranking is None:
             reviews_ranking = []
         desc_ranking = descriptionRanking(not_like_show, 100)
         for show, score in transcripts_ranking:
             lowercase_show = show.lower()
             if lowercase_show in not_like_tv_sim_score_sum:
-                not_like_tv_sim_score_sum[lowercase_show] += (
-                    not_like_weights["transcripts"] * score * 100
-                )
+                not_like_tv_sim_score_sum[lowercase_show] += not_like_weights["transcripts"] * score * 100 
             else:
-                not_like_tv_sim_score_sum[lowercase_show] = (
-                    not_like_weights["transcripts"] * score * 100
-                )
+                not_like_tv_sim_score_sum[lowercase_show] = not_like_weights["transcripts"] * score * 100
         for show, score in reviews_ranking:
             lowercase_show = show.lower()
             if lowercase_show in not_like_tv_sim_score_sum:
-                not_like_tv_sim_score_sum[lowercase_show] += (
-                    not_like_weights["reviews"] * score * 100
-                )
+                not_like_tv_sim_score_sum[lowercase_show] += not_like_weights["reviews"] * score * 100
             else:
-                not_like_tv_sim_score_sum[lowercase_show] = (
-                    not_like_weights["reviews"] * score * 100
-                )
+                not_like_tv_sim_score_sum[lowercase_show] = not_like_weights["reviews"] * score * 100
         for show, score in desc_ranking:
             lowercase_show = show.lower()
             if lowercase_show in not_like_tv_sim_score_sum:
-                not_like_tv_sim_score_sum[lowercase_show] += (
-                    not_like_weights["descriptions"] * score * 100
-                )
+                not_like_tv_sim_score_sum[lowercase_show] += not_like_weights["descriptions"] * score * 100
             else:
-                not_like_tv_sim_score_sum[lowercase_show] = (
-                    not_like_weights["descriptions"] * score * 100
-                )
+                not_like_tv_sim_score_sum[lowercase_show] = not_like_weights["descriptions"] * score * 100
 
     if not_like_free_search and slider_weights["not like"] > 0:
         free_search_ranking = adhoc_similarity.find_n_similar_shows_free_search(
@@ -282,13 +265,9 @@ def final_search(
         for show, score in free_search_ranking:
             lowercase_show = show.lower()
             if lowercase_show in not_like_tv_sim_score_sum:
-                not_like_tv_sim_score_sum[lowercase_show] += (
-                    not_like_weights["free search"] * score * 100
-                )
+                not_like_tv_sim_score_sum[lowercase_show] += not_like_weights["free search"] * score * 100
             else:
-                not_like_tv_sim_score_sum[lowercase_show] = (
-                    not_like_weights["free search"] * score * 100
-                )
+                not_like_tv_sim_score_sum[lowercase_show] = not_like_weights["free search"] * score * 100
 
     shows_not_to_include = create_shows_not_to_include_list(
         capitalized_query,
@@ -330,9 +309,7 @@ def final_search(
                 tv_sim_score_sum[lowercase_show] = weights["descriptions"] * score * 100
 
     if free_search:
-        free_search_ranking = adhoc_similarity.find_n_similar_shows_free_search(
-            free_search, 100
-        )  # list of tv shows and sim scores
+        free_search_ranking = adhoc_similarity.find_n_similar_shows_free_search(free_search, 100)  # list of tv shows and sim scores
         for show, score in free_search_ranking:
             lowercase_show = show.lower()
             if lowercase_show in tv_sim_score_sum:
@@ -340,9 +317,7 @@ def final_search(
             else:
                 tv_sim_score_sum[lowercase_show] = weights["free search"] * score * 100
 
-    tv_sim_score_sum = {
-        k: v for k, v in sorted(tv_sim_score_sum.items(), key=lambda item: -item[1])
-    }
+    tv_sim_score_sum = { k: v for k, v in sorted(tv_sim_score_sum.items(), key=lambda item: -item[1]) }
     n_sim_shows = len(tv_sim_score_sum)
     print(tv_sim_score_sum)
     # print(n_sim_shows)
