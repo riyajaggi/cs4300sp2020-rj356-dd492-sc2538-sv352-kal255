@@ -60,19 +60,21 @@ def updateRelevanceShow(show, result, rel):
         show_results[result][1]+1]
 
         score = show_results[result][0]/ show_results[result][1]
+
+        print(score)
         #make relevant
         if score >= 0.75 and show_results[result][1]>3:
             if prev_score <=0.25 and show_results[result][1]>4:
                 data["irrelevant"][show].remove(result)
                 data["relevant"][show].append(result)
-            elif prev_score < 0.75:
+            elif prev_score < 0.75 or show_results[result][1]<5:
                 data["relevant"][show].append(result)
         #make irrelevant
         elif score <= 0.25 and show_results[result][1]>3:
             if prev_score >=0.75 and show_results[result][1]>4:
                 data["relevant"][show].remove(result)
                 data["irrelevant"][show].append(result)
-            elif prev_score > 0.25:
+            elif prev_score > 0.25 or show_results[result][1]<5:
                 data["irrelevant"][show].append(result)
         #make neutral
         else:
@@ -80,9 +82,6 @@ def updateRelevanceShow(show, result, rel):
                 data["relevant"][show].remove(result)
             elif prev_score <=0.25 and show_results[result][1]>4:
                 data["irrelevant"][show].remove(result)
-
-
-
     else:
         show_results[result] = [rel, 1]
 
@@ -105,7 +104,7 @@ def updateRelevanceWords(keywords, result, rel):
 
         show_results = data["scores"][show]
         if result in data["scores"][show].keys():
-
+            
             prev_score = show_results[result][0]/ show_results[result][1]
 
             show_results[result] = [show_results[result][0]+rel,
@@ -113,18 +112,19 @@ def updateRelevanceWords(keywords, result, rel):
 
             score = show_results[result][0]/ show_results[result][1]
             #make relevant
+            print(show_results[result][1])
             if score >= 0.75 and show_results[result][1]>3:
                 if prev_score <=0.25 and show_results[result][1]>4:
                     data["irrelevant"][show].remove(result)
                     data["relevant"][show].append(result)
-                elif prev_score < 0.75:
+                elif prev_score < 0.75 or show_results[result][1]<5:
                     data["relevant"][show].append(result)
             #make irrelevant
             elif score <= 0.25 and show_results[result][1]>3:
                 if prev_score >=0.75 and show_results[result][1]>4:
                     data["relevant"][show].remove(result)
                     data["irrelevant"][show].append(result)
-                elif prev_score > 0.25:
+                elif prev_score > 0.25 or show_results[result][1]<5:
                     data["irrelevant"][show].append(result)
             #make neutral
             else:
@@ -161,5 +161,5 @@ def resetData():
     json.dump(data, a_file)
     a_file.close()
 
-#resetData()
+resetData()
 #Call updateData()

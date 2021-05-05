@@ -212,13 +212,13 @@ streaming_platform=None, not_like_show=None, not_like_free_search=None):
     not_like_weights = select_weights(not_like_show, not_like_free_search,various_weight_combos)
 
     # EDIT DISTANCE
-    if not capitalized_query and capitalized_query not in tv_shows_to_index.keys():
+    if not capitalized_query and capitalized_query not in tv_shows_to_index.keys() and query_show!= None:
         query_show = ed.edit_search(query_show)[0][1]
         capitalized_query = capitalize_show_name(query_show)
 
     if not_like_show and slider_weights['not like'] > 0:
         # EDIT DISTANCE
-        if not capitalized_not_like_query and capitalized_not_like_query not in tv_shows_to_index.keys():
+        if not capitalized_not_like_query and capitalized_not_like_query not in tv_shows_to_index.keys() and query_show!= None:
             not_like_show = ed.edit_search(not_like_show)[0][1]
             capitalized_not_like_query = capitalize_show_name(not_like_show)
 

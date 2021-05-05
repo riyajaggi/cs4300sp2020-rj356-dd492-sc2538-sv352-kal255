@@ -1,1 +1,1 @@
-{"shows": {"scores": {}, "relevant": {}, "irrelevant": {}}, "words": {"scores": {"anime": {"gintama": [1, 1], "keep your hands off eizouken!": [0, 1], "kaguya-sama: love is war": [1, 1]}}, "relevant": {"anime": ["keep your hands off eizouken!"]}, "irrelevant": {"anime": ["kaguya-sama: love is war"]}}}
+{"shows": {"scores": {}, "relevant": {}, "irrelevant": {}}, "words": {"scores": {}, "relevant": {}, "irrelevant": {}}}

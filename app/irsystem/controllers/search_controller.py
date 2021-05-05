@@ -67,7 +67,7 @@ def search():
             "tv show" :  int(showWeight)/100
         }
         query_show, not_like_query_show, data = final_search(slider_weights, query_show=query, n=10, free_search=free_search, genre=genre, not_like_show=not_tv_show, not_like_free_search=not_keyword)
-        
+
         output_query_msg= ""
         if (query and query_show) or free_search:
             output_query = ""
@@ -82,7 +82,7 @@ def search():
         if (not_tv_show and not_like_query_show) or not_keyword:
             output_query = ""
             if not_tv_show and not_keyword:
-                output_query = not_tv_show + " (" + showWeight + ") and " +not_keywordfree_search + " (" + keywordWeight + ") " 
+                output_query = not_tv_show + " (" + showWeight + ") and " +not_keywordfree_search + " (" + keywordWeight + ") "
             elif not_tv_show:
                 output_query = not_like_query_show + " "
             elif not_keyword:
@@ -91,9 +91,9 @@ def search():
             output_query_msg += notWeight + "% Not Like " + output_query
 
         if genre:
-            output_query_msg += "Genre: " + genre + " "    
-       
-        
+            output_query_msg += "Genre: " + genre + " "
+
+
         if len(data) == 0:
             abort(500)
 
