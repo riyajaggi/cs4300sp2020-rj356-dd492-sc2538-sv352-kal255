@@ -22,8 +22,11 @@
     <br>
     {% for x in range(data | length) %}
     <div class="form-group">
-      <input type="button" value="Like" onclick="posRel(1, '{{data[x]}}', '{{ show }}', '{{ keyword }}')">
-      <input type="button" value="Dislike" onclick="posRel(0, '{{data[x]}}', '{{ show }}', '{{ keyword }}')">
+      <input type="button" id="{{data[x]}}relevant" value="Relevant"
+        onclick="posRel(1, '{{data[x]}}', '{{ show }}', '{{ keyword }}')">
+      <input type="button" id="{{data[x]}}irrelevant" value="Irrelevant"
+        onclick="posRel(0, '{{data[x]}}', '{{ show }}', '{{ keyword }}')">
+      <p id="{{data[x]}}thanks" style="display: none;">Thank you for voting!</p>
       <p id="ans" style="text-align: center;
         color: black;
         background: #F7F3F3;
@@ -51,7 +54,13 @@
       url: '/addrel/'.concat(rel, '/', result, '/', show, '/', keyword),
       type: 'post',
       success: function () {
-        alert(result);
+        var relevant = document.getElementById(result.concat('relevant'));
+        var irrelevant = document.getElementById(result.concat('irrelevant'));
+        var thanks = document.getElementById(result.concat('thanks'));
+        relevant.style.display = "none"
+        irrelevant.style.display = "none"
+        thanks.style.display = "inline"
+
       }
     });
   }
