@@ -1,12 +1,1 @@
-{
-  "shows": {
-    "scores": {},
-    "relevant": {},
-    "irrelevant": {}
-  },
-  "words": {
-    "scores": {},
-    "relevant": {},
-    "irrelevant": {}
-  }
-}
+{"shows": {"scores": {"sherlock": {"elementary": [1, 1]}}, "relevant": {"sherlock": []}, "irrelevant": {"sherlock": []}}, "words": {"scores": {}, "relevant": {}, "irrelevant": {}}}
