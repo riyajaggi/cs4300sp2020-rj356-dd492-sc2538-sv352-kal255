@@ -367,7 +367,7 @@ def final_search(
         if score > 0:
             capitalized_show = capitalize_show_name(key)
             if index >= starting_index:
-                if capitalized_show and not capitalized_show in shows_not_to_include:
+                if capitalized_show and capitalized_show in shows_to_include and not capitalized_show in shows_not_to_include:
                     show_info = merged_tv_shows[tv_shows_to_index[capitalized_show]]
                     results.append(capitalized_show)
                     count += 1
