@@ -61,7 +61,7 @@ def search():
     filters["seasMax"] = int(seasMax)
     filters["yearMin"] = yearMin
     filters["yearMax"] = yearMax
-    print(filters)
+    # print(filters)
 
     if query == "":
         query = None
@@ -168,13 +168,13 @@ def search():
     "/addrel/<int:rel>/<string:result>/<string:show>/<string:keywords>", methods=["POST"]
 )
 def relevence(rel, result, show, keywords):
-    print("enterned")
-    print(rel)
-    print(result)
-    print(show)
+    # print("enterned")
+    # print(rel)
+    # print(result)
+    # print(show)
     result = result.lower()
     if show != "None" and keywords != "None":
-        print("oh noosssssss")
+        # print("oh noosssssss")
         show = show.lower()
         updateData(result, rel, show=show, keywords=keywords)
     elif show != "None":

@@ -61,7 +61,7 @@ def updateRelevanceShow(show, result, rel):
 
         score = show_results[result][0]/ show_results[result][1]
 
-        print(score)
+        # print(score)
         #make relevant
         if score >= 0.75 and show_results[result][1]>3:
             if prev_score <=0.25 and show_results[result][1]>4:
@@ -112,7 +112,7 @@ def updateRelevanceWords(keywords, result, rel):
 
             score = show_results[result][0]/ show_results[result][1]
             #make relevant
-            print(show_results[result][1])
+            # print(show_results[result][1])
             if score >= 0.75 and show_results[result][1]>3:
                 if prev_score <=0.25 and show_results[result][1]>4:
                     data["irrelevant"][show].remove(result)

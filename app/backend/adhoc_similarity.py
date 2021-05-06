@@ -98,7 +98,7 @@ def index_search(query, index, idf, show_norms):
   lowercase_query = query.lower()
   #rememebr query_obj
   q1 = rocchio_update_addhoc(query, query_obj['words'], index, idf)
-  print(query_obj)
+  # print(query_obj)
   
   tokenized_query = cosine_similarity.tokenizeQuotes(lowercase_query)
   query_tfs = Counter(tokenized_query)
