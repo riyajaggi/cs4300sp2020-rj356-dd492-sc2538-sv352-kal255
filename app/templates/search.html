@@ -71,7 +71,7 @@
 
 </head>
 
-<body style="background-image: url('../static/streamOn_background.png')">
+<body id="bdy" style="background-image: url('../static/streamOn_background.png')">
   <form class="form-inline global-search" id="main-search">
     <h1 id="title">
       stream<span id="title" style="color: #5680E9;">On</span>
@@ -79,20 +79,33 @@
     <br>
     <div class="form-group">
 
-      <div class="required">
-        <p class="btw">Search</p>
+      <div class="required" style="padding-top: 30px;">
+        <p class="btw">Search<span style="color: black;">*</span></p>
         <input id="query-show" type="text" name="search" class="form-control" placeholder="Enter TV Show">
 
         <p class="btw">Or/And</p>
         <input id="query-free" type="text" name="freeSearch" class="form-control" placeholder="Enter keyword">
-        <div class="help-tip">
-          <p>Welcome to Stream On! Enter A TV Show or some words that describe what you want to watch to get started!
-          </p>
+        <div style="position:relative">
+          <div class="help-tip">
+            <p>Required: Enter a TV show or some words about what you feel like watching!
+            </p>
+          </div>
         </div>
         <p class="btw">(multi-word keywords can be grouped by quotes Ex: "los angeles")</p>
         <br><br>
+        <p class="btw" style="color:rgb(116, 18, 141);">Not Like</p>
+        <input id="query-not-show" type="text" name="not-tv" class="form-control" placeholder="Enter TV Show">
+        <p class="btw" style="color:rgb(116, 18, 141);">Or/And</p>
+        <input id="query-not-free" type="text" name="not-keyword" class="form-control" placeholder="Enter keyword">
+        <div style="position:relative">
+          <div class="help-tip">
+            <p>Enter either a TV Show or a couple words about the type of show you don't like. Ex: "dark dramatic"
+            </p>
+          </div>
+        </div>
+        <br><br>
         <div id="options">
-          <p style="color:black;"> Additional Options </p>
+          <p style="color:black;"> Click for Additional Options </p>
         </div>
       </div>
       <br>
@@ -101,18 +114,9 @@
         <input id="type" type="text" name="Genre" class="form-control" placeholder="Genre">
         <input id="stream" type="text" name="platform" class="form-control" placeholder="Platforms"> -->
 
-      <div class="slidecontainer" id="filters">
-        <div class="help-tip">
-          <p>Welcome to Stream On! Enter A TV Show or some words that describe what you want to watch to get started!
-          </p>
-        </div>
-        <p class="btw" style="color:purple; ">Not like</p>
-        <input id="query-not" type="text" name="not-tv" class="form-control" placeholder="Enter TV Show">
-        <p class="btw" style="color:purple; ">Or/And</p>
-        <input id="query-not" type="text" name="not-keyword" class="form-control" placeholder="Enter keyword">
-        <br><br>
-
+      <div class="slidecontainer" id="filters" style="display:none">
         <p class="slid">
+          <span style="color:rgb(116, 18, 141); padding-bottom: 10px; font-weight: 550;">Filters</span>
 
           <input id="smallquery-subscriptions" type="text" name="subscriptions" class="random"
             placeholder="Enter subscriptions" style="  position: center;
@@ -140,9 +144,12 @@
             <label
               style="color: purple;  
             border-radius: 15px; padding-left: 40px; padding-top: 5px;padding-bottom: 5px; padding-right: 20px;">AssignWeights</label>
-          <div class="help-tip">
-            <p>Welcome to Stream On! Enter A TV Show or some words that describe what you want to watch to get started!
-            </p>
+          <div style="position:relative">
+            <div class="help-tip">
+              <p>Welcome to Stream On! Enter A TV Show or some words that describe what you want to watch to get
+                started!
+              </p>
+            </div>
           </div>
           <br>
           <label>Similarity</label>
@@ -171,35 +178,39 @@
         <p></p>
         <p></p>
         <p></p>
-        <div class="genrediv"></div>
-        <p class="slid">
-          <input id="smallquery-genre" type="text" name="genre" class="random" placeholder="Genre" style="  position: center;
+
+        <div class="genrediv">
+
+          <p class="slid">
+            <span style="color:rgb(116, 18, 141);padding-bottom: 10px; font-weight: 550;">Filters</span>
+            <input id="smallquery-genre" type="text" name="genre" class="random" placeholder="Genre" style="  position: center;
             width: 240px;
             height: 45px;">
-          <br><br>
-          <label>Year</label>
-          <br>
+            <br><br>
+            <label>Year</label>
+            <br>
 
-          <input type="range" min="1946" max="2021" value="1946" class="slider min" id="minYear">
-          min: <span id="min_val_year"></span>
-          <input type="range" min="1946" max="2021" value="2021" class="slider max" id="maxYear">
-          max: <span id="max_val_year"></span>
-        </p>
+            <input type="range" min="1946" max="2021" value="1946" class="slider min" id="minYear">
+            min: <span id="min_val_year"></span>
+            <input type="range" min="1946" max="2021" value="2021" class="slider max" id="maxYear">
+            max: <span id="max_val_year"></span>
+          </p>
+        </div>
+
+
       </div>
-
-
-    </div>
     </div>
     <br><br>
     <p>
-      <button id="button" type="submit" position="center" form="main-search"> Find Shows! </button>
+      <button id="button" type="submit" position="center" form="main-search"> Find Shows!
+      </button>
     </p>
   </form>
 
   <script>
     var shows_string = "{{shows}}".split(", ");
     shows = shows_string.map(function (r) {
-      return r.trim().replaceAll("&#39;", "").replaceAll("&#34;", "");
+      return r.trim().replaceAll("&#39;", "").replaceAll("&#34;", "").replaceAll("amp;", "");
     });
 
 
@@ -208,6 +219,13 @@
         source: shows,
       });
     });
+
+    $(function () {
+      $("#query-not-show").autocomplete({
+        source: shows,
+      });
+    });
+
 
 
     $('#smallquery-genre').selectize({
@@ -256,10 +274,29 @@
       }
     });
 
+    var search = document.getElementById("button")
+    var queryS = document.getElementById("query-show")
+    var queryF = document.getElementById("query-free")
+    var form = document.getElementById("bdy")
+
+    search.onclick = function () {
+      if (queryS.value.length == 0 && queryF.value.length == 0) {
+        return alert("Not Like is optional, Search* is required. Please fill in at least one of the two Search* fields!")
+      }
+    }
+
     var filters = document.getElementById("filters")
     var options = document.getElementById("options")
     options.onclick = function () {
-      filters.style.display = "block"
+      if (filters.style.display == "inline-block") {
+        filters.style.display = "none"
+        form.style.height = "100%"
+      }
+      else {
+        filters.style.display = "inline-block"
+        form.style.height = "140%"
+      }
+
     }
 
 

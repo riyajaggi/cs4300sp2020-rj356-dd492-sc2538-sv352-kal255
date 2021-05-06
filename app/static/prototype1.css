@@ -74,14 +74,14 @@
   color: black;
 }
 
-#query-not {
+#query-not-show {
   position: center;
   width: 363.5px;
   height: 51px;
   /* left: 357px; */
   /* top: 326px; */
 
-  background: white;
+  background: #F7F3F3;
   border: 2px solid #D8CFCF;
   box-sizing: border-box;
   border-radius: 25px;
@@ -90,13 +90,35 @@
   font-family: 'Source Sans Pro', sans-serif;
   font-style: normal;
   font-weight: normal;
-  font-size: 18px;
-  line-height: 22px;
+  font-size: 22px;
+  line-height: 26px;
   letter-spacing: -0.02em;
 
-  color: #8A8A8A;
+  color: black;
 }
 
+#query-not-free {
+  position: center;
+  width: 363.5px;
+  height: 51px;
+  /* left: 357px; */
+  /* top: 326px; */
+
+  background: #F7F3F3;
+  border: 2px solid #D8CFCF;
+  box-sizing: border-box;
+  border-radius: 25px;
+  margin: auto;
+
+  font-family: 'Source Sans Pro', sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 22px;
+  line-height: 26px;
+  letter-spacing: -0.02em;
+
+  color: black;
+}
 
 
 #button {
