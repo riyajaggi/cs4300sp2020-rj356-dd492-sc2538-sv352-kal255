@@ -93,6 +93,19 @@
         </div>
         <p class="btw">(multi-word keywords can be grouped by quotes Ex: "los angeles")</p>
         <br><br>
+
+        <div id="options">
+          <p id="opp1" style="color:black; display: none;">Additional Options </p>
+          <p id="opp2" style="color:black; font-weight: bolder;">Click for Additional Options </p>
+        </div>
+      </div>
+      <br>
+      <!--     <form class="form-inline global-search">
+        <input id="not" type="text" name="notShow" class="form-control" placeholder="Shows not to include">
+        <input id="type" type="text" name="Genre" class="form-control" placeholder="Genre">
+        <input id="stream" type="text" name="platform" class="form-control" placeholder="Platforms"> -->
+
+      <div class="slidecontainer" id="filters" style="display:none">
         <p class="btw" style="color:rgb(116, 18, 141);">Not Like</p>
         <input id="query-not-show" type="text" name="not-tv" class="form-control" placeholder="Enter TV Show">
         <p class="btw" style="color:rgb(116, 18, 141);">Or/And</p>
@@ -104,18 +117,8 @@
           </div>
         </div>
         <br><br>
-        <div id="options">
-          <p style="color:black;"> Click for Additional Options </p>
-        </div>
-      </div>
-      <br>
-      <!--     <form class="form-inline global-search">
-        <input id="not" type="text" name="notShow" class="form-control" placeholder="Shows not to include">
-        <input id="type" type="text" name="Genre" class="form-control" placeholder="Genre">
-        <input id="stream" type="text" name="platform" class="form-control" placeholder="Platforms"> -->
-
-      <div class="slidecontainer" id="filters" style="display:none">
         <p class="slid">
+
           <span style="color:rgb(116, 18, 141); padding-bottom: 10px; font-weight: 550;">Filters</span>
 
           <input id="smallquery-subscriptions" type="text" name="subscriptions" class="random"
@@ -146,27 +149,41 @@
             border-radius: 15px; padding-left: 40px; padding-top: 5px;padding-bottom: 5px; padding-right: 20px;">AssignWeights</label>
           <div style="position:relative">
             <div class="help-tip">
-              <p>Welcome to Stream On! Enter A TV Show or some words that describe what you want to watch to get
-                started!
+              <p><span style="font-weight:bolder">Decide how you want to weigh things</span>
+                <br><br>
+                <span style="font-weight:bolder">Similarity:</span> How similar do you want your show to be to your
+                query?
+                <br><br>
+                <span style="font-weight:bolder"></span>Not like:</span> How much do you want what you don't want to
+                affect your results? If we find a show that's
+                perfect for what you want but also checks a lot of what you don't want this weight will tell us whether
+                to show it to you
+                <br><br>
+                <span style="font-weight:bolder">TV Show - Keyword:</span> How much do you want us to base your search
+                off the TV Show vs Keyword? Far left for
+                all TV Show, far right for all Keyword
+                <br><br>
+                <span style="font-weight:bolder">Not like:</span> TV Show - Keyword: Same as TV Show - Keyword but for
+                Not Like search items instead
               </p>
             </div>
           </div>
           <br>
-          <label>Similarity</label>
+          <label>Similarity <span id="sim_val"></span></label>
           <br>
           <input type="range" min="0" max="100" value="100" class="slider weight" id="simil" name="similarity-weight">
 
-          <label>Not like</label>
+          <label>Not like <span id="not_val"></span></label>
           <br>
-          <input type="range" min="0" max="100" value="0" class="slider weight" id="not-like" name="not-weight">
+          <input type="range" min="0" max="100" value="100" class="slider weight" id="not-like" name="not-weight">
 
-          <label>TV Show - Keyword</label>
+          <label>TV Show - Keyword <span id="like_key_val"></span></label>
           <br>
-          <input type="range" min="0" max="100" value="50" class="slider weight" id="show" name="show-keyword-weight">
+          <input type="range" min="0" max="100" value="50" class="slider weight" id="key" name="show-keyword-weight">
 
-          <label>Not like: TV Show - Keyword</label>
+          <label>Not like: TV Show - Keyword <span id="not_key_val"></span></label>
           <br>
-          <input type="range" min="0" max="100" value="50" class="slider weight" id="keyword"
+          <input type="range" min="0" max="100" value="50" class="slider weight" id="not-key"
             name="not-like-show-keyword-weight">
           </p>
         </div>
@@ -287,17 +304,170 @@
 
     var filters = document.getElementById("filters")
     var options = document.getElementById("options")
+    var op1 = document.getElementById("opp1")
+    var op2 = document.getElementById("opp2")
     options.onclick = function () {
       if (filters.style.display == "inline-block") {
         filters.style.display = "none"
         form.style.height = "100%"
+        op2.style.display = "inline"
+        op1.style.display = "none"
       }
       else {
         filters.style.display = "inline-block"
         form.style.height = "140%"
+        op1.style.display = "inline"
+        op2.style.display = "none"
       }
 
     }
+
+    var sim_val = document.getElementById("sim_val");
+    var not_val = document.getElementById("not_val");
+    var like_key_val = document.getElementById("like_key_val");
+    var not_key_val = document.getElementById("not_key_val");
+
+
+    var sim_slide = document.getElementById("simil");
+    var not_slide = document.getElementById("not-like");
+    var like_key_slide = document.getElementById("key");
+    var not_key_slide = document.getElementById("not-key");
+
+    var queryNS = document.getElementById("query-not-show")
+    var queryNF = document.getElementById("query-not-free")
+
+    sim_val.innerHTML = sim_slide.value.concat("%");
+    not_val.innerHTML = not_slide.value.concat("%");
+
+    like_key_val.innerHTML = "N/A";
+    not_key_val.innerHTML = "N/A";
+
+    sim_slide.oninput = function () {
+      sim_val.innerHTML = this.value.concat("%");
+
+    }
+
+    not_slide.oninput = function () {
+      not_val.innerHTML = this.value.concat("%");
+
+    }
+
+
+    queryS.oninput = function () {
+      if (queryS.value.length == 0 && queryF.value.length == 0) {
+        like_key_val.innerHTML = "N/A"
+      }
+      else if (queryS.value.length == 0) {
+        like_key_slide.value = "100"
+        like_key_val.innerHTML = "100"
+      }
+      else if (queryF.value.length == 0) {
+        like_key_slide.value = "0"
+        like_key_val.innerHTML = "0"
+      }
+      else if (queryS.value.length == 1) {
+        like_key_slide.value = "50"
+        like_key_val.innerHTML = "50"
+
+      }
+
+    }
+
+    queryF.oninput = function () {
+      if (queryS.value.length == 0 && queryF.value.length == 0) {
+        like_key_val.innerHTML = "N/A"
+      }
+      else if (queryS.value.length == 0) {
+        like_key_slide.value = "100"
+        like_key_val.innerHTML = "100"
+      }
+      else if (queryF.value.length == 0) {
+        like_key_slide.value = "0"
+        like_key_val.innerHTML = "0"
+      }
+      else if (queryF.value.length == 1) {
+        like_key_slide.value = "50"
+        like_key_val.innerHTML = "50"
+
+      }
+
+    }
+
+    like_key_slide.oninput = function () {
+      if (queryS.value.length == 0 && queryF.value.length == 0) {
+        like_key_val.innerHTML = "N/A"
+        this.value = "50"
+      }
+      else if (queryS.value.length == 0) {
+        this.value = "100"
+      }
+      else if (queryF.value.length == 0) {
+        this.value = "0"
+      }
+      else {
+        like_key_val.innerHTML = this.value.concat("%");
+      }
+
+    }
+
+    queryNS.oninput = function () {
+      if (queryNS.value.length == 0 && queryNF.value.length == 0) {
+        not_key_val.innerHTML = "N/A"
+      }
+      else if (queryNS.value.length == 0) {
+        not_key_slide.value = "100"
+        not_key_val.innerHTML = "100"
+      }
+      else if (queryNF.value.length == 0) {
+        not_key_slide.value = "0"
+        not_key_val.innerHTML = "0"
+      }
+      else if (queryNS.value.length == 1) {
+        not_key_slide.value = "50"
+        not_key_val.innerHTML = "50"
+
+      }
+
+    }
+
+    queryNF.oninput = function () {
+      if (queryNS.value.length == 0 && queryNF.value.length == 0) {
+        not_key_val.innerHTML = "N/A"
+      }
+      else if (queryNS.value.length == 0) {
+        not_key_slide.value = "100"
+        not_key_val.innerHTML = "100"
+      }
+      else if (queryNF.value.length == 0) {
+        not_key_slide.value = "0"
+        not_key_val.innerHTML = "0"
+      }
+      else if (queryNF.value.length == 1) {
+        not_key_slide.value = "50"
+        not_key_val.innerHTML = "50"
+
+      }
+
+    }
+
+    not_key_slide.oninput = function () {
+      if (queryNS.value.length == 0 && queryNF.value.length == 0) {
+        not_key_val.innerHTML = "N/A"
+        this.value = "50"
+      }
+      else if (queryNS.value.length == 0) {
+        this.value = "100"
+      }
+      else if (queryNF.value.length == 0) {
+        this.value = "0"
+      }
+      else {
+        not_key_val.innerHTML = this.value.concat("%");
+      }
+
+    }
+
+
 
 
 

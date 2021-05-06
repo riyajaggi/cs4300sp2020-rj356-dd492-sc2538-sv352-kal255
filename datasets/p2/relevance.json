@@ -1,1 +1,12 @@
-{"shows": {"scores": {"mad dogs": {"mad men": [0, 1]}}, "relevant": {"mad dogs": []}, "irrelevant": {"mad dogs": []}}, "words": {"scores": {}, "relevant": {}, "irrelevant": {}}}
+{
+  "shows": {
+    "scores": {},
+    "relevant": {},
+    "irrelevant": {}
+  },
+  "words": {
+    "scores": {},
+    "relevant": {},
+    "irrelevant": {}
+  }
+}
