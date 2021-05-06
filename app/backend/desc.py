@@ -4,14 +4,20 @@ import numpy as np
 def format_des(show_info):
     formatted_des = {}
     end_year = show_info["end year"] if show_info["end year"] != 0 else ""
-    formatted_des["Years"] = str(show_info["start year"]) + " - " + str(end_year)
-    formatted_des["Seasons"] = str(show_info["no of seasons"])
-    formatted_des["Runtime"] = str(show_info["runtime"]) + " mins"
+    if show_info["start year"] != -1:
+        formatted_des["Years"] = str(show_info["start year"]) + " - " + str(end_year)
+    if show_info["no of seasons"] != -1:
+        formatted_des["Seasons"] = str(show_info["no of seasons"])
+    if show_info["runtime"] != -1:
+        formatted_des["Runtime"] = str(show_info["runtime"]) + " mins"
     formatted_des["Streaming Platforms"] = ", ".join(show_info["streaming platform"])
     formatted_des["Genre"] = ", ".join(show_info["genre"])
-    formatted_des["Content Rating"] = show_info["content rating"].title()
-    formatted_des["IMBd rating"] = str(show_info["imdb rating"])
-    formatted_des["Description"] = str(show_info["description"])
+    if show_info["content rating"] != "":
+        formatted_des["Content Rating"] = show_info["content rating"].title()
+    if show_info["imdb rating"] != -1:
+        formatted_des["IMBd rating"] = str(show_info["imdb rating"])
+    if show_info["description"] != "":
+        formatted_des["Description"] = str(show_info["description"])
 
     return formatted_des
 
