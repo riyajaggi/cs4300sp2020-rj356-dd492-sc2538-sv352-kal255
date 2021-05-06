@@ -10,6 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap" rel="stylesheet" />
   <script src="/static/js/jquery.min.js"></script>
   <script src="/static/js/selectize.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 
   <style>
     body {
@@ -79,13 +80,20 @@
     <div class="form-group">
 
       <div class="required">
-        <p class="btw">TV Show</p>
-        <input id="query" type="text" name="search" class="form-control" placeholder="Enter TV Show">
+        <p class="btw">Search</p>
+        <input id="query-show" type="text" name="search" class="form-control" placeholder="Enter TV Show">
+
         <p class="btw">Or/And</p>
-        <input id="query" type="text" name="freeSearch" class="form-control" placeholder="Enter keyword">
+        <input id="query-free" type="text" name="freeSearch" class="form-control" placeholder="Enter keyword">
+        <div class="help-tip">
+          <p>Welcome to Stream On! Enter A TV Show or some words that describe what you want to watch to get started!
+          </p>
+        </div>
         <p class="btw">(multi-word keywords can be grouped by quotes Ex: "los angeles")</p>
         <br><br>
-        <p> Additional Options: </p>
+        <div id="options">
+          <p style="color:black;"> Additional Options </p>
+        </div>
       </div>
       <br>
       <!--     <form class="form-inline global-search">
@@ -93,10 +101,14 @@
         <input id="type" type="text" name="Genre" class="form-control" placeholder="Genre">
         <input id="stream" type="text" name="platform" class="form-control" placeholder="Platforms"> -->
 
-      <div class="slidecontainer">
-        <p class="btw" style="color:red">Not like:</p>
+      <div class="slidecontainer" id="filters">
+        <div class="help-tip">
+          <p>Welcome to Stream On! Enter A TV Show or some words that describe what you want to watch to get started!
+          </p>
+        </div>
+        <p class="btw" style="color:purple; ">Not like</p>
         <input id="query-not" type="text" name="not-tv" class="form-control" placeholder="Enter TV Show">
-        <p class="btw" style="color:red">Or/And</p>
+        <p class="btw" style="color:purple; ">Or/And</p>
         <input id="query-not" type="text" name="not-keyword" class="form-control" placeholder="Enter keyword">
         <br><br>
 
@@ -124,24 +136,31 @@
         <!-- <h3>assign weights </h3> -->
         <div class="weights">
           <p class="slid">
-            <label>Assign Weights: </label>
-            <br>
-            <label>Similarity</label>
-            <br>
-            <input type="range" min="0" max="100" value="100" class="slider weight" id="simil" name="similarity-weight">
 
-            <label>Not like</label>
-            <br>
-            <input type="range" min="0" max="100" value="0" class="slider weight" id="not-like" name="not-weight">
+            <label
+              style="color: purple;  
+            border-radius: 15px; padding-left: 40px; padding-top: 5px;padding-bottom: 5px; padding-right: 20px;">AssignWeights</label>
+          <div class="help-tip">
+            <p>Welcome to Stream On! Enter A TV Show or some words that describe what you want to watch to get started!
+            </p>
+          </div>
+          <br>
+          <label>Similarity</label>
+          <br>
+          <input type="range" min="0" max="100" value="100" class="slider weight" id="simil" name="similarity-weight">
 
-            <label>TV Show - Keyword</label>
-            <br>
-            <input type="range" min="0" max="100" value="50" class="slider weight" id="show" name="show-keyword-weight">
+          <label>Not like</label>
+          <br>
+          <input type="range" min="0" max="100" value="0" class="slider weight" id="not-like" name="not-weight">
 
-            <label>Not like: TV Show - Keyword</label>
-            <br>
-            <input type="range" min="0" max="100" value="50" class="slider weight" id="keyword"
-              name="not-like-show-keyword-weight">
+          <label>TV Show - Keyword</label>
+          <br>
+          <input type="range" min="0" max="100" value="50" class="slider weight" id="show" name="show-keyword-weight">
+
+          <label>Not like: TV Show - Keyword</label>
+          <br>
+          <input type="range" min="0" max="100" value="50" class="slider weight" id="keyword"
+            name="not-like-show-keyword-weight">
           </p>
         </div>
 
@@ -178,6 +197,19 @@
   </form>
 
   <script>
+    var shows_string = "{{shows}}".split(", ");
+    shows = shows_string.map(function (r) {
+      return r.trim().replaceAll("&#39;", "").replaceAll("&#34;", "");
+    });
+
+
+    $(function () {
+      $("#query-show").autocomplete({
+        source: shows,
+      });
+    });
+
+
     $('#smallquery-genre').selectize({
       delimiter: ',',
       persist: false,
@@ -223,6 +255,13 @@
         }
       }
     });
+
+    var filters = document.getElementById("filters")
+    var options = document.getElementById("options")
+    options.onclick = function () {
+      filters.style.display = "block"
+    }
+
 
 
 

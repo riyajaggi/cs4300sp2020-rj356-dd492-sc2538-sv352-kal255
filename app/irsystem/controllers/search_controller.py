@@ -1,4 +1,5 @@
 from . import *
+import json
 from app.irsystem.models.helpers import *
 from app.irsystem.models.helpers import NumpyEncoder as NumpyEncoder
 
@@ -9,6 +10,13 @@ from app.backend.backend_script import *
 from app.backend.desc import *
 
 from app.backend.relevance import updateData
+
+with open("datasets/p2/tv_shows_to_index_final.json") as f:
+  data = json.load(f)
+f.close()
+
+check = list(data.keys())
+check = str(check)[1:-1]
 
 project_name = "Stream On"
 net_id = "Divya Damodaran: dd492, Riya Jaggi: rj356, Siddhi Chordia: sc2538, Sidharth Vadduri: sv352, Kendall Lane: kal255"
@@ -159,6 +167,7 @@ def search():
         name=project_name,
         netid=net_id,
         output_message=output_message,
+        shows=check,
         data=data,
         genre_list=genre_list,
     )
