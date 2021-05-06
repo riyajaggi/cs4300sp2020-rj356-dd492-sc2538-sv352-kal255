@@ -117,7 +117,7 @@ def filter_out_shows(filters):
     filters are genre, subscription, season min, season max, year min and year max
     """
     shows_to_include = list(tv_shows_to_index.keys())
-    print("before shows to include: " + str(len(shows_to_include)))
+    # print("before shows to include: " + str(len(shows_to_include)))
 
     count = 0
     for k, v in filters.items():
@@ -168,7 +168,7 @@ def filter_out_shows(filters):
         ):
             shows_to_include.remove(show_title)
 
-    print("after shows to include: " + str(len(shows_to_include)))
+    # print("after shows to include: " + str(len(shows_to_include)))
     return shows_to_include
 
 
@@ -403,4 +403,4 @@ def final_search(
 # test2 = final_search("Sherlock", 10,)
 # print(test2)
 
-print()
+# print()
