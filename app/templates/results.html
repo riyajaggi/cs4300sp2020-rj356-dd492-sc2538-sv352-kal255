@@ -38,10 +38,10 @@
       <br>
       <div style="display:flex; 
   justify-content: center;">
-        <input class="button-feedback" type="button" style="background: #8BE293;" id="{{data[x]}}relevant"
+        <input class="button-feedback" type="button" style="background: #8BE293; border-color:#8BE293" id="{{data[x]}}relevant"
           value="Relevant"
           onclick="posRel(1, '{{data[x]}}', '{{ show }}', '{{ keyword }}')">
-        <input class="button-feedback" type="button" style="background: #E2958B" id="{{data[x]}}irrelevant"
+        <input class="button-feedback" type="button" style="background: #E2958B; border-color: #E2958B;" id="{{data[x]}}irrelevant"
           value="Irrelevant"
           onclick="posRel(0, '{{data[x]}}', '{{ show }}', '{{ keyword }}')">
         <p id="{{data[x]}}thanks" style="display: none;">Thank you for voting!</p>
