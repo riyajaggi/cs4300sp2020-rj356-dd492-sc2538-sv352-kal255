@@ -110,40 +110,6 @@ def select_weights(query_show, free_search, various_weight_combos, not_like=Fals
     return weights
 
 
-def create_shows_not_to_include_list(
-    capitalized_query,
-    not_like_show,
-    not_like_free_search,
-    not_like_tv_sim_score_sum,
-    slider_weights,
-    capitalized_not_like_query=None,
-):
-    """
-    Returns a list of shows not to include in the final search results
-    """
-    shows_not_to_include = [capitalized_query]
-    if not_like_show or not_like_free_search:
-        shows_not_to_include.append(capitalized_not_like_query)
-        not_like_tv_sim_score_sum = {
-            k: v
-            for k, v in sorted(
-                not_like_tv_sim_score_sum.items(), key=lambda item: -item[1]
-            )
-        }
-        n_not_like_shows = len(not_like_tv_sim_score_sum)
-        n_not_including = int(slider_weights["not like"] * n_not_like_shows)
-        print(n_not_including)
-        count = 0
-        for key, _ in not_like_tv_sim_score_sum.items():
-            if count == n_not_including:
-                break
-            capitalized_show = capitalize_show_name(key)
-            if capitalized_show:
-                shows_not_to_include.append(capitalized_show)
-                count += 1
-    return shows_not_to_include
-
-
 def final_search(
     slider_weights,
     query_show=None,
@@ -221,8 +187,10 @@ def final_search(
         }
     }
     results = []
-    not_like_tv_sim_score_sum = tv_sim_score_sum = {}
-    weights = not_like_weights = {}
+    not_like_tv_sim_score_sum = {}
+    tv_sim_score_sum = {}
+    weights = {}
+    not_like_weights = {}
     capitalized_query = capitalize_show_name(query_show)
     capitalized_not_like_query = capitalize_show_name(not_like_show)
     weights = select_weights(query_show, free_search, various_weight_combos)
@@ -234,24 +202,24 @@ def final_search(
             not_like_show = ed.edit_search(not_like_show)[0][1]
             capitalized_not_like_query = capitalize_show_name(not_like_show)
 
-        transcripts_ranking = transcriptRanking(not_like_show, 100)  # list of tv shows
-        reviews_ranking = reviewRanking(not_like_show, 100)  # list of tv shows and sim scores
-        if reviews_ranking is None:
-            reviews_ranking = []
-        desc_ranking = descriptionRanking(not_like_show, 100)
-        for show, score in transcripts_ranking:
+        not_like_transcripts_ranking = transcriptRanking(not_like_show, 100)  # list of tv shows
+        not_like_reviews_ranking = reviewRanking(not_like_show, 100)  # list of tv shows and sim scores
+        if not_like_reviews_ranking is None:
+            not_like_reviews_ranking = []
+        not_like_desc_ranking = descriptionRanking(not_like_show, 100)
+        for show, score in not_like_transcripts_ranking:
             lowercase_show = show.lower()
             if lowercase_show in not_like_tv_sim_score_sum:
                 not_like_tv_sim_score_sum[lowercase_show] += not_like_weights["transcripts"] * score * 100 
             else:
                 not_like_tv_sim_score_sum[lowercase_show] = not_like_weights["transcripts"] * score * 100
-        for show, score in reviews_ranking:
+        for show, score in not_like_reviews_ranking:
             lowercase_show = show.lower()
             if lowercase_show in not_like_tv_sim_score_sum:
                 not_like_tv_sim_score_sum[lowercase_show] += not_like_weights["reviews"] * score * 100
             else:
                 not_like_tv_sim_score_sum[lowercase_show] = not_like_weights["reviews"] * score * 100
-        for show, score in desc_ranking:
+        for show, score in not_like_desc_ranking:
             lowercase_show = show.lower()
             if lowercase_show in not_like_tv_sim_score_sum:
                 not_like_tv_sim_score_sum[lowercase_show] += not_like_weights["descriptions"] * score * 100
@@ -268,15 +236,6 @@ def final_search(
                 not_like_tv_sim_score_sum[lowercase_show] += not_like_weights["free search"] * score * 100
             else:
                 not_like_tv_sim_score_sum[lowercase_show] = not_like_weights["free search"] * score * 100
-
-    shows_not_to_include = create_shows_not_to_include_list(
-        capitalized_query,
-        not_like_show,
-        not_like_free_search,
-        not_like_tv_sim_score_sum,
-        slider_weights,
-        capitalized_not_like_query,
-    )
 
     if query_show:
         # EDIT DISTANCE
@@ -316,11 +275,16 @@ def final_search(
                 tv_sim_score_sum[lowercase_show] += weights["free search"] * score * 100
             else:
                 tv_sim_score_sum[lowercase_show] = weights["free search"] * score * 100
+    
+    shows_not_to_include = [capitalized_query]
+    if slider_weights["not like"] > 0 and (not_like_show or not_like_free_search):
+        shows_not_to_include.append(capitalized_not_like_query)
+        for show, score in tv_sim_score_sum.items():
+            if show in not_like_tv_sim_score_sum:
+                tv_sim_score_sum[show] = score - (not_like_tv_sim_score_sum[show] * slider_weights['not like'])
 
     tv_sim_score_sum = { k: v for k, v in sorted(tv_sim_score_sum.items(), key=lambda item: -item[1]) }
     n_sim_shows = len(tv_sim_score_sum)
-    print(tv_sim_score_sum)
-    # print(n_sim_shows)
 
     count = 0
     starting_index = int(n_sim_shows - (slider_weights["similarity"] * n_sim_shows) - n)
@@ -329,16 +293,17 @@ def final_search(
     elif starting_index > n_sim_shows - n:
         starting_index = n_sim_shows - n
     index = 0
-    for key, _ in tv_sim_score_sum.items():
-        capitalized_show = capitalize_show_name(key)
-        if index >= starting_index:
-            if capitalized_show and not capitalized_show in shows_not_to_include:
-                show_info = merged_tv_shows[tv_shows_to_index[capitalized_show]]
-                results.append(capitalized_show)
-                count += 1
-        index += 1
-        if count == n:
-            break
+    for key, score in tv_sim_score_sum.items():
+        if score > 0:
+            capitalized_show = capitalize_show_name(key)
+            if index >= starting_index:
+                if capitalized_show and not capitalized_show in shows_not_to_include:
+                    show_info = merged_tv_shows[tv_shows_to_index[capitalized_show]]
+                    results.append(capitalized_show)
+                    count += 1
+            index += 1
+            if count == n:
+                break
     return (capitalized_query, capitalized_not_like_query, results)
 
 
@@ -363,3 +328,5 @@ def final_search(
 
 # test2 = final_search("Sherlock", 10,)
 # print(test2)
+
+print()
