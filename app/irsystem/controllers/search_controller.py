@@ -25,21 +25,21 @@ def search():
 
     # FILTERS
     # genre is a comma seperate string of genres; it is an empty string when there are no genres
-    genre = request.args.get("genre")
+    genre = request.args.get("genre", "")
 
     # subscription is a comma seperate string of subscriptions; it is an empty 
     # string when there are no subscriptions
-    subscription = request.args.get("subscriptions")
+    subscription = request.args.get("subscriptions", "")
 
     # seasMin is a string representing min seasons; default is 1
-    seasMin = request.args.get("seasonMin")
+    seasMin = request.args.get("seasonMin", 1)
     # seasMax is a string representing max seasons; default is 187
-    seasMax = request.args.get("seasonMax")
+    seasMax = request.args.get("seasonMax", 187)
 
     # yearMin is a string representing min years; default is 1946
-    yearMin = request.args.get("yearMin")
+    yearMin = request.args.get("yearMin", 1946)
     # yearMax is a string representing max years; default is 2021
-    yearMax = request.args.get("yearMax")
+    yearMax = request.args.get("yearMax", 2021)
 
 
     # WEIGHTS
@@ -61,10 +61,11 @@ def search():
     filters = {}
     filters["genre"] = genre.split()
     filters["subscription"] = subscription.split()
-    flters["seasMin"] = seasMin
-    filters["seasMax"] = seasMax
+    filters["seasMin"] = int(seasMin)
+    filters["seasMax"] = int(seasMax)
     filters["yearMin"] = yearMin
     filters["yearMax"] = yearMax
+    print(filters)
 
 
     if query == "":
@@ -87,6 +88,7 @@ def search():
         }
         query_show, not_like_query_show, data = final_search(
             slider_weights,
+            filters,
             query_show=query,
             n=10,
             free_search=free_search,
