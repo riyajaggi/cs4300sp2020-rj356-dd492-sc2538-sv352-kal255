@@ -1,1 +1,12 @@
-{"shows": {"scores": {"breaking bad": {"taken": [1, 1], "12 monkeys": [0, 1]}, "turn up charlie": {"mad dogs": [1, 1]}, "hell on wheels": {"the pinkertons": [1, 1], "american crime": [1, 1], "into the badlands": [1, 1], "rubicon": [1, 1]}, "a.n.t. farm": {"school of rock": [1, 1], "mad dogs": [0, 1]}}, "relevant": {"breaking bad": [], "turn up charlie": [], "hell on wheels": [], "a.n.t. farm": []}, "irrelevant": {"breaking bad": [], "turn up charlie": [], "hell on wheels": [], "a.n.t. farm": []}}, "words": {"scores": {"comedy": {"pixelheads": [0, 4], "queens of comedy": [4, 4]}, "anime": {"gintama": [26, 29]}, "show": {"the gcn show": [1, 1], "twenties": [0, 1]}}, "relevant": {"comedy": ["queens of comedy"], "anime": ["gintama"], "show": []}, "irrelevant": {"comedy": ["pixelheads"], "anime": [], "show": []}}}
+{
+  "shows": {
+    "scores": {},
+    "relevant": {},
+    "irrelevant": {}
+  },
+  "words": {
+    "scores": {},
+    "relevant": {},
+    "irrelevant": {}
+  }
+}
