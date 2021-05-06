@@ -15,40 +15,45 @@
     <h1 id="title">
       stream<span id="title" style="color: #5680E9;">On </span>
     </h1>
-    <br>
     <h1 id="message" style="text-align:center; width: 100%">Showing results for <span id="message"
         style="color: #5680E9;">{{output_query}}</span>
     </h1>
-    <br>
+    <button class="back" id="button" type="submit" position="center" onclick="history.go(-1)"> Go Back!</button>
+    <br><br><br><br>
     {% for x in range(data | length) %}
-    <div class="form-group">
-      <input type="button" id="{{data[x]}}relevant" value="Relevant"
-        onclick="posRel(1, '{{data[x]}}', '{{ show }}', '{{ keyword }}')">
-      <input type="button" id="{{data[x]}}irrelevant" value="Irrelevant"
-        onclick="posRel(0, '{{data[x]}}', '{{ show }}', '{{ keyword }}')">
-      <p id="{{data[x]}}thanks" style="display: none;">Thank you for voting!</p>
-      <p id="ans" style="text-align: center;
-        color: black;
-        background: #F7F3F3;
-      border: 4px solid #D8CFCF;
-      box-sizing: border-box;
-      border-radius: 25px;">{{data[x]}}<br></p>
-      <div id="box1" style="text-align: center;
-    color: black;">
-        {{descr[x]}}
+    <div>
+      <p class="center" id="show-name" style="display:flex; 
+  justify-content: center;">{{data[x]}}<br></p>
+      <div class="center" id="show-info" style="display:flex; 
+  justify-content: center; color: black;">
+        <table>
+          {% for k, v in descr[x].items() %}
+          <tr>
+            <th>{{ k }}</th>
+            <td>{{ v }}</td>
+          </tr>
+          {% endfor %}
+        </table>
       </div>
-      <br><br>
+      <br>
+      <div style="display:flex; 
+  justify-content: center;">
+        <input class="button-feedback" type="button" style="background: #8BE293;" id="{{data[x]}}relevant"
+          value="Relevant"
+          onclick="posRel(1, '{{data[x]}}', '{{ show }}', '{{ keyword }}')">
+        <input class="button-feedback" type="button" style="background: #E2958B" id="{{data[x]}}irrelevant"
+          value="Irrelevant"
+          onclick="posRel(0, '{{data[x]}}', '{{ show }}', '{{ keyword }}')">
+        <p id="{{data[x]}}thanks" style="display: none;">Thank you for voting!</p>
+      </div>
+      <br><br><br>
     </div>
     {% endfor %}
     <br><br>
-    <form>
-      <button type="submit" onclick="history.go(-1)" id="button" position="center"> Go Back!</button>
-    </form>
   </div>
 </body>
 
 <script>
-
   function posRel(rel, result, show, keyword) {
     $.ajax({
       url: '/addrel/'.concat(rel, '/', result, '/', show, '/', keyword),

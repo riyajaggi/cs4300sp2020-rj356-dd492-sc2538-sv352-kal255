@@ -93,4 +93,36 @@
     border-radius: 20px;
 }
 
+.back {
+    position: absolute;
+    left: 40%;
+}
+
+.button-feedback {
+    position: center;
+    /* width: 152px; */
+    height: 25px;
+    border-radius: 5px;
+    width: 20%;
+    /* margin-left: 35%;
+  margin-right: 35%; */
+
+
+    font-family: Roboto Condensed;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 16px;
+    margin: auto;
+    display: table-cell;
+    align-items: center;
+    text-align: center;
+    vertical-align: middle;
+    letter-spacing: -0.02em;
+    color: #000000;
+}
+
+.center {
+    margin:auto;
+    width: 50%;
+}
 
