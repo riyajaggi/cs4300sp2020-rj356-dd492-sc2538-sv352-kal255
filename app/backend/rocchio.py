@@ -140,7 +140,7 @@ def rocchio_update(query, query_obj, input_doc_mat, \
     return np.clip(q1, 0, None)
 
 def rocchio_update_addhoc(query, query_obj, index,\
-            idf,a=.3, b=.3, c=.8):
+            idf,a=.3, b=.3, c=.5):
 
     #use index show-tf tuples
     #use idf: words as keys, idf as values
@@ -148,16 +148,16 @@ def rocchio_update_addhoc(query, query_obj, index,\
     q = tokenizeQuotes(query)
     q_dict = Counter(q)
     terms = list(q_dict.keys())
-    q0 = np.zeros(len(terms))
+    q0 = []
     rel = []
     irrel = []
     sum_rel = np.zeros(len(terms))
     sum_irrel = np.zeros(len(terms))
     for i in range(len(terms)):
         if terms[i].find(" ") >= 0:
-            q0[i] = q_dict[terms[i]]*compute_idf_multi_words(index, terms[i], len(index_to_tv_show))
-        else:
-            q0[i] = q_dict[terms[i]]*idf[terms[i]]
+            q0.append(q_dict[terms[i]]*compute_idf_multi_words(index, terms[i], len(index_to_tv_show)))
+        elif terms[i] in idf.keys() and terms[i] in index:
+            q0.append(q_dict[terms[i]]*idf[terms[i]])
 
         if terms[i] in query_obj['relevant'].keys():
             rel += query_obj['relevant'][terms[i]]
@@ -168,28 +168,29 @@ def rocchio_update_addhoc(query, query_obj, index,\
             irrel += query_obj['irrelevant'][terms[i]]
         else:
             irrel = []
+    
+    q0 = np.array(q0)
 
-    print(rel)
-    print(irrel)
     if len(rel) == 0 or len(irrel) == 0:
         q1 = q0
     
     else:
         for i in range(len(terms)):
             if terms[i].find(" ") >= 0:
-                for pair in index[terms[i]]:
-                    if pair[0] in rel:
-                        sum_rel[i] += pair[1]*compute_idf_multi_words(index, terms[i], len(index_to_tv_show))
-                    if pair[0] in irrel:
-                        sum_irrel[i]+= pair[1]*compute_idf_multi_words(index, terms[i], len(index_to_tv_show))
-            else:
+                for pair in index[terms[i]].keys():
+                    if index_to_tv_show[pair].lower() in rel:
+                        sum_rel[i] += index[terms[i]][pair]*compute_idf_multi_words(index, terms[i], len(index_to_tv_show))
+                    if index_to_tv_show[pair].lower() in irrel:
+                        sum_irrel[i]+= index[terms[i]][pair]*compute_idf_multi_words(index, terms[i], len(index_to_tv_show))
+            elif terms[i] in idf.keys() and terms[i] in index:
                for pair in index[terms[i]]:
-                    if pair[0] in rel:
-                        sum_rel[i] += pair[1]*idf[terms[i]]
-                    if pair[0] in irrel:
-                        sum_irrel[i]+= pair[1]*idf[terms[i]]
-        q1 = a*q0 + b*(sum_rel/len(rel)) - c*(sum_irrel/len(irrel))
+                    if index_to_tv_show[pair].lower() in rel:
+                        sum_rel[i] += index[terms[i]][pair]*idf[terms[i]]
+                    if index_to_tv_show[pair].lower() in irrel:
+                        sum_irrel[i]+= index[terms[i]][pair]*idf[terms[i]]
 
+
+        q1 = a*q0 + b*(sum_rel/len(rel)) - c*(sum_irrel/len(irrel))
     return np.clip(q1, 0, None)
 
 

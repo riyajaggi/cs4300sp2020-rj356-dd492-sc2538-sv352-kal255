@@ -109,9 +109,72 @@ def select_weights(query_show, free_search, various_weight_combos, not_like=Fals
         weights = various_weight_combos["just free search"]
     return weights
 
+def filter_out_shows(filters):
+    """
+    Returns a list of titles of shows that can be included in the results based on
+    the filters entered by the user.
+
+    filters are genre, subscription, season min, season max, year min and year max
+    """
+    shows_to_include = list(tv_shows_to_index.keys())
+    print("before shows to include: " + str(len(shows_to_include)))
+
+    count = 0
+    for k, v in filters.items():
+        if (k == "genre" or k == "subscription") and v == []:
+            count += 1
+        elif k == "seasMin" and v == 1:
+            count += 1
+        elif k == "seasMax" and v == 187:
+            count += 1
+        elif k == "yearMin" and v == 1946:
+            count += 1
+        elif k == "yearMax" and v == 2021:
+            count += 1
+
+    # if filters are default (i.e. no filters entered) include all shows
+    if count == 6:
+        return shows_to_include
+
+    # if filters are not default, remove shows from include list
+    for show in merged_tv_shows:
+        show_title = show["show_title"]
+        show_info = show["show_info"]
+
+        # filter out based on genre
+        if filters["genre"] != []:
+            show_genre = show_info["genre"]
+            if len((set(filters["genre"]).intersection(show_genre))) == 0:
+                shows_to_include.remove(show_title)
+                continue
+
+        # filter out based on subscription
+        if filters["subscription"] != []:
+            show_subscriptions = show_info["streaming platform"]
+            if len((set(filters["subscription"]).intersection(show_subscriptions))) == 0:
+                shows_to_include.remove(show_title)
+                continue
+
+        # filter out based on min and max seasons
+        if (show_info["no of seasons"] < filters["seasMin"]
+            or show_info["no of seasons"] > filters["seasMax"]
+        ):
+            shows_to_include.remove(show_title)
+            continue
+
+        # filter out based on min and max years
+        if (show_info["start year"] < filters["yearMin"]
+            or show_info["start year"] > filters["yearMax"]
+        ):
+            shows_to_include.remove(show_title)
+
+    print("after shows to include: " + str(len(shows_to_include)))
+    return shows_to_include
+
 
 def final_search(
     slider_weights,
+    filters,
     query_show=None,
     n=10,
     free_search=None,
@@ -196,9 +259,16 @@ def final_search(
     weights = select_weights(query_show, free_search, various_weight_combos)
     not_like_weights = select_weights(not_like_show, not_like_free_search, various_weight_combos, True)
 
-    if not_like_show and slider_weights['not like'] > 0:        
+    # EDIT DISTANCE
+    if not capitalized_query and capitalized_query not in tv_shows_to_index.keys() and query_show!= None:
+        query_show = ed.edit_search(query_show)[0][1]
+        capitalized_query = capitalize_show_name(query_show)
+
+    shows_to_include = filter_out_shows(filters)
+
+    if not_like_show and slider_weights["not like"] > 0:
         # EDIT DISTANCE
-        if (not capitalized_not_like_query and capitalized_not_like_query not in tv_shows_to_index.keys()):
+        if not capitalized_not_like_query and capitalized_not_like_query not in tv_shows_to_index.keys():
             not_like_show = ed.edit_search(not_like_show)[0][1]
             capitalized_not_like_query = capitalize_show_name(not_like_show)
 
@@ -307,9 +377,13 @@ def final_search(
     return (capitalized_query, capitalized_not_like_query, results)
 
 
-# TESTS
+# # TESTS
+# filters = {"genre": [], "subscriptions": [], "seasMin": 1, "seasMax": 187, "yearMin": 1946, "yearMax": 2021}
+# filters1 = {"genre": [], "subscriptions": ["Netflix"], "seasMin": 1, "seasMax": 187, "yearMin": 2000, "yearMax": 2021}
 # the_walking_dead_results = final_search("The Walking Dead", 10)
 # print(the_walking_dead_results)
+
+# the_walking_dead_results_2 = final_search("The Walking Dead")
 # sherlock_results = final_search("Sherlock", 10, "dogs")
 # print(sherlock_results)
 # its_always_sunny_results = final_search("It's Always Sunny in Philadephia", 10) # no reviews, no description, no transcripts in transcript2

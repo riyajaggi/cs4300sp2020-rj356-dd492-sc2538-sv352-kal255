@@ -11,19 +11,16 @@ with open('./datasets/p2/tv_shows_to_index_final.json') as tv_shows_to_index_fil
   tv_show_to_index = json.load(tv_shows_to_index_file)
 with open('./datasets/p2/index_to_tv_shows_final.json') as index_to_tv_show_file:
   index_to_tv_show = json.load(index_to_tv_show_file)
-with open("./datasets/p2/relevance.json") as f:
-  query_obj = json.load(f)
-f.close()
 
 # def build_inverted_index(reviews_description_dict):
 #   """
 #   Returns: An inverted index represented by a dict with words as keys and show
 #   index-tf dictionaries as values
 
-#   Parameter reviews_description_dict: a dictionary with info about reviews 
+#   Parameter reviews_description_dict: a dictionary with info about reviews
 #   and descriptions
 #   Precondtion: review dictionary
-#   """  
+#   """
 #   result = {}
 
 #   for show in reviews_description_dict:
@@ -43,7 +40,7 @@ f.close()
 #         else:
 #             result[word] = { index : count }
 #     count_dict = {}
-        
+
 #   return result
 
 # TESTS FOR INVERTED INDEX
@@ -76,9 +73,9 @@ with open('./datasets/p2/adhoc_idf_dict.json') as c_file:
 
 def index_search(query, index, idf, show_norms):
   """
-  Returns: A list of score-show tuples in descending order from most similar 
+  Returns: A list of score-show tuples in descending order from most similar
   shows to least similar shows.
-  
+
   Parameter query: query
   Precondition: string
 
@@ -90,10 +87,14 @@ def index_search(query, index, idf, show_norms):
 
   Parameter: computed norms for every show
   Precondition: list with length of the number of shows with reviews
-  """  
+  """
+  with open("./datasets/p2/relevance.json") as f:
+    query_obj = json.load(f)
+  f.close()
 
   result = []
   numerators = {}
+  
   lowercase_query = query.lower()
   #rememebr query_obj
   q1 = rocchio_update_addhoc(query, query_obj['words'], index, idf)
@@ -101,46 +102,67 @@ def index_search(query, index, idf, show_norms):
   
   tokenized_query = cosine_similarity.tokenizeQuotes(lowercase_query)
   query_tfs = Counter(tokenized_query)
-  query_norm = 0
-  
   query_norm = math.sqrt(q1.dot(q1))
 
   cnt = 0
   for token, q_tf in query_tfs.items():
+    irrelevant_list = []
+    relevant_list = []
     if token.find(" ") >= 0:
+      if token in query_obj['words']['scores'].keys():
+        relevant_list = query_obj['words']['relevant'][token] 
+        irrelevant_list = query_obj['words']['irrelevant'][token]
       multi_word_dict = cosine_similarity.create_multi_word_dict(index, token)
       show_count_tf_dict = multi_word_dict['shows_count_tf_dict']
       token_idf = cosine_similarity.compute_idf_multi_words(index, token, len(index_to_tv_show))
       for show in show_count_tf_dict.keys():
         if show_count_tf_dict[show]['count'] == multi_word_dict['n_words_in_quotes']:
           if q_tf != 0 and token_idf != 0:
-            numerator = q1[cnt] * show_count_tf_dict[show]['tf'] * token_idf
+            if index_to_tv_show[show].lower() in relevant_list or index_to_tv_show[show].lower() in irrelevant_list:
+              temp_score = query_obj['words']['scores'][token][index_to_tv_show[show].lower()][0]/ query_obj['words']['scores'][token][index_to_tv_show[show].lower()][1]
+              numerator = q1[cnt] * show_count_tf_dict[show]['tf'] * token_idf * (temp_score*2)
+            else:
+              numerator = q1[cnt] * show_count_tf_dict[show]['tf'] * token_idf
+              
             if show in numerators:
               numerators[show] += numerator
             else:
               numerators[show] = numerator
-    else:   
+      cnt+=1
+    else:
       if token in index and token in idf:
+          if token in query_obj['words']['scores'].keys():
+            relevant_list = query_obj['words']['relevant'][token] 
+            irrelevant_list = query_obj['words']['irrelevant'][token]
+          
           token_idf = idf[token]
           for show, show_tf in index[token].items():
               if q_tf != 0 and token_idf != 0:
-                  numerator = q1[cnt] * show_tf * token_idf
+                  if index_to_tv_show[show].lower() in relevant_list or index_to_tv_show[show].lower() in irrelevant_list:
+                    temp_score = query_obj['words']['scores'][token][index_to_tv_show[show].lower()][0]/ query_obj['words']['scores'][token][index_to_tv_show[show].lower()][1]
+                    numerator = q1[cnt] * show_tf * token_idf * (temp_score*2)
+                  else:
+                    numerator = q1[cnt] * show_tf * token_idf
                   if show in numerators:
                       numerators[show] += numerator
                   else:
                       numerators[show] = numerator
-    cnt+=1
+          cnt+=1
+    
 
   for show, numerator in numerators.items():
       denominator = query_norm * show_norms[int(show)]
-      score = numerator / denominator
+      if denominator == 0:
+        score = 0.0
+      else:
+        score = numerator / denominator
       result.append((score, show))
-  
+
   result = sorted(result, key = lambda x: -x[0])
   return result
 
 def find_n_similar_shows_free_search(query, n):
-  """ 
+  """
   Returns: A list with the top n most similar shows based on free search query.
 
   Parameter query: the query
@@ -149,10 +171,10 @@ def find_n_similar_shows_free_search(query, n):
   Parameter n:  the amount of similar shows to return.
   Precondition: Any integer between 1 and the length of tv_shows_reviews_description.
   """
-  
+
   results = index_search(query, inverted_index, idf_dict, show_norms)
   final_show_list  = []
-  
+
   if len(results)==0:
     return final_show_list
 
