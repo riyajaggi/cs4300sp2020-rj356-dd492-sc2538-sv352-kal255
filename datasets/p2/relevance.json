@@ -1,1 +1,12 @@
-{"shows": {"scores": {"sherlock": {"elementary": [2, 3]}}, "relevant": {"sherlock": []}, "irrelevant": {"sherlock": []}}, "words": {"scores": {"comedy": {"pixelheads": [0, 4], "queens of comedy": [4, 4]}, "anime": {"gintama": [25, 28]}, "show": {"the gcn show": [1, 1], "twenties": [0, 1]}}, "relevant": {"comedy": ["queens of comedy"], "anime": ["gintama"], "show": []}, "irrelevant": {"comedy": ["pixelheads"], "anime": [], "show": []}}}
+{
+  "shows": {
+    "scores": {},
+    "relevant": {},
+    "irrelevant": {}
+  },
+  "words": {
+    "scores": {},
+    "relevant": {},
+    "irrelevant": {}
+  }
+}

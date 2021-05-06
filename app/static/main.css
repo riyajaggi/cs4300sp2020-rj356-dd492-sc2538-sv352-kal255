@@ -5,6 +5,143 @@
 }
 
 @media (min-width:400px) {
+    .help-tip{
+        top: 18px;
+        right: 18px;
+        text-align: center;
+        background-color: #BCDBEA;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        font-size: 14px;
+        line-height: 26px;
+        cursor: default;
+    }
+    
+    .help-tip:before{
+        content:'?';
+        font-weight: bold;
+        color:#fff;
+    }
+    
+    .help-tip:hover p{
+        display:block;
+        transform-origin: 100% 0%;
+    
+        -webkit-animation: fadeIn 0.3s ease-in-out;
+        animation: fadeIn 0.3s ease-in-out;
+    
+    }
+    
+    .help-tip p{    /* The tooltip */
+        display: none;
+        text-align: left;
+        background-color: #1E2021;
+        padding: 20px;
+        width: 300px;
+        position: absolute;
+        border-radius: 3px;
+        box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+        right: -4px;
+        color: #FFF;
+        font-size: 13px;
+        line-height: 1.4;
+    }
+    
+    .help-tip p:before{ /* The pointer of the tooltip */
+        position: absolute;
+        content: '';
+        width:0;
+        height: 0;
+        border:6px solid transparent;
+        border-bottom-color:#1E2021;
+        right:10px;
+        top:-12px;
+    }
+    
+    .help-tip p:after{ /* Prevents the tooltip from being hidden */
+        width:100%;
+        height:40px;
+        content:'';
+        position: absolute;
+        top:-40px;
+        left:0;
+    }
+    
+    /* CSS animation */
+    
+    @-webkit-keyframes fadeIn {
+        0% { 
+            opacity:0; 
+            transform: scale(0.6);
+        }
+    
+        100% {
+            opacity:100%;
+            transform: scale(1);
+        }
+    }
+    
+    @keyframes fadeIn {
+        0% { opacity:0; }
+        100% { opacity:100%; }
+    }
+    
+    .ui-menu {
+        border-radius: 20px;
+        background-color: #f0fffe;
+        border-color: rgb(0, 0, 0);
+        box-shadow: 0px 6px 6px rgba(0, 0, 0, 0.5);
+        
+    }
+
+    .ui-menu .ui-menu-item a
+    {
+        display: block;
+        padding: 3px 3px 3px 3px;
+        text-decoration: none;
+        cursor: pointer;
+        background-color: whitesmoke;
+        color: black
+    }
+
+    .ui-menu .ui-menu-item a:hover
+    {
+        display: block;
+        padding: 3px 3px 3px 3px;
+        text-decoration: none;
+        color: White;
+        cursor: pointer;
+        background-color: grey;
+    }
+
+    
+    
+    .ui-helper-hidden-accessible {
+        overflow: hidden;
+        padding: 0;
+        position: absolute;
+        width: 0px;
+        padding-bottom: 5px;
+    }
+    
+    .ui-autocomplete {
+        position: absolute;
+        padding: 5px 5px 5px 5px;
+        margin: 5px 5px 5px 5px;
+        list-style: none;
+        background-color: #f0fffe;
+        border-color: rgb(0, 0, 0);
+        border-style: solid;
+        border-width: 1px;
+        padding-bottom: 10px;
+        max-height: 224px;
+        overflow-y: auto;   /* prevent horizontal scrollbar */
+        overflow-x: hidden; /* add padding to account for vertical scrollbar */
+        z-index:1000 !important;
+        box-shadow: 0px 6px 6px rgba(0, 0, 0, 0.5);
+        
+    }
     
     .selectize-control { width: 20px; }
 
@@ -22,7 +159,7 @@
     body {
         position: absolute;
         width: 100%;
-        height: 115%;
+        height: 124%;
         padding-top: 15%;
         padding-bottom: 15%;
         background-image: url("../static/streamOn_background.png");
