@@ -22,12 +22,11 @@ def search():
     not_tv_show = request.args.get("not-tv")
     not_keyword = request.args.get("not-keyword")
 
-
     # FILTERS
     # genre is a comma seperate string of genres; it is an empty string when there are no genres
     genre = request.args.get("genre", "")
 
-    # subscription is a comma seperate string of subscriptions; it is an empty 
+    # subscription is a comma seperate string of subscriptions; it is an empty
     # string when there are no subscriptions
     subscription = request.args.get("subscriptions", "")
 
@@ -41,7 +40,6 @@ def search():
     # yearMax is a string representing max years; default is 2021
     yearMax = request.args.get("yearMax", 2021)
 
-
     # WEIGHTS
     # simWeight is a string representing weight of similarity 1-100; default is 100
     simWeight = request.args.get("similarity-weight")
@@ -49,14 +47,12 @@ def search():
     # notWeight is a string representing weight of <not like> 1-100; default is 0
     notWeight = request.args.get("not-weight")
 
-    # keywordWeight is a string representing weight of keyword 1-100; default is 
-    # 100 if only keyword, 50 if both, 0 if not at all
-    keywordWeight = request.args.get("keyword-weight")
-
-    # showWeight is a string representing weight of show 1-100; default is 100 if 
-    # only show, 50 if both, 0 if not at all
-    showWeight = request.args.get("show-weight")
-
+    # keywordWeight is a string representing weight of keyword 1-100;
+    # default is 100 if only keyword, 50 if both, 0 if not at all
+    showKeywordWeight = request.args.get("show-keyword-weight")
+    # showWeight is a string representing weight of show 1-100;
+    # default is 100 if only show, 50 if both, 0 if not at all
+    notLikeShowKeywordWeight = request.args.get("not-like-show-keyword-weight")
 
     filters = {}
     filters["genre"] = genre.split()
@@ -66,7 +62,6 @@ def search():
     filters["yearMin"] = yearMin
     filters["yearMax"] = yearMax
     print(filters)
-
 
     if query == "":
         query = None
@@ -83,8 +78,8 @@ def search():
         slider_weights = {
             "similarity": int(simWeight) / 100,
             "not like": int(notWeight) / 100,
-            "keyword": int(keywordWeight) / 100,
-            "tv show": int(showWeight) / 100,
+            "show/keyword": int(showKeywordWeight) / 100,
+            "not like show/keyword": int(notLikeShowKeywordWeight) / 100,
         }
         query_show, not_like_query_show, data = final_search(
             slider_weights,
@@ -104,11 +99,11 @@ def search():
                 output_query = (
                     query_show
                     + " ("
-                    + showWeight
+                    + str(100 - int(showKeywordWeight))
                     + "%) and "
                     + free_search
                     + " ("
-                    + keywordWeight
+                    + showKeywordWeight
                     + "%) "
                 )
             elif query:
@@ -121,14 +116,14 @@ def search():
             output_query = ""
             if not_tv_show and not_keyword:
                 output_query = (
-                    not_tv_show
+                    not_like_query_show
                     + " ("
-                    + showWeight
-                    + ") and "
-                    + not_keywordfree_search
+                    + str(100 - int(notLikeShowKeywordWeight))
+                    + "%) and "
+                    + not_keyword
                     + " ("
-                    + keywordWeight
-                    + ") "
+                    + notLikeShowKeywordWeight
+                    + "%) "
                 )
             elif not_tv_show:
                 output_query = not_like_query_show + " "
