@@ -1,6 +1,7 @@
 import json
 import numpy as np
 
+
 def format_des(show_info):
     formatted_des = {}
     end_year = show_info["end year"] if show_info["end year"] != 0 else ""
@@ -21,6 +22,7 @@ def format_des(show_info):
 
     return formatted_des
 
+
 def des(shows):
     show_descriptions = []
     shows_lst = json.load(open("datasets/p2/merged_tv_shows_final.json", "r"))
@@ -35,5 +37,6 @@ def des(shows):
 
     return show_descriptions
 
-# 
+
+#
 # print(des(["Game of Thrones", "Friends"]))
