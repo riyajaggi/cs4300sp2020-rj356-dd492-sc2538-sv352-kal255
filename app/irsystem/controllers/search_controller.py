@@ -63,8 +63,14 @@ def search():
     notLikeShowKeywordWeight = request.args.get("not-like-show-keyword-weight")
 
     filters = {}
-    filters["genre"] = genre.split()
-    filters["subscription"] = subscription.split()
+    if genre != '':
+        filters["genre"] = genre.split(',')
+    else:
+        filters["genre"] = []
+    if subscription != '':
+        filters["subscription"] = subscription.split(',')
+    else:
+        filters["subscription"] = []
     filters["seasMin"] = int(seasMin)
     filters["seasMax"] = int(seasMax)
     filters["yearMin"] = yearMin

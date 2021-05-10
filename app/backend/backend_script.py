@@ -144,14 +144,14 @@ def filter_out_shows(filters):
         # filter out based on genre
         if filters["genre"] != []:
             show_genre = show_info["genre"]
-            if len((set(filters["genre"]).intersection(show_genre))) == 0:
+            if len((set(filters["genre"]).intersection(set(show_genre)))) == 0:
                 shows_to_include.remove(show_title)
                 continue
 
         # filter out based on subscription
         if filters["subscription"] != []:
             show_subscriptions = show_info["streaming platform"]
-            if len((set(filters["subscription"]).intersection(show_subscriptions))) == 0:
+            if len((set(filters["subscription"]).intersection(set(show_subscriptions)))) == 0:
                 shows_to_include.remove(show_title)
                 continue
 
